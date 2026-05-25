@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FoodRescue - Consumer App</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          borderRadius: {
+            'xl': '12px',
+            '2xl': '16px',
+            '3xl': '24px',
+          },
+          colors: {
+            emerald: {
+              50: '#ecfdf5',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles CSS -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Leaflet Map CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <!-- Leaflet Map JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+
+  <!-- Main Container -->
+  <div class="app-container">
+
+    <!-- GLOBAL COMPONENT A: TOP NAVBAR (Sticky) -->
+    <header class="sticky top-0 z-50 bg-white border-b border-gray-100 w-full">
+      <div class="max-w-5xl mx-auto px-4 md:px-8 lg:px-16 py-3 flex items-center justify-between">
+        <div class="flex items-center cursor-pointer" onclick="switchView('explore')">
+          <!-- SVG Eco Leaf + Food Dome Logo -->
+          <svg class="w-6 h-6 text-emerald-600 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5.9 16.17 6 20c3.83.1 10-2 12-11 .83-3.75-.5-5-1-9-.5 4-1.25 5.75-9 8 5-2 7-5 8-8z"/>
+          </svg>
+          <span class="text-emerald-600 font-extrabold text-lg tracking-tight font-heading">FoodRescue</span>
+        </div>
+        <button id="bell-btn" class="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 relative transition-colors">
+          <i data-lucide="bell" class="w-5 h-5"></i>
+          <!-- Red dot indicator -->
+          <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+        </button>
+      </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE CONTENT AREA (Scrollable) -->
+    <main class="flex-1 overflow-y-auto no-scrollbar pb-24 bg-gray-50 w-full">
+      
+      <!-- SCREEN 1: EXPLORE / HOME -->
+      <section id="screen-explore" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4">
+        <!-- Welcome banner -->
+        <div class="space-y-1">
+          <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">Welcome back, Alex!</h1>
+          <p class="text-xs md:text-sm text-gray-500 font-medium">Ready to rescue delicious surplus food at a discount today?</p>
+        </div>
+
+        <!-- Search Bar & Filters Header (Grid on desktop for cleaner horizontal layout) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          <!-- Search Bar -->
+          <div class="relative md:col-span-2">
+            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
+              <i data-lucide="search" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="search-bar" placeholder="Search for bakeries, cafes, groceries..." class="w-full bg-white border border-gray-100 rounded-2xl py-2.5 pl-10 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400">
+          </div>
+
+          <!-- Budget Limit Slider -->
+          <div class="bg-white rounded-2xl px-4 py-2 border border-gray-100 shadow-sm flex flex-col justify-center">
+            <div class="flex justify-between items-center mb-1">
+              <span class="text-[10px] font-bold text-gray-800 uppercase tracking-wider">Budget Limit</span>
+              <span id="budget-value" class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">$15.00</span>
+            </div>
+            <input type="range" id="budget-slider" min="3" max="25" step="0.5" value="15" class="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600">
+          </div>
+        </div>
+
+        <!-- Horizontal Category Badge Scroll -->
+        <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 md:mx-0 px-4 md:px-0 py-1">
+          <button data-category="all" class="category-badge whitespace-nowrap bg-emerald-600 text-white rounded-full px-4 py-1.5 text-xs font-bold shadow-sm transition-all border border-transparent">All Categories</button>
+          <button data-category="bakery" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Bakery</button>
+          <button data-category="veggies" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Veggies</button>
+          <button data-category="meals" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Meals</button>
+        </div>
+
+        <!-- Map Radar Section -->
+        <div class="space-y-2">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-gray-900 text-sm">Map Radar View</h3>
+            <span class="text-[10px] text-gray-400 font-bold">📍 Near Green Hills</span>
+          </div>
+          <div class="relative w-full h-44 md:h-64 lg:h-80 rounded-2xl overflow-hidden shadow-sm border border-gray-100 z-10">
+            <!-- Map Target -->
+            <div id="map"></div>
+          </div>
+        </div>
+
+        <!-- Nearby Surplus Catalog -->
+        <div class="space-y-3">
+          <div class="flex justify-between items-center">
+            <h3 class="font-bold text-gray-900 text-sm">Nearby Rescue Opportunities</h3>
+            <button onclick="resetFilters()" class="text-xs font-bold text-emerald-600 hover:underline">Reset Filters</button>
+          </div>
+          <!-- Responsive Food Cards Grid -->
+          <div id="surplus-catalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
+            <!-- Dynamic Food Cards -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN 2: CART -->
+      <section id="screen-cart" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4 hidden">
+        <!-- Back button header -->
+        <div class="flex items-center gap-1">
+          <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <h2 class="font-bold text-gray-900 text-lg">Your Cart</h2>
+        </div>
+
+        <!-- Delivery/Pickup toggle -->
+        <div class="bg-gray-100 rounded-xl p-1 flex max-w-xs">
+          <button class="flex-1 bg-white text-gray-900 font-bold text-xs py-1.5 rounded-lg shadow-sm flex items-center justify-center gap-1">
+            <span>🏪</span> Self-Pickup
+          </button>
+          <button class="flex-1 text-gray-500 font-bold text-xs py-1.5 flex items-center justify-center gap-1 cursor-not-allowed">
+            <span>🛵</span> Delivery
+          </button>
+        </div>
+
+        <!-- Responsive Grid for Cart Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          
+          <!-- Left Columns (Items and Savings) -->
+          <div class="lg:col-span-2 space-y-4">
+            <!-- Items Container -->
+            <div id="cart-items-list" class="space-y-3.5">
+              <!-- Dynamic Cart Items -->
+            </div>
+
+            <!-- Eco Savings Highlight Banner -->
+            <div id="cart-eco-savings-banner">
+              <!-- Dynamic savings -->
+            </div>
+          </div>
+
+          <!-- Right Column (Billing and Actions) -->
+          <div id="cart-checkout-container" class="space-y-4">
+            <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2.5">
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Order Summary</h3>
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>Subtotal</span>
+                <span id="cart-subtotal" class="font-semibold text-gray-900">$0.00</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>Platform Fee</span>
+                <span id="cart-platform-fee" class="font-semibold text-gray-900">$0.00</span>
+              </div>
+              <div class="flex justify-between text-xs text-gray-500">
+                <span>Tax (5%)</span>
+                <span id="cart-tax" class="font-semibold text-gray-900">$0.00</span>
+              </div>
+              <div class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-extrabold text-gray-950">
+                <span>Total</span>
+                <span id="cart-total">$0.00</span>
+              </div>
+            </div>
+
+            <!-- Checkout button trigger -->
+            <button onclick="goToCheckout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl text-center shadow-md transition-transform active:scale-98 flex items-center justify-center gap-2">
+              <span>Proceed to Checkout</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: CHECKOUT DETAILS -->
+      <section id="screen-checkout" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4 hidden pb-36 lg:pb-12">
+        <!-- Back button header -->
+        <div class="flex items-center gap-1">
+          <button onclick="switchView('cart')" class="text-gray-600 hover:text-gray-900">
+            <i data-lucide="chevron-left" class="w-5 h-5"></i>
+          </button>
+          <h2 class="font-bold text-gray-900 text-lg">Checkout</h2>
+        </div>
+
+        <!-- Responsive Grid for Checkout Content -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          
+          <!-- Left Columns (Details and Items) -->
+          <div class="lg:col-span-2 space-y-4">
+            <!-- Address choosing -->
+            <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
+              <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold uppercase tracking-wider">
+                <span>Pickup Address</span>
+                <button onclick="alert('Address changes are unavailable in prototype')" class="text-emerald-600">Change</button>
+              </div>
+              <div class="flex items-start gap-2.5">
+                <span class="bg-emerald-50 text-emerald-800 p-2 rounded-xl text-lg mt-0.5">🏠</span>
+                <div>
+                  <h4 class="font-bold text-sm text-gray-900">Home</h4>
+                  <p id="checkout-address" class="text-xs text-gray-500 mt-0.5">42 Verdant Avenue, Green Hills, NY 10012</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Order Items Summarized List -->
+            <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Your Items</h3>
+              <div id="checkout-items-list" class="space-y-2">
+                <!-- Dynamic checkout item rows -->
+              </div>
+              
+              <div class="border-t border-gray-100 pt-3 space-y-2.5">
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>Subtotal & Fees</span>
+                  <span id="checkout-subtotal" class="font-semibold text-gray-900">$0.00</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>Delivery Fee</span>
+                  <span id="checkout-delivery-fee" class="font-semibold text-gray-900">FREE</span>
+                </div>
+                <div class="flex justify-between text-xs text-gray-500">
+                  <span>Eco Discount</span>
+                  <span id="checkout-eco-discount" class="font-extrabold text-emerald-600">-$0.00</span>
+                </div>
+                <div class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-black text-gray-900">
+                  <span>Total Payment</span>
+                  <span id="checkout-total">$0.00</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column (Payment Options and Button) -->
+          <div class="space-y-4">
+            <div class="space-y-2.5">
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider">Payment Method</h3>
+              
+              <div class="space-y-2">
+                <!-- EcoPay Wallet -->
+                <div id="pay-method-ecopay" onclick="selectPayment('ecopay')" class="bg-white rounded-2xl p-4 border border-gray-200 cursor-pointer flex items-center justify-between shadow-xs transition-colors hover:border-emerald-600">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">💳</span>
+                    <div>
+                      <h4 class="font-bold text-sm text-gray-900">EcoPay Wallet</h4>
+                      <p class="text-[10px] text-gray-400">Balance: <span class="font-semibold text-emerald-600">$42.50</span></p>
+                    </div>
+                  </div>
+                  <span id="pay-check-ecopay" class="text-emerald-600 text-sm font-bold">✓</span>
+                </div>
+
+                <!-- Credit Card -->
+                <div id="pay-method-card" onclick="selectPayment('card')" class="bg-white rounded-2xl p-4 border border-gray-200 cursor-pointer flex items-center justify-between shadow-xs transition-colors hover:border-emerald-600">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">🏦</span>
+                    <div>
+                      <h4 class="font-bold text-sm text-gray-900">Credit / Debit Card</h4>
+                      <p class="text-[10px] text-gray-400">Visa / Mastercard ending in 4829</p>
+                    </div>
+                  </div>
+                  <span id="pay-check-card" class="text-emerald-600 text-sm font-bold hidden">✓</span>
+                </div>
+
+                <!-- Cash on Delivery -->
+                <div id="pay-method-cod" onclick="selectPayment('cod')" class="bg-white rounded-2xl p-4 border border-gray-200 cursor-pointer flex items-center justify-between shadow-xs transition-colors hover:border-emerald-600">
+                  <div class="flex items-center gap-3">
+                    <span class="text-xl">💵</span>
+                    <div>
+                      <h4 class="font-bold text-sm text-gray-900">Cash on Self-Pickup</h4>
+                      <p class="text-[10px] text-gray-400">Pay directly to restaurant staff</p>
+                    </div>
+                  </div>
+                  <span id="pay-check-cod" class="text-emerald-600 text-sm font-bold hidden">✓</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Checkout button container: shifts position responsive -->
+            <div class="fixed bottom-[65px] left-0 right-0 w-full bg-white/95 backdrop-blur-xs border-t border-gray-100 p-4 shadow-lg z-40 lg:relative lg:bottom-0 lg:border-t-0 lg:shadow-none lg:p-0 lg:bg-transparent lg:z-0 lg:mt-4">
+              <div class="flex items-center justify-between max-w-5xl mx-auto md:px-8 lg:px-0 lg:w-full lg:bg-white lg:p-4 lg:rounded-2xl lg:border lg:border-gray-100 lg:shadow-sm">
+                <div class="flex flex-col">
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">Total Payment</span>
+                  <span id="checkout-bar-total" class="text-lg font-black text-emerald-600 font-heading">$0.00</span>
+                </div>
+                <button onclick="placeOrder()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-2.5 rounded-xl shadow-md transition-transform active:scale-95 text-xs flex items-center gap-1.5">
+                  <span>Place Order</span>
+                  <i data-lucide="check-circle" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN: SUCCESS SCREEN -->
+      <section id="screen-success" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-md lg:mx-auto space-y-5 hidden text-center py-12">
+        <!-- Success content wrapper -->
+        <div id="success-summary-container" class="space-y-4">
+          <!-- Dynamic success metrics -->
+        </div>
+
+        <div class="space-y-2.5 pt-2">
+          <button onclick="switchView('orders')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl shadow-sm text-xs transition-colors">
+            View My Rescues
+          </button>
+          <button onclick="switchView('explore')" class="w-full border border-gray-200 text-gray-600 font-bold py-3 rounded-2xl hover:bg-gray-50 text-xs transition-colors">
+            Continue Rescuing
+          </button>
+        </div>
+      </section>
+
+      <!-- SCREEN 3: ECO-IMPACT & GAMIFICATION -->
+      <section id="screen-impact" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4 hidden">
+        <!-- Responsive Grid for Impact Page -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+          
+          <!-- Left 2 Columns -->
+          <div class="lg:col-span-2 space-y-4">
+            <!-- Impact Hero Banner -->
+            <div class="bg-emerald-600 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
+              <div class="absolute right-[-20px] top-[-20px] w-32 h-32 bg-emerald-500/20 rounded-full"></div>
+              
+              <span class="bg-emerald-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-white/15">Certified Hero</span>
+              <h2 class="text-xl font-black mt-2 font-heading">Hello, Alex!</h2>
+              <p class="text-xs text-emerald-100 font-medium leading-relaxed mt-1">Your contributions are making a difference in preventing waste.</p>
+            </div>
+
+            <!-- Mini-Game Banner (Sort & Save) -->
+            <div class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl p-4 text-white shadow-sm flex items-center justify-between relative overflow-hidden">
+              <div class="space-y-1">
+                <span class="bg-white/20 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Arcade Mini-Game</span>
+                <h3 class="font-bold text-sm font-heading">Sort & Save: Trash Bash!</h3>
+                <p class="text-[10px] text-orange-100 font-medium">Beat the clock! Sort food waste for bonus coins.</p>
+                <button onclick="alert('🕹️ Launching Trash Bash Arcade mini-game...')" class="bg-white text-orange-600 font-black text-[10px] px-3 py-1.5 rounded-lg mt-2 transition-transform active:scale-95">Play & Win ➔</button>
+              </div>
+              <span class="text-5xl opacity-40 select-none">🎮</span>
+            </div>
+
+            <!-- Quests/Quests Sections -->
+            <div class="space-y-3">
+              <h3 class="font-bold text-gray-900 text-sm">Points & Quests</h3>
+              <div id="quests-list-container" class="space-y-3">
+                <!-- Dynamic active quests -->
+              </div>
+            </div>
+
+            <!-- Exchange Eco-Coins Rewards -->
+            <div class="space-y-3 pb-6">
+              <h3 class="font-bold text-gray-900 text-sm">Exchange Your Eco-Coins</h3>
+              <div id="reward-shop-container" class="grid grid-cols-2 gap-3">
+                <!-- Dynamic Rewards Shop Cards -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="space-y-4">
+            <!-- Metric stats -->
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-3">
+                <span class="text-2xl bg-emerald-50 p-2 rounded-xl">🌍</span>
+                <div>
+                  <span id="impact-co2-saved" class="text-base font-extrabold text-gray-900 block font-heading">12.0 kg</span>
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">CO₂ Prevented</span>
+                </div>
+              </div>
+              
+              <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-3">
+                <span class="text-2xl bg-amber-50 p-2 rounded-xl">🍲</span>
+                <div>
+                  <span id="impact-meals-rescued" class="text-base font-extrabold text-gray-900 block font-heading">24 Meals</span>
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">Meals Rescued</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Eco Coins Balance Card -->
+            <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="text-2xl">🪙</span>
+                <div>
+                  <h4 class="font-bold text-xs text-gray-900">Eco-Coins Balance</h4>
+                  <p class="text-[10px] text-gray-400">Coins verify automatically after pickup</p>
+                </div>
+              </div>
+              <span id="impact-coins-balance" class="text-lg font-black text-amber-500 font-heading">1,250</span>
+            </div>
+
+            <!-- Unlocked Badges Grid -->
+            <div class="space-y-3">
+              <h3 class="font-bold text-gray-900 text-sm">Unlocked Badges</h3>
+              <div id="badges-grid-container" class="grid grid-cols-3 gap-2.5">
+                <!-- Dynamic Badges -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- SCREEN 4: ORDERS -->
+      <section id="screen-orders" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4 hidden">
+        <div class="space-y-1">
+          <h2 class="font-bold text-gray-900 text-lg">Your Rescues</h2>
+          <p class="text-xs text-gray-400 font-medium">Track your active meals and check past sustainability gains.</p>
+        </div>
+        
+        <!-- Grid layout for ongoing and past orders on desktop -->
+        <div id="orders-list-container" class="space-y-5 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6 lg:items-start">
+          <!-- Dynamic Ongoing and Past order list -->
+        </div>
+      </section>
+
+      <!-- SCREEN 5: PROFILE -->
+      <section id="screen-profile" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-2xl lg:mx-auto space-y-4 hidden">
+        <div class="space-y-1">
+          <h2 class="font-bold text-gray-900 text-lg">User Profile</h2>
+        </div>
+
+        <!-- User Information -->
+        <div class="bg-white rounded-3xl p-4 border border-gray-100 shadow-sm flex items-center gap-4">
+          <div class="w-14 h-14 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-800 text-2xl font-bold font-heading">A</div>
+          <div>
+            <h3 id="profile-name" class="font-bold text-gray-900 text-base">Alex</h3>
+            <p id="profile-address" class="text-xs text-gray-400 mt-0.5 font-medium">42 Verdant Avenue, Green Hills, NY 10012</p>
+          </div>
+        </div>
+
+        <!-- Summary Stats Card -->
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
+          <h4 class="font-bold text-xs text-gray-400 uppercase tracking-wider">Rescue Impact Milestones</h4>
+          <div class="grid grid-cols-3 gap-2 text-center">
+            <div class="bg-gray-50 rounded-xl p-2.5">
+              <span id="profile-co2" class="font-black text-sm text-gray-900 block">12.0 kg</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">CO₂ Saved</span>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-2.5">
+              <span id="profile-meals" class="font-black text-sm text-gray-900 block">24</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">Meals</span>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-2.5">
+              <span id="profile-saved" class="font-black text-sm text-gray-900 block">$120.00</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">Money Saved</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wallet balance -->
+        <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">🪙</span>
+            <span class="text-xs font-bold text-gray-900">Total Eco-Coins Earned</span>
+          </div>
+          <span id="profile-coins" class="text-sm font-extrabold text-amber-500">1,250</span>
+        </div>
+
+        <!-- Profile Settings list -->
+        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-xs">
+          <div onclick="alert('Profile Address Management')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Manage Addresses</span>
+            <span class="text-gray-400">➔</span>
+          </div>
+          <div onclick="alert('Wallet / Payment Settings')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Payment & EcoPay Wallet</span>
+            <span class="text-gray-400">➔</span>
+          </div>
+          <div onclick="alert('Help Center & FAQs')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Help Center & FAQ</span>
+            <span class="text-gray-400">➔</span>
+          </div>
+          <div onclick="alert('Privacy & Terms')" class="p-3.5 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Privacy Policy & Terms</span>
+            <span class="text-gray-400">➔</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: PARTNER DETAILS -->
+      <section id="screen-partner-detail" class="app-screen lg:max-w-5xl lg:mx-auto hidden">
+        <!-- Partner header back button -->
+        <div id="partner-header" class="bg-white px-4 py-3 border-b border-gray-100 flex items-center justify-between sticky top-0 z-30">
+          <!-- Back button dynamic -->
+        </div>
+        <!-- Partner details content -->
+        <div id="partner-details-container" class="space-y-4">
+          <!-- Dynamic partner content -->
+        </div>
+      </section>
+
+      <!-- SCREEN: FOOD DETAILS -->
+      <section id="screen-food-detail" class="app-screen lg:max-w-4xl lg:mx-auto hidden relative pb-24">
+        <!-- Food details back button header -->
+        <div id="food-header" class="bg-white px-4 py-3 border-b border-gray-100 flex items-center justify-between sticky top-0 z-30">
+          <!-- Back button dynamic -->
+        </div>
+        <!-- Food details content -->
+        <div id="food-detail-container">
+          <!-- Dynamic food item details -->
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FLOATING CART BUTTON (Only shows on Explore view if items in cart) -->
+    <button id="floating-cart-btn" class="absolute bottom-20 right-4 z-40 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-4 shadow-lg transition-transform active:scale-95 flex items-center justify-center hidden">
+      <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+      <span id="cart-badge-count" class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full border-2 border-white flex items-center justify-center shadow-xs">0</span>
+    </button>
+
+    <!-- GLOBAL COMPONENT B: BOTTOM NAVIGATION BAR (Fixed) -->
+    <nav class="fixed bottom-0 w-full z-50 bg-white border-t border-gray-200 shadow-md">
+      <div class="max-w-5xl mx-auto px-4 py-2.5 flex justify-between items-center">
+        <!-- Explore -->
+        <a href="#" id="nav-explore" class="flex flex-col items-center flex-1 py-1">
+          <i data-lucide="compass" class="nav-icon text-emerald-600 transition-colors w-5 h-5"></i>
+          <span class="nav-label text-[10px] font-semibold text-emerald-600 transition-colors mt-0.5">Explore</span>
+        </a>
+        <!-- Orders -->
+        <a href="#" id="nav-orders" class="flex flex-col items-center flex-1 py-1">
+          <i data-lucide="shopping-bag" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Orders</span>
+        </a>
+        <!-- Impact -->
+        <a href="#" id="nav-impact" class="flex flex-col items-center flex-1 py-1">
+          <i data-lucide="leaf" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Impact</span>
+        </a>
+        <!-- Profile -->
+        <a href="#" id="nav-profile" class="flex flex-col items-center flex-1 py-1">
+          <i data-lucide="user" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Profile</span>
+        </a>
+      </div>
+    </nav>
+
+    <!-- SURPRISE BLIND BOX OVERLAY MODAL -->
+    <div id="blindbox-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center hidden p-6">
+      <div class="bg-white rounded-3xl w-full max-w-[320px] p-6 shadow-2xl relative border border-gray-100">
+        <!-- Close overlay button -->
+        <button onclick="closeBlindBoxModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-900">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+        
+        <div id="blindbox-inner-content">
+          <!-- Dynamic tap game -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- App Main Scripts -->
+  <script src="app.js"></script>
+  <!-- Initialize Lucide Icons -->
+  <script>
+    lucide.createIcons();
+    
+    // Add lucide update hooks to rendering
+    const originalRenderAll = renderAll;
+    renderAll = function() {
+      originalRenderAll();
+      lucide.createIcons();
+    };
+    
+    const originalSwitchView = switchView;
+    switchView = function(viewName, params) {
+      originalSwitchView(viewName, params);
+      lucide.createIcons();
+    };
+  </script>
+</body>
+</html>
