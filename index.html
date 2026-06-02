@@ -166,16 +166,16 @@
                 <span
                   id="budget-value"
                   class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100"
-                  >$15.00</span
+                  >Rp 50.000</span
                 >
               </div>
               <input
                 type="range"
                 id="budget-slider"
-                min="3"
-                max="25"
-                step="0.5"
-                value="15"
+                min="10000"
+                max="100000"
+                step="5000"
+                value="50000"
                 class="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
               />
             </div>
@@ -298,7 +298,7 @@
                 <div class="flex justify-between text-xs text-gray-500">
                   <span>Subtotal</span>
                   <span id="cart-subtotal" class="font-semibold text-gray-900"
-                    >$0.00</span
+                    >Rp 0</span
                   >
                 </div>
                 <div class="flex justify-between text-xs text-gray-500">
@@ -306,20 +306,20 @@
                   <span
                     id="cart-platform-fee"
                     class="font-semibold text-gray-900"
-                    >$0.00</span
+                    >Rp 0</span
                   >
                 </div>
                 <div class="flex justify-between text-xs text-gray-500">
                   <span>Pajak (5%)</span>
                   <span id="cart-tax" class="font-semibold text-gray-900"
-                    >$0.00</span
+                    >Rp 0</span
                   >
                 </div>
                 <div
                   class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-extrabold text-gray-950"
                 >
                   <span>Total</span>
-                  <span id="cart-total">$0.00</span>
+                  <span id="cart-total">Rp 0</span>
                 </div>
               </div>
 
@@ -408,7 +408,7 @@
                     <span
                       id="checkout-subtotal"
                       class="font-semibold text-gray-900"
-                      >$0.00</span
+                      >Rp 0</span
                     >
                   </div>
                   <div class="flex justify-between text-xs text-gray-500">
@@ -424,14 +424,14 @@
                     <span
                       id="checkout-eco-discount"
                       class="font-extrabold text-emerald-600"
-                      >-$0.00</span
+                      >-Rp 0</span
                     >
                   </div>
                   <div
                     class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-black text-gray-900"
                   >
                     <span>Total Pembayaran</span>
-                    <span id="checkout-total">$0.00</span>
+                    <span id="checkout-total">Rp 0</span>
                   </div>
                 </div>
               </div>
@@ -465,7 +465,7 @@
                         <p class="text-[10px] text-gray-400">
                           Saldo:
                           <span class="font-semibold text-emerald-600"
-                            >$42.50</span
+                            >Rp 150.000</span
                           >
                         </p>
                       </div>
@@ -547,7 +547,7 @@
                     <span
                       id="checkout-bar-total"
                       class="text-lg font-black text-emerald-600 font-heading"
-                      >$0.00</span
+                      >Rp 0</span
                     >
                   </div>
                   <button
@@ -836,7 +836,7 @@
                 <span
                   id="profile-saved"
                   class="font-black text-sm text-gray-900 block"
-                  >$120.00</span
+                  >Rp 500.000</span
                 >
                 <span class="text-[9px] text-gray-400 uppercase font-semibold"
                   >Uang Dihemat</span
@@ -947,9 +947,15 @@
       >
         <div class="flex items-center">
           <i data-lucide="shopping-bag" class="w-5 h-5 mr-2"></i>
-          <span id="cart-badge-count" class="font-extrabold text-xs tracking-wide">0 Barang</span>
+          <span
+            id="cart-badge-count"
+            class="font-extrabold text-xs tracking-wide"
+            >0 Barang</span
+          >
           <span class="border-l border-white/20 h-4 mx-3"></span>
-          <span id="cart-badge-total" class="font-black text-sm tracking-wide">$0.00</span>
+          <span id="cart-badge-total" class="font-black text-sm tracking-wide"
+            >Rp 0</span
+          >
         </div>
         <div
           class="bg-white text-emerald-600 font-extrabold text-[11px] px-3.5 py-1.5 rounded-full flex items-center gap-1 shadow-sm uppercase tracking-wider"

@@ -1,8 +1,12 @@
 // FoodRescue Consumer App State
+function formatRupiah(amount) {
+  return "Rp " + Math.round(amount).toLocaleString("id-ID");
+}
+
 const state = {
   currentView: "explore", // 'explore', 'cart', 'checkout', 'impact', 'orders', 'profile', 'success', 'partner-detail', 'food-detail'
   searchQuery: "",
-  budgetLimit: 15,
+  budgetLimit: 50000,
   selectedCategory: "all",
   selectedPartner: null,
   selectedFoodItem: null,
@@ -44,8 +48,8 @@ const state = {
     coins: 1250,
     co2Saved: 12.0, // kg
     mealsRescued: 24,
-    moneySaved: 120.0, // USD
-    address: "42 Verdant Avenue, Green Hills, NY 10012",
+    moneySaved: 500000, // Rp
+    address: "Gang Hijau No. 42, Sukajadi, Bandung 40162",
   },
 
   // Cart State
@@ -55,8 +59,8 @@ const state = {
       name: "Kotak Kue Akhir Hari",
       partnerId: "partner-1",
       partnerName: "Sunrise Bakehouse",
-      price: 4.5,
-      originalPrice: 18.0,
+      price: 15000,
+      originalPrice: 60000,
       image:
         "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
       quantity: 1,
@@ -68,8 +72,8 @@ const state = {
       name: "Bundel Sayuran Tidak Sempurna",
       partnerId: "partner-2",
       partnerName: "Green Valley Grocers",
-      price: 8.0,
-      originalPrice: 22.0,
+      price: 20000,
+      originalPrice: 80000,
       image:
         "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
       quantity: 1,
@@ -80,7 +84,7 @@ const state = {
 
   // Payment Options
   selectedPayment: "ecopay", // 'ecopay', 'card', 'cod'
-  ecopayBalance: 42.5,
+  ecopayBalance: 150000,
 
   // Ongoing/Past Orders
   orders: [
@@ -89,7 +93,7 @@ const state = {
       partnerName: "Luigi's Artisanal Bakery",
       itemName: "Kotak Pizza Misteri",
       itemCount: 2,
-      price: 9.5,
+      price: 25000,
       status: "ongoing",
       expiresIn: "44m 58s",
       distance: "jarak 0,6 km",
@@ -98,21 +102,21 @@ const state = {
     },
     {
       id: "FR-8291",
-      partnerName: "The Green Kitchen",
-      itemName: "Campuran Salad Organik",
+      partnerName: "Sunrise Bakehouse",
+      itemName: "Kotak Kue Akhir Hari",
       itemCount: 1,
-      price: 6.5,
+      price: 15000,
       status: "ongoing",
       expiresIn: "Siap Diambil",
       distance: "jarak 1,9 km",
       image:
-        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
     },
     {
       id: "FR-1279",
       partnerName: "Urban Greens",
       itemName: "Mangkuk Salad Superfood",
-      price: 4.5,
+      price: 15000,
       status: "completed",
       date: "24 Okt 2023",
       image:
@@ -283,8 +287,8 @@ const catalog = [
     name: "Kotak Kue Akhir Hari",
     partnerId: "partner-1",
     partnerName: "Sunrise Bakehouse",
-    price: 4.5,
-    originalPrice: 18.0,
+    price: 15000,
+    originalPrice: 60000,
     rating: 4.8,
     image:
       "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
@@ -300,8 +304,8 @@ const catalog = [
     name: "Bundel Sayuran Tidak Sempurna",
     partnerId: "partner-2",
     partnerName: "Green Valley Grocers",
-    price: 8.0,
-    originalPrice: 22.0,
+    price: 20000,
+    originalPrice: 80000,
     rating: 4.6,
     image:
       "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
@@ -317,8 +321,8 @@ const catalog = [
     name: "Mangkuk Biji-bijian Sisa",
     partnerId: "partner-3",
     partnerName: "Green Bean Cafe",
-    price: 5.0,
-    originalPrice: 11.0,
+    price: 12000,
+    originalPrice: 45000,
     rating: 4.5,
     image:
       "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
@@ -334,8 +338,8 @@ const catalog = [
     name: "Bundel Roti Artisanal",
     partnerId: "partner-1",
     partnerName: "Sunrise Bakehouse",
-    price: 4.5,
-    originalPrice: 18.0,
+    price: 15000,
+    originalPrice: 50000,
     rating: 4.8,
     image:
       "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600",
@@ -351,8 +355,8 @@ const catalog = [
     name: "Kotak Pizza Sisa",
     partnerId: "partner-4",
     partnerName: "Luigi's Artisanal Bakery",
-    price: 9.5,
-    originalPrice: 28.0,
+    price: 25000,
+    originalPrice: 90000,
     rating: 4.9,
     image:
       "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600",
@@ -555,7 +559,7 @@ function updateFloatingCart() {
     );
     const badgeTotal = document.getElementById("cart-badge-total");
     if (badgeTotal) {
-      badgeTotal.innerText = `$${subtotal.toFixed(2)}`;
+      badgeTotal.innerText = formatRupiah(subtotal);
     }
   } else {
     floatingCart.classList.add("hidden");
@@ -640,7 +644,7 @@ function setupSearchAndFilters() {
   const sliderVal = document.getElementById("budget-value");
   slider.addEventListener("input", (e) => {
     state.budgetLimit = parseFloat(e.target.value);
-    sliderVal.innerText = `$${state.budgetLimit.toFixed(2)}`;
+    sliderVal.innerText = formatRupiah(state.budgetLimit);
     renderExploreCatalog();
     updateMapMarkers();
   });
@@ -726,7 +730,7 @@ function updateMapMarkers() {
 
     const priceMarker = L.divIcon({
       className: "custom-marker",
-      html: `<div class="marker-label">$${lowestPrice.toFixed(2)}</div>`,
+      html: `<div class="marker-label">${formatRupiah(lowestPrice)}</div>`,
       iconSize: [50, 24],
     });
 
@@ -819,8 +823,8 @@ function renderExploreCatalog() {
         
         <div class="flex items-baseline justify-between mt-3 pt-2 border-t border-gray-50">
           <div>
-            <span class="text-xs text-gray-400 line-through">$${item.originalPrice.toFixed(2)}</span>
-            <span class="text-base font-bold text-emerald-600 ml-1">$${item.price.toFixed(2)}</span>
+            <span class="text-xs text-gray-400 line-through">${formatRupiah(item.originalPrice)}</span>
+            <span class="text-base font-bold text-emerald-600 ml-1">${formatRupiah(item.price)}</span>
           </div>
           <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1.5 shadow-sm transition-transform active:scale-95 flex items-center justify-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -837,10 +841,10 @@ function renderExploreCatalog() {
 
 function resetFilters() {
   document.getElementById("search-bar").value = "";
-  document.getElementById("budget-slider").value = 25;
-  document.getElementById("budget-value").innerText = "$25.00";
+  document.getElementById("budget-slider").value = 100000;
+  document.getElementById("budget-value").innerText = "Rp 100.000";
   state.searchQuery = "";
-  state.budgetLimit = 25;
+  state.budgetLimit = 100000;
   state.selectedCategory = "all";
 
   const badges = document.querySelectorAll(".category-badge");
@@ -891,8 +895,8 @@ function renderPartnerDetail() {
         </div>
         <div class="flex justify-between items-baseline mt-2">
           <div>
-            <span class="text-xs text-gray-400 line-through">$${item.originalPrice.toFixed(2)}</span>
-            <span class="text-sm font-bold text-emerald-600 ml-1">$${item.price.toFixed(2)}</span>
+            <span class="text-xs text-gray-400 line-through">${formatRupiah(item.originalPrice)}</span>
+            <span class="text-sm font-bold text-emerald-600 ml-1">${formatRupiah(item.price)}</span>
           </div>
           <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1 shadow-sm transition-transform active:scale-95">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
@@ -985,8 +989,8 @@ function renderFoodDetail() {
       
       <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-xl border border-emerald-100">
         <div>
-          <span class="text-xs text-emerald-800">Harga Asli: <span class="line-through font-semibold">$${item.originalPrice.toFixed(2)}</span></span>
-          <div class="text-xl font-extrabold text-emerald-600 mt-0.5">$${item.price.toFixed(2)}</div>
+          <span class="text-xs text-emerald-800">Harga Asli: <span class="line-through font-semibold">${formatRupiah(item.originalPrice)}</span></span>
+          <div class="text-xl font-extrabold text-emerald-600 mt-0.5">${formatRupiah(item.price)}</div>
         </div>
         <div class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg">
           Hemat 75%
@@ -1112,7 +1116,7 @@ function renderCart() {
     0,
   );
 
-  const platformFee = 0.99;
+  const platformFee = 2000;
   const tax = subtotal * 0.05;
   const total = subtotal + platformFee + tax;
 
@@ -1135,8 +1139,8 @@ function renderCart() {
         
         <div class="flex justify-between items-center mt-2">
           <div>
-            <span class="text-[10px] text-gray-400 line-through">$${item.originalPrice.toFixed(2)}</span>
-            <span class="text-sm font-extrabold text-emerald-600 ml-1">$${item.price.toFixed(2)}</span>
+            <span class="text-[10px] text-gray-400 line-through">${formatRupiah(item.originalPrice)}</span>
+            <span class="text-sm font-extrabold text-emerald-600 ml-1">${formatRupiah(item.price)}</span>
           </div>
           
           <div class="flex items-center border border-gray-100 rounded-lg px-1.5 py-0.5 bg-gray-50">
@@ -1160,20 +1164,20 @@ function renderCart() {
         </svg>
       </div>
       <div>
-        <h4 class="font-bold text-sm text-emerald-900">Total Penghematan: $${totalSavings.toFixed(2)}!</h4>
+        <h4 class="font-bold text-sm text-emerald-900">Total Penghematan: ${formatRupiah(totalSavings)}!</h4>
         <p class="text-[11px] text-emerald-700">Plus, Anda mencegah emisi CO₂ sebesar <span class="font-bold">${co2Prevented.toFixed(1)} kg</span> hari ini.</p>
       </div>
     </div>
   `;
 
-  subtotalLabel.innerText = `$${subtotal.toFixed(2)}`;
-  platformFeeLabel.innerText = `$${platformFee.toFixed(2)}`;
-  taxLabel.innerText = `$${tax.toFixed(2)}`;
-  totalLabel.innerText = `$${total.toFixed(2)}`;
+  subtotalLabel.innerText = formatRupiah(subtotal);
+  platformFeeLabel.innerText = formatRupiah(platformFee);
+  taxLabel.innerText = formatRupiah(tax);
+  totalLabel.innerText = formatRupiah(total);
 
   // Bottom Sticky Total Card
   document.getElementById("checkout-bar-total").innerText =
-    `$${total.toFixed(2)}`;
+    formatRupiah(total);
 }
 
 window.addItemToCart = function (itemId) {
@@ -1260,23 +1264,23 @@ function renderCheckout() {
         <h4 class="font-bold text-xs text-gray-900 line-clamp-1">${item.name}</h4>
         <p class="text-[10px] text-gray-400 font-semibold">Qty: ${item.quantity}</p>
       </div>
-      <span class="text-xs font-bold text-gray-900">$${(item.price * item.quantity).toFixed(2)}</span>
+      <span class="text-xs font-bold text-gray-900">${formatRupiah(item.price * item.quantity)}</span>
     </div>
   `,
     )
     .join("");
 
   // We mock a fixed delivery fee or self-pickup
-  const deliveryFee = 0.0; // Self-pickup is always $0
+  const deliveryFee = 0.0; // Self-pickup is always Rp 0
   const tax = subtotal * 0.05;
-  const platformFee = 0.99;
+  const platformFee = 2000;
   const total = subtotal + deliveryFee + tax + platformFee;
 
-  subtotalLabel.innerText = `$${(subtotal + tax + platformFee).toFixed(2)}`;
-  ecoDiscountLabel.innerText = `-$${ecoDiscount.toFixed(2)}`;
+  subtotalLabel.innerText = formatRupiah(subtotal + tax + platformFee);
+  ecoDiscountLabel.innerText = `-${formatRupiah(ecoDiscount)}`;
   deliveryLabel.innerText =
-    deliveryFee === 0 ? "GRATIS (Ambil Sendiri)" : `$${deliveryFee.toFixed(2)}`;
-  totalLabel.innerText = `$${total.toFixed(2)}`;
+    deliveryFee === 0 ? "GRATIS (Ambil Sendiri)" : formatRupiah(deliveryFee);
+  totalLabel.innerText = formatRupiah(total);
 
   // Default wallet highlights
   selectPayment(state.selectedPayment);
@@ -1307,9 +1311,10 @@ window.placeOrder = function () {
   const orderId = `FR-${Math.floor(1000 + Math.random() * 9000)}`;
   const firstItem = state.cart[0];
   const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice =
-    state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0) +
-    1.62; // including tax/fees
+  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const platformFee = 2000;
+  const tax = subtotal * 0.05;
+  const totalPrice = subtotal + platformFee + tax;
   const co2SavedToday = state.cart.reduce(
     (sum, item) => sum + item.co2Reduction * item.quantity,
     0,
@@ -1761,7 +1766,7 @@ function renderOrders() {
       </div>
       
       <div class="text-right space-y-1.5">
-        <div class="text-xs font-bold text-gray-900">$${o.price.toFixed(2)}</div>
+        <div class="text-xs font-bold text-gray-900">${formatRupiah(o.price)}</div>
         <button onclick="reorderItem('${o.partnerName}')" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 hover:bg-emerald-100 transition-colors">
           Pesan Lagi
         </button>
@@ -1809,7 +1814,7 @@ function renderProfile() {
     `${state.user.co2Saved.toFixed(1)} kg`;
   document.getElementById("profile-meals").innerText = state.user.mealsRescued;
   document.getElementById("profile-saved").innerText =
-    `$${state.user.moneySaved.toFixed(2)}`;
+    formatRupiah(state.user.moneySaved);
   document.getElementById("profile-coins").innerText =
     state.user.coins.toLocaleString();
 }
