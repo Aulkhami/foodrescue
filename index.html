@@ -941,17 +941,23 @@
       </main>
 
       <!-- FLOATING CART BUTTON (Only shows on Explore view if items in cart) -->
-      <button
+      <div
         id="floating-cart-btn"
-        class="fixed bottom-20 right-4 z-40 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-4 shadow-lg transition-transform active:scale-95 flex items-center justify-center hidden"
+        class="fixed bottom-20 left-1/2 -translate-x-1/2 z-40 bg-emerald-600 hover:bg-emerald-700 text-white rounded-full px-5 py-3 shadow-xl transition-all duration-300 active:scale-98 flex items-center justify-between gap-4 w-[90%] max-w-md hidden cursor-pointer"
       >
-        <i data-lucide="shopping-bag" class="w-6 h-6"></i>
-        <span
-          id="cart-badge-count"
-          class="absolute top-0 right-0 bg-red-500 text-white text-[10px] font-black w-5 h-5 rounded-full border-2 border-white flex items-center justify-center shadow-xs"
-          >0</span
+        <div class="flex items-center">
+          <i data-lucide="shopping-bag" class="w-5 h-5 mr-2"></i>
+          <span id="cart-badge-count" class="font-extrabold text-xs tracking-wide">0 Barang</span>
+          <span class="border-l border-white/20 h-4 mx-3"></span>
+          <span id="cart-badge-total" class="font-black text-sm tracking-wide">$0.00</span>
+        </div>
+        <div
+          class="bg-white text-emerald-600 font-extrabold text-[11px] px-3.5 py-1.5 rounded-full flex items-center gap-1 shadow-sm uppercase tracking-wider"
         >
-      </button>
+          <span>Keranjang</span>
+          <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+        </div>
+      </div>
 
       <!-- GLOBAL COMPONENT B: BOTTOM NAVIGATION BAR (Fixed) -->
       <nav
@@ -1068,7 +1074,7 @@
     <!-- Toast Notification Container -->
     <div
       id="toast-container"
-      class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none flex flex-col items-center gap-2"
+      class="fixed bottom-36 left-1/2 -translate-x-1/2 z-[9999] pointer-events-none flex flex-col items-center gap-2"
     ></div>
   </body>
 </html>

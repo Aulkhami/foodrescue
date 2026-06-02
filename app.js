@@ -532,6 +532,36 @@ function setupNavEventListeners() {
   });
 }
 
+function updateFloatingCart() {
+  const floatingCart = document.getElementById("floating-cart-btn");
+  if (!floatingCart) return;
+
+  const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const showViews = ["explore", "food-detail"];
+
+  if (showViews.includes(state.currentView) && count > 0) {
+    floatingCart.classList.remove("hidden");
+    
+    // Update count text
+    const badgeCount = document.getElementById("cart-badge-count");
+    if (badgeCount) {
+      badgeCount.innerText = `${count} Barang`;
+    }
+    
+    // Calculate and update subtotal price
+    const subtotal = state.cart.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+    const badgeTotal = document.getElementById("cart-badge-total");
+    if (badgeTotal) {
+      badgeTotal.innerText = `$${subtotal.toFixed(2)}`;
+    }
+  } else {
+    floatingCart.classList.add("hidden");
+  }
+}
+
 function switchView(viewName, params = {}) {
   state.currentView = viewName;
 
@@ -585,17 +615,7 @@ function switchView(viewName, params = {}) {
   });
 
   // Floating Cart Visibility
-  const floatingCart = document.getElementById("floating-cart-btn");
-  if (viewName === "explore" && state.cart.length > 0) {
-    floatingCart.classList.remove("hidden");
-    // Update badge count
-    document.getElementById("cart-badge-count").innerText = state.cart.reduce(
-      (sum, item) => sum + item.quantity,
-      0,
-    );
-  } else {
-    floatingCart.classList.add("hidden");
-  }
+  updateFloatingCart();
 
   // Trigger map resize if switching back to explore
   if (viewName === "explore" && map) {
@@ -1179,12 +1199,7 @@ window.addItemToCart = function (itemId) {
   }
 
   // Update floating badge
-  const floatingCart = document.getElementById("floating-cart-btn");
-  floatingCart.classList.remove("hidden");
-  document.getElementById("cart-badge-count").innerText = state.cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0,
-  );
+  updateFloatingCart();
 
   showToast("Berhasil dimasukkan ke Keranjang!");
 };
@@ -1205,12 +1220,7 @@ window.removeFromCart = function (itemId) {
   state.cart = state.cart.filter((c) => c.id !== itemId);
 
   // Update floating badge
-  const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  if (count > 0) {
-    document.getElementById("cart-badge-count").innerText = count;
-  } else {
-    document.getElementById("floating-cart-btn").classList.add("hidden");
-  }
+  updateFloatingCart();
 
   renderCart();
 };
@@ -1347,7 +1357,7 @@ window.placeOrder = function () {
 
   // Clear Cart
   state.cart = [];
-  document.getElementById("floating-cart-btn").classList.add("hidden");
+  updateFloatingCart();
 };
 
 function renderSuccessScreen(orderId, partnerName, co2, meals) {
