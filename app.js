@@ -1,281 +1,337 @@
 // FoodRescue Consumer App State
 const state = {
-  currentView: 'explore', // 'explore', 'cart', 'checkout', 'impact', 'orders', 'profile', 'success', 'partner-detail', 'food-detail'
-  searchQuery: '',
+  currentView: "explore", // 'explore', 'cart', 'checkout', 'impact', 'orders', 'profile', 'success', 'partner-detail', 'food-detail'
+  searchQuery: "",
   budgetLimit: 15,
-  selectedCategory: 'all',
+  selectedCategory: "all",
   selectedPartner: null,
   selectedFoodItem: null,
-  
+
   // User Profile
   user: {
-    name: 'Alex',
+    name: "Alex",
     coins: 1250,
     co2Saved: 12.0, // kg
     mealsRescued: 24,
-    moneySaved: 120.00, // USD
-    address: '42 Verdant Avenue, Green Hills, NY 10012'
+    moneySaved: 120.0, // USD
+    address: "42 Verdant Avenue, Green Hills, NY 10012",
   },
-  
+
   // Cart State
   cart: [
     {
-      id: 'item-1',
-      name: 'Kotak Kue Akhir Hari',
-      partnerId: 'partner-1',
-      partnerName: 'Sunrise Bakehouse',
-      price: 4.50,
-      originalPrice: 18.00,
-      image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600',
+      id: "item-1",
+      name: "Kotak Kue Akhir Hari",
+      partnerId: "partner-1",
+      partnerName: "Sunrise Bakehouse",
+      price: 4.5,
+      originalPrice: 18.0,
+      image:
+        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
       quantity: 1,
-      pickupWindow: 'Ambil sebelum jam 18:00',
-      co2Reduction: 0.9 // kg
+      pickupWindow: "Ambil sebelum jam 18:00",
+      co2Reduction: 0.9, // kg
     },
     {
-      id: 'item-2',
-      name: 'Bundel Sayuran Tidak Sempurna',
-      partnerId: 'partner-2',
-      partnerName: 'Green Valley Grocers',
-      price: 8.00,
-      originalPrice: 22.00,
-      image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600',
+      id: "item-2",
+      name: "Bundel Sayuran Tidak Sempurna",
+      partnerId: "partner-2",
+      partnerName: "Green Valley Grocers",
+      price: 8.0,
+      originalPrice: 22.0,
+      image:
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
       quantity: 1,
-      pickupWindow: 'Ambil sebelum jam 19:30',
-      co2Reduction: 1.5 // kg
-    }
+      pickupWindow: "Ambil sebelum jam 19:30",
+      co2Reduction: 1.5, // kg
+    },
   ],
-  
+
   // Payment Options
-  selectedPayment: 'ecopay', // 'ecopay', 'card', 'cod'
-  ecopayBalance: 42.50,
-  
+  selectedPayment: "ecopay", // 'ecopay', 'card', 'cod'
+  ecopayBalance: 42.5,
+
   // Ongoing/Past Orders
   orders: [
     {
-      id: 'FR-4829',
+      id: "FR-4829",
       partnerName: "Luigi's Artisanal Bakery",
-      itemName: 'Kotak Pizza Misteri',
+      itemName: "Kotak Pizza Misteri",
       itemCount: 2,
-      price: 9.50,
-      status: 'ongoing',
-      expiresIn: '44m 58s',
-      distance: 'jarak 0,6 km',
-      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600'
+      price: 9.5,
+      status: "ongoing",
+      expiresIn: "44m 58s",
+      distance: "jarak 0,6 km",
+      image:
+        "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600",
     },
     {
-      id: 'FR-8291',
-      partnerName: 'The Green Kitchen',
-      itemName: 'Campuran Salad Organik',
+      id: "FR-8291",
+      partnerName: "The Green Kitchen",
+      itemName: "Campuran Salad Organik",
       itemCount: 1,
-      price: 6.50,
-      status: 'ongoing',
-      expiresIn: 'Siap Diambil',
-      distance: 'jarak 1,9 km',
-      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600'
+      price: 6.5,
+      status: "ongoing",
+      expiresIn: "Siap Diambil",
+      distance: "jarak 1,9 km",
+      image:
+        "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
     },
     {
-      id: 'FR-1279',
-      partnerName: 'Urban Greens',
-      itemName: 'Mangkuk Salad Superfood',
-      price: 4.50,
-      status: 'completed',
-      date: '24 Okt 2023',
-      image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600'
+      id: "FR-1279",
+      partnerName: "Urban Greens",
+      itemName: "Mangkuk Salad Superfood",
+      price: 4.5,
+      status: "completed",
+      date: "24 Okt 2023",
+      image:
+        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
     },
     {
-      id: 'FR-1102',
-      partnerName: 'The Vegan Joint',
-      itemName: 'Eco-Burger & Kentang Goreng Manis',
+      id: "FR-1102",
+      partnerName: "The Vegan Joint",
+      itemName: "Eco-Burger & Kentang Goreng Manis",
       price: 6.25,
-      status: 'completed',
-      date: '21 Okt 2023',
-      image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600'
-    }
+      status: "completed",
+      date: "21 Okt 2023",
+      image:
+        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600",
+    },
   ],
-  
+
   // Gamification Quests
   quests: [
     {
-      id: 'q-1',
-      title: 'Selamatkan 5 makanan minggu ini',
-      description: 'Kumpulkan 5 kotak penyelamatan untuk mengurangi pemborosan makanan.',
+      id: "q-1",
+      title: "Selamatkan 5 makanan minggu ini",
+      description:
+        "Kumpulkan 5 kotak penyelamatan untuk mengurangi pemborosan makanan.",
       progress: 3,
       target: 5,
-      reward: '200 Koin',
-      completed: false
+      reward: "200 Koin",
+      completed: false,
     },
     {
-      id: 'q-2',
-      title: 'Masuk Hijau Harian',
-      description: 'Buka aplikasi setiap hari untuk menemukan mitra terdekat.',
+      id: "q-2",
+      title: "Masuk Hijau Harian",
+      description: "Buka aplikasi setiap hari untuk menemukan mitra terdekat.",
       progress: 1,
       target: 1,
-      reward: '20 Koin',
-      completed: true
+      reward: "20 Koin",
+      completed: true,
     },
     {
-      id: 'q-3',
-      title: 'Hemat 15kg CO2',
-      description: 'Pencapaian total dampak ekologis.',
+      id: "q-3",
+      title: "Hemat 15kg CO2",
+      description: "Pencapaian total dampak ekologis.",
       progress: 12,
       target: 15,
-      reward: '500 Koin + Lencana Eco',
-      completed: false
-    }
+      reward: "500 Koin + Lencana Eco",
+      completed: false,
+    },
   ],
-  
+
   // Badges Grid
   badges: [
-    { id: 'b-1', name: 'Pahlawan Tanpa Sampah', icon: '🍃', desc: 'Terbuka: Menyelamatkan lebih dari 10 makanan sisa!', unlocked: true },
-    { id: 'b-2', name: 'Penyelamat Kue', icon: '🥐', desc: 'Terbuka: Menyelamatkan kue 5 kali!', unlocked: true },
-    { id: 'b-3', name: 'Juara CO2', icon: '🌍', desc: 'Terbuka: Menyelamatkan 10kg emisi CO2!', unlocked: true },
-    { id: 'b-4', name: 'Penyelamat Pagi', icon: '🌅', desc: 'Menyelamatkan makanan sebelum jam 09.00', unlocked: false },
-    { id: 'b-5', name: 'Duta Eco', icon: '🎖️', desc: 'Mengumpulkan 2.000 Koin Eco', unlocked: false },
-    { id: 'b-6', name: 'Pelindung Bumi', icon: '🛡️', desc: 'Selesaikan 10 misi', unlocked: false }
+    {
+      id: "b-1",
+      name: "Pahlawan Tanpa Sampah",
+      icon: "🍃",
+      desc: "Terbuka: Menyelamatkan lebih dari 10 makanan sisa!",
+      unlocked: true,
+    },
+    {
+      id: "b-2",
+      name: "Penyelamat Kue",
+      icon: "🥐",
+      desc: "Terbuka: Menyelamatkan kue 5 kali!",
+      unlocked: true,
+    },
+    {
+      id: "b-3",
+      name: "Juara CO2",
+      icon: "🌍",
+      desc: "Terbuka: Menyelamatkan 10kg emisi CO2!",
+      unlocked: true,
+    },
+    {
+      id: "b-4",
+      name: "Penyelamat Pagi",
+      icon: "🌅",
+      desc: "Menyelamatkan makanan sebelum jam 09.00",
+      unlocked: false,
+    },
+    {
+      id: "b-5",
+      name: "Duta Eco",
+      icon: "🎖️",
+      desc: "Mengumpulkan 2.000 Koin Eco",
+      unlocked: false,
+    },
+    {
+      id: "b-6",
+      name: "Pelindung Bumi",
+      icon: "🛡️",
+      desc: "Selesaikan 10 misi",
+      unlocked: false,
+    },
   ],
-  
+
   // Blind Box Tap Interaction
   blindBox: {
     tapsRemaining: 3,
-    state: 'closed', // 'closed', 'shaking', 'revealed'
-    revealedItem: null
-  }
+    state: "closed", // 'closed', 'shaking', 'revealed'
+    revealedItem: null,
+  },
 };
 
 // Partners Mock Data
 const partners = [
   {
-    id: 'partner-1',
-    name: 'Sunrise Bakehouse',
-    address: '122 Baker St, New York',
+    id: "partner-1",
+    name: "Sunrise Bakehouse",
+    address: "122 Baker St, New York",
     lat: 40.7259,
-    lng: -73.9930,
+    lng: -73.993,
     rating: 4.8,
-    distance: '0.3 mil',
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600',
-    description: 'Toko roti lokal artisanal yang berkomitmen pada zero waste. Spesialisasi dalam sourdough organik, kue kering, dan roti tawar.',
-    tags: ['Toko Roti', 'Vegetarian']
+    distance: "0.3 mil",
+    image:
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600",
+    description:
+      "Toko roti lokal artisanal yang berkomitmen pada zero waste. Spesialisasi dalam sourdough organik, kue kering, dan roti tawar.",
+    tags: ["Toko Roti", "Vegetarian"],
   },
   {
-    id: 'partner-2',
-    name: 'Green Valley Grocers',
-    address: '45 Orchard Dr, New York',
-    lat: 40.7290,
-    lng: -73.9970,
+    id: "partner-2",
+    name: "Green Valley Grocers",
+    address: "45 Orchard Dr, New York",
+    lat: 40.729,
+    lng: -73.997,
     rating: 4.6,
-    distance: '0.8 mil',
-    image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600',
-    description: 'Pasar bahan makanan lokal segar yang menyelamatkan bundel hasil tani tidak sempurna dan sayuran organik kemasan.',
-    tags: ['Sayuran', 'Organik']
+    distance: "0.8 mil",
+    image:
+      "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600",
+    description:
+      "Pasar bahan makanan lokal segar yang menyelamatkan bundel hasil tani tidak sempurna dan sayuran organik kemasan.",
+    tags: ["Sayuran", "Organik"],
   },
   {
-    id: 'partner-3',
-    name: 'Green Bean Cafe',
-    address: '88 Commerce St, New York',
-    lat: 40.7230,
-    lng: -74.0010,
+    id: "partner-3",
+    name: "Green Bean Cafe",
+    address: "88 Commerce St, New York",
+    lat: 40.723,
+    lng: -74.001,
     rating: 4.7,
-    distance: '1.2 mil',
-    image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=600',
-    description: 'Kedai kopi dan dapur ramah lingkungan yang menyelamatkan mangkuk sarapan, kue kering, dan mangkuk biji-bijian makan siang setiap hari.',
-    tags: ['Makanan Berat', 'Kopi']
+    distance: "1.2 mil",
+    image:
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=600",
+    description:
+      "Kedai kopi dan dapur ramah lingkungan yang menyelamatkan mangkuk sarapan, kue kering, dan mangkuk biji-bijian makan siang setiap hari.",
+    tags: ["Makanan Berat", "Kopi"],
   },
   {
-    id: 'partner-4',
+    id: "partner-4",
     name: "Luigi's Artisanal Bakery",
-    address: '12 Bleecker St, New York',
+    address: "12 Bleecker St, New York",
     lat: 40.7275,
     lng: -73.9902,
     rating: 4.9,
-    distance: '0.4 mil',
-    image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600',
-    description: 'Toko roti dan tempat makan Italia yang menawarkan roti lapis segar, loyang pizza, dan kotak manis akhir hari.',
-    tags: ['Toko Roti', 'Pizza']
-  }
+    distance: "0.4 mil",
+    image:
+      "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600",
+    description:
+      "Toko roti dan tempat makan Italia yang menawarkan roti lapis segar, loyang pizza, dan kotak manis akhir hari.",
+    tags: ["Toko Roti", "Pizza"],
+  },
 ];
 
 // Food Items Catalog
 const catalog = [
   {
-    id: 'item-1',
-    name: 'Kotak Kue Akhir Hari',
-    partnerId: 'partner-1',
-    partnerName: 'Sunrise Bakehouse',
-    price: 4.50,
-    originalPrice: 18.00,
+    id: "item-1",
+    name: "Kotak Kue Akhir Hari",
+    partnerId: "partner-1",
+    partnerName: "Sunrise Bakehouse",
+    price: 4.5,
+    originalPrice: 18.0,
     rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Baru Dipanggang Hari Ini',
-    freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
+    image:
+      "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
+    freshnessBadge: "Baru Dipanggang Hari Ini",
+    freshnessClass: "bg-emerald-50 text-emerald-800 border-emerald-100",
     stockLeft: 3,
-    category: 'bakery',
+    category: "bakery",
     co2Reduction: 0.9,
-    pickupWindow: 'Ambil sebelum jam 18:00'
+    pickupWindow: "Ambil sebelum jam 18:00",
   },
   {
-    id: 'item-2',
-    name: 'Bundel Sayuran Tidak Sempurna',
-    partnerId: 'partner-2',
-    partnerName: 'Green Valley Grocers',
-    price: 8.00,
-    originalPrice: 22.00,
+    id: "item-2",
+    name: "Bundel Sayuran Tidak Sempurna",
+    partnerId: "partner-2",
+    partnerName: "Green Valley Grocers",
+    price: 8.0,
+    originalPrice: 22.0,
     rating: 4.6,
-    image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Hasil Tani Organik Segar',
-    freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
+    image:
+      "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
+    freshnessBadge: "Hasil Tani Organik Segar",
+    freshnessClass: "bg-emerald-50 text-emerald-800 border-emerald-100",
     stockLeft: 1,
-    category: 'veggies',
+    category: "veggies",
     co2Reduction: 1.5,
-    pickupWindow: 'Ambil sebelum jam 19:30'
+    pickupWindow: "Ambil sebelum jam 19:30",
   },
   {
-    id: 'item-3',
-    name: 'Mangkuk Biji-bijian Sisa',
-    partnerId: 'partner-3',
-    partnerName: 'Green Bean Cafe',
-    price: 5.00,
-    originalPrice: 11.00,
+    id: "item-3",
+    name: "Mangkuk Biji-bijian Sisa",
+    partnerId: "partner-3",
+    partnerName: "Green Bean Cafe",
+    price: 5.0,
+    originalPrice: 11.0,
     rating: 4.5,
-    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Disiapkan 2 jam lalu',
-    freshnessClass: 'bg-amber-50 text-amber-800 border-amber-100',
+    image:
+      "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600",
+    freshnessBadge: "Disiapkan 2 jam lalu",
+    freshnessClass: "bg-amber-50 text-amber-800 border-amber-100",
     stockLeft: 4,
-    category: 'meals',
+    category: "meals",
     co2Reduction: 0.8,
-    pickupWindow: 'Ambil sebelum jam 16:00'
+    pickupWindow: "Ambil sebelum jam 16:00",
   },
   {
-    id: 'item-4',
-    name: 'Bundel Roti Artisanal',
-    partnerId: 'partner-1',
-    partnerName: 'Sunrise Bakehouse',
-    price: 4.50,
-    originalPrice: 18.00,
+    id: "item-4",
+    name: "Bundel Roti Artisanal",
+    partnerId: "partner-1",
+    partnerName: "Sunrise Bakehouse",
+    price: 4.5,
+    originalPrice: 18.0,
     rating: 4.8,
-    image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Sourdough & Baguette Segar',
-    freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
+    image:
+      "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600",
+    freshnessBadge: "Sourdough & Baguette Segar",
+    freshnessClass: "bg-emerald-50 text-emerald-800 border-emerald-100",
     stockLeft: 2,
-    category: 'bakery',
+    category: "bakery",
     co2Reduction: 1.1,
-    pickupWindow: 'Ambil sebelum jam 18:00'
+    pickupWindow: "Ambil sebelum jam 18:00",
   },
   {
-    id: 'item-5',
-    name: 'Kotak Pizza Sisa',
-    partnerId: 'partner-4',
+    id: "item-5",
+    name: "Kotak Pizza Sisa",
+    partnerId: "partner-4",
     partnerName: "Luigi's Artisanal Bakery",
-    price: 9.50,
-    originalPrice: 28.00,
+    price: 9.5,
+    originalPrice: 28.0,
     rating: 4.9,
-    image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Potongan Pizza Hangat',
-    freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
+    image:
+      "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600",
+    freshnessBadge: "Potongan Pizza Hangat",
+    freshnessClass: "bg-emerald-50 text-emerald-800 border-emerald-100",
     stockLeft: 2,
-    category: 'meals',
+    category: "meals",
     co2Reduction: 1.4,
-    pickupWindow: 'Ambil sebelum jam 20:00'
-  }
+    pickupWindow: "Ambil sebelum jam 20:00",
+  },
 ];
 
 // Leaflet Map instance
@@ -283,132 +339,151 @@ let map = null;
 let markers = [];
 
 // DOM References & Render Controllers
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   initApp();
 });
 
 function initApp() {
-  switchView('explore');
+  switchView("explore");
   setupNavEventListeners();
   setupSearchAndFilters();
   setupMap();
   renderAll();
-  
+
   // Notification Bell
-  document.getElementById('bell-btn').addEventListener('click', () => {
-    alert('🔔 Notifikasi: Pesanan Anda #FR-8291 siap untuk diambil sendiri!');
+  document.getElementById("bell-btn").addEventListener("click", () => {
+    alert("🔔 Notifikasi: Pesanan Anda #FR-8291 siap untuk diambil sendiri!");
   });
 }
 
 // Global Nav & Screen Controllers
 function setupNavEventListeners() {
-  const tabs = ['explore', 'orders', 'impact', 'profile'];
-  
-  tabs.forEach(tab => {
+  const tabs = ["explore", "orders", "impact", "profile"];
+
+  tabs.forEach((tab) => {
     const btn = document.getElementById(`nav-${tab}`);
     if (btn) {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener("click", (e) => {
         e.preventDefault();
         switchView(tab);
       });
     }
   });
-  
+
   // Floating Cart Icon
-  document.getElementById('floating-cart-btn').addEventListener('click', () => {
-    switchView('cart');
+  document.getElementById("floating-cart-btn").addEventListener("click", () => {
+    switchView("cart");
   });
 }
 
 function switchView(viewName, params = {}) {
   state.currentView = viewName;
-  
+
   // Hide all screens
-  const screens = document.querySelectorAll('.app-screen');
-  screens.forEach(s => s.classList.add('hidden'));
-  
+  const screens = document.querySelectorAll(".app-screen");
+  screens.forEach((s) => s.classList.add("hidden"));
+
   // Show active screen
   const activeScreen = document.getElementById(`screen-${viewName}`);
   if (activeScreen) {
-    activeScreen.classList.remove('hidden');
+    activeScreen.classList.remove("hidden");
     // Scroll to top
     activeScreen.scrollTop = 0;
   }
-  
+
   // Manage details parameters
-  if (viewName === 'partner-detail') {
-    state.selectedPartner = partners.find(p => p.id === params.partnerId);
+  if (viewName === "partner-detail") {
+    state.selectedPartner = partners.find((p) => p.id === params.partnerId);
     renderPartnerDetail();
-  } else if (viewName === 'food-detail') {
-    state.selectedFoodItem = catalog.find(i => i.id === params.itemId);
+  } else if (viewName === "food-detail") {
+    state.selectedFoodItem = catalog.find((i) => i.id === params.itemId);
     renderFoodDetail();
   }
-  
+
   // Update Bottom Nav active highlights
-  const tabIds = ['explore', 'orders', 'impact', 'profile'];
-  tabIds.forEach(tab => {
+  const tabIds = ["explore", "orders", "impact", "profile"];
+  tabIds.forEach((tab) => {
     const btn = document.getElementById(`nav-${tab}`);
-    const icon = btn.querySelector('.nav-icon');
-    const label = btn.querySelector('.nav-label');
-    
-    if (tab === viewName || (viewName === 'partner-detail' && tab === 'explore') || (viewName === 'food-detail' && tab === 'explore')) {
-      icon.className = 'nav-icon text-emerald-600 transition-colors';
-      label.className = 'nav-label text-[10px] font-semibold text-emerald-600 transition-colors';
+    const icon = btn.querySelector(".nav-icon");
+    const label = btn.querySelector(".nav-label");
+
+    if (
+      tab === viewName ||
+      (viewName === "partner-detail" && tab === "explore") ||
+      (viewName === "food-detail" && tab === "explore")
+    ) {
+      icon.className = "nav-icon text-emerald-600 transition-colors";
+      label.className =
+        "nav-label text-[10px] font-semibold text-emerald-600 transition-colors";
     } else {
-      icon.className = 'nav-icon text-gray-400 transition-colors';
-      label.className = 'nav-label text-[10px] font-semibold text-gray-400 transition-colors';
+      icon.className = "nav-icon text-gray-400 transition-colors";
+      label.className =
+        "nav-label text-[10px] font-semibold text-gray-400 transition-colors";
     }
   });
-  
+
   // Floating Cart Visibility
-  const floatingCart = document.getElementById('floating-cart-btn');
-  if (viewName === 'explore' && state.cart.length > 0) {
-    floatingCart.classList.remove('hidden');
+  const floatingCart = document.getElementById("floating-cart-btn");
+  if (viewName === "explore" && state.cart.length > 0) {
+    floatingCart.classList.remove("hidden");
     // Update badge count
-    document.getElementById('cart-badge-count').innerText = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById("cart-badge-count").innerText = state.cart.reduce(
+      (sum, item) => sum + item.quantity,
+      0,
+    );
   } else {
-    floatingCart.classList.add('hidden');
+    floatingCart.classList.add("hidden");
   }
-  
+
   // Trigger map resize if switching back to explore
-  if (viewName === 'explore' && map) {
+  if (viewName === "explore" && map) {
     setTimeout(() => {
       map.invalidateSize();
     }, 100);
   }
-  
+
   renderAll();
 }
 
 function setupSearchAndFilters() {
-  const searchInput = document.getElementById('search-bar');
-  searchInput.addEventListener('input', (e) => {
+  const searchInput = document.getElementById("search-bar");
+  searchInput.addEventListener("input", (e) => {
     state.searchQuery = e.target.value.toLowerCase();
     renderExploreCatalog();
     updateMapMarkers();
   });
-  
+
   // Budget Slider
-  const slider = document.getElementById('budget-slider');
-  const sliderVal = document.getElementById('budget-value');
-  slider.addEventListener('input', (e) => {
+  const slider = document.getElementById("budget-slider");
+  const sliderVal = document.getElementById("budget-value");
+  slider.addEventListener("input", (e) => {
     state.budgetLimit = parseFloat(e.target.value);
     sliderVal.innerText = `$${state.budgetLimit.toFixed(2)}`;
     renderExploreCatalog();
     updateMapMarkers();
   });
-  
+
   // Category Badges
-  const badges = document.querySelectorAll('.category-badge');
-  badges.forEach(badge => {
-    badge.addEventListener('click', () => {
-      badges.forEach(b => {
-        b.classList.remove('bg-emerald-600', 'text-white');
-        b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+  const badges = document.querySelectorAll(".category-badge");
+  badges.forEach((badge) => {
+    badge.addEventListener("click", () => {
+      badges.forEach((b) => {
+        b.classList.remove("bg-emerald-600", "text-white");
+        b.classList.add(
+          "bg-white",
+          "text-gray-600",
+          "border",
+          "border-gray-200",
+        );
       });
-      badge.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
-      badge.classList.add('bg-emerald-600', 'text-white');
-      
+      badge.classList.remove(
+        "bg-white",
+        "text-gray-600",
+        "border",
+        "border-gray-200",
+      );
+      badge.classList.add("bg-emerald-600", "text-white");
+
       state.selectedCategory = badge.dataset.category;
       renderExploreCatalog();
       updateMapMarkers();
@@ -419,98 +494,110 @@ function setupSearchAndFilters() {
 // Leaflet Map Integration
 function setupMap() {
   // Center map around New York coordinates where partners are
-  map = L.map('map', {
+  map = L.map("map", {
     zoomControl: false,
-    attributionControl: false
-  }).setView([40.7265, -73.9950], 15);
-  
+    attributionControl: false,
+  }).setView([40.7265, -73.995], 15);
+
   // Style with beautiful Stadia Alidade Smooth or OpenStreetMap tiles
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-    maxZoom: 20
-  }).addTo(map);
-  
+  L.tileLayer(
+    "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+    {
+      maxZoom: 20,
+    },
+  ).addTo(map);
+
   // Add User Location Pin
   const userIcon = L.divIcon({
-    className: 'custom-marker',
+    className: "custom-marker",
     html: '<div class="marker-user"></div>',
-    iconSize: [20, 20]
+    iconSize: [20, 20],
   });
-  L.marker([40.7265, -73.9950], { icon: userIcon }).addTo(map);
-  
+  L.marker([40.7265, -73.995], { icon: userIcon }).addTo(map);
+
   // Load Partner Markers
   updateMapMarkers();
 }
 
 function updateMapMarkers() {
   if (!map) return;
-  
+
   // Clear old markers
-  markers.forEach(m => map.removeLayer(m));
+  markers.forEach((m) => map.removeLayer(m));
   markers = [];
-  
+
   // Filter partners based on search queries and categories
   const activeItems = getFilteredItems();
-  const visiblePartnerIds = [...new Set(activeItems.map(item => item.partnerId))];
-  
-  partners.forEach(partner => {
+  const visiblePartnerIds = [
+    ...new Set(activeItems.map((item) => item.partnerId)),
+  ];
+
+  partners.forEach((partner) => {
     if (!visiblePartnerIds.includes(partner.id)) return;
-    
+
     // Find lowest priced item for this partner
-    const partnerItems = activeItems.filter(item => item.partnerId === partner.id);
+    const partnerItems = activeItems.filter(
+      (item) => item.partnerId === partner.id,
+    );
     if (partnerItems.length === 0) return;
-    const lowestPrice = Math.min(...partnerItems.map(i => i.price));
-    
+    const lowestPrice = Math.min(...partnerItems.map((i) => i.price));
+
     const priceMarker = L.divIcon({
-      className: 'custom-marker',
+      className: "custom-marker",
       html: `<div class="marker-label">$${lowestPrice.toFixed(2)}</div>`,
-      iconSize: [50, 24]
+      iconSize: [50, 24],
     });
-    
-    const marker = L.marker([partner.lat, partner.lng], { icon: priceMarker }).addTo(map);
-    
+
+    const marker = L.marker([partner.lat, partner.lng], {
+      icon: priceMarker,
+    }).addTo(map);
+
     // Clicking a marker filters search list to that partner or shows Partner Detail
-    marker.on('click', () => {
-      switchView('partner-detail', { partnerId: partner.id });
+    marker.on("click", () => {
+      switchView("partner-detail", { partnerId: partner.id });
     });
-    
+
     markers.push(marker);
   });
 }
 
 // Filter Function
 function getFilteredItems() {
-  return catalog.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(state.searchQuery) || 
-                          item.partnerName.toLowerCase().includes(state.searchQuery);
+  return catalog.filter((item) => {
+    const matchesSearch =
+      item.name.toLowerCase().includes(state.searchQuery) ||
+      item.partnerName.toLowerCase().includes(state.searchQuery);
     const matchesBudget = item.price <= state.budgetLimit;
-    const matchesCategory = state.selectedCategory === 'all' || item.category === state.selectedCategory;
-    
+    const matchesCategory =
+      state.selectedCategory === "all" ||
+      item.category === state.selectedCategory;
+
     return matchesSearch && matchesBudget && matchesCategory;
   });
 }
 
 // Render Controllers
 function renderAll() {
-  if (state.currentView === 'explore') {
+  if (state.currentView === "explore") {
     renderExploreCatalog();
-  } else if (state.currentView === 'cart') {
+  } else if (state.currentView === "cart") {
     renderCart();
-  } else if (state.currentView === 'checkout') {
+  } else if (state.currentView === "checkout") {
     renderCheckout();
-  } else if (state.currentView === 'impact') {
+  } else if (state.currentView === "impact") {
     renderImpact();
-  } else if (state.currentView === 'orders') {
+  } else if (state.currentView === "orders") {
     renderOrders();
-  } else if (state.currentView === 'profile') {
+  } else if (state.currentView === "profile") {
     renderProfile();
   }
 }
 
 // Explore / Catalog rendering
 function renderExploreCatalog() {
-  const container = document.getElementById('surplus-catalog');
+  const container = document.getElementById("surplus-catalog");
   const items = getFilteredItems();
-  
+
   if (items.length === 0) {
     container.innerHTML = `
       <div class="col-span-full text-center py-8">
@@ -521,8 +608,10 @@ function renderExploreCatalog() {
     `;
     return;
   }
-  
-  container.innerHTML = items.map(item => `
+
+  container.innerHTML = items
+    .map(
+      (item) => `
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative flex flex-col cursor-pointer" onclick="switchView('food-detail', { itemId: '${item.id}' })">
       <div class="relative h-32 w-full">
         <img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover">
@@ -559,27 +648,34 @@ function renderExploreCatalog() {
         </div>
       </div>
     </div>
-  `).join('');
+  `,
+    )
+    .join("");
 }
 
 function resetFilters() {
-  document.getElementById('search-bar').value = '';
-  document.getElementById('budget-slider').value = 25;
-  document.getElementById('budget-value').innerText = '$25.00';
-  state.searchQuery = '';
+  document.getElementById("search-bar").value = "";
+  document.getElementById("budget-slider").value = 25;
+  document.getElementById("budget-value").innerText = "$25.00";
+  state.searchQuery = "";
   state.budgetLimit = 25;
-  state.selectedCategory = 'all';
-  
-  const badges = document.querySelectorAll('.category-badge');
-  badges.forEach(b => {
-    b.classList.remove('bg-emerald-600', 'text-white');
-    b.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
-    if (b.dataset.category === 'all') {
-      b.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
-      b.classList.add('bg-emerald-600', 'text-white');
+  state.selectedCategory = "all";
+
+  const badges = document.querySelectorAll(".category-badge");
+  badges.forEach((b) => {
+    b.classList.remove("bg-emerald-600", "text-white");
+    b.classList.add("bg-white", "text-gray-600", "border", "border-gray-200");
+    if (b.dataset.category === "all") {
+      b.classList.remove(
+        "bg-white",
+        "text-gray-600",
+        "border",
+        "border-gray-200",
+      );
+      b.classList.add("bg-emerald-600", "text-white");
     }
   });
-  
+
   renderExploreCatalog();
   updateMapMarkers();
 }
@@ -588,20 +684,22 @@ function resetFilters() {
 function renderPartnerDetail() {
   const p = state.selectedPartner;
   if (!p) return;
-  
-  const header = document.getElementById('partner-header');
-  const details = document.getElementById('partner-details-container');
-  
+
+  const header = document.getElementById("partner-header");
+  const details = document.getElementById("partner-details-container");
+
   header.innerHTML = `
     <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
     </button>
     <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">${p.name}</h2>
   `;
-  
+
   // Find partner's items
-  const partnerItems = catalog.filter(item => item.partnerId === p.id);
-  const itemsHtml = partnerItems.map(item => `
+  const partnerItems = catalog.filter((item) => item.partnerId === p.id);
+  const itemsHtml = partnerItems
+    .map(
+      (item) => `
     <div class="bg-white rounded-xl p-3 border border-gray-100 flex gap-3 shadow-sm" onclick="switchView('food-detail', { itemId: '${item.id}' })">
       <img src="${item.image}" alt="${item.name}" class="w-20 h-20 rounded-lg object-cover">
       <div class="flex-1 flex flex-col justify-between">
@@ -622,8 +720,10 @@ function renderPartnerDetail() {
         </div>
       </div>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   details.innerHTML = `
     <div class="relative h-44 w-full">
       <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
@@ -671,17 +771,17 @@ function renderPartnerDetail() {
 function renderFoodDetail() {
   const item = state.selectedFoodItem;
   if (!item) return;
-  
-  const header = document.getElementById('food-header');
-  const content = document.getElementById('food-detail-container');
-  
+
+  const header = document.getElementById("food-header");
+  const content = document.getElementById("food-detail-container");
+
   header.innerHTML = `
     <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
     </button>
     <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">Detail Produk</h2>
   `;
-  
+
   content.innerHTML = `
     <div class="relative h-64 w-full">
       <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
@@ -757,16 +857,16 @@ function renderFoodDetail() {
   state.detailQty = 1;
 }
 
-window.adjustDetailsQty = function(delta) {
+window.adjustDetailsQty = function (delta) {
   state.detailQty = Math.max(1, state.detailQty + delta);
-  document.getElementById('detail-qty-indicator').innerText = state.detailQty;
+  document.getElementById("detail-qty-indicator").innerText = state.detailQty;
 };
 
-window.addDetailsToCart = function() {
+window.addDetailsToCart = function () {
   const item = state.selectedFoodItem;
   if (!item) return;
-  
-  const existing = state.cart.find(c => c.id === item.id);
+
+  const existing = state.cart.find((c) => c.id === item.id);
   if (existing) {
     existing.quantity += state.detailQty;
   } else {
@@ -780,24 +880,24 @@ window.addDetailsToCart = function() {
       image: item.image,
       quantity: state.detailQty,
       pickupWindow: item.pickupWindow,
-      co2Reduction: item.co2Reduction
+      co2Reduction: item.co2Reduction,
     });
   }
-  
+
   alert(`${state.detailQty}x ${item.name} dimasukkan ke Keranjang!`);
-  switchView('cart');
+  switchView("cart");
 };
 
 // Cart Rendering & Handlers
 function renderCart() {
-  const container = document.getElementById('cart-items-list');
-  const subtotalLabel = document.getElementById('cart-subtotal');
-  const platformFeeLabel = document.getElementById('cart-platform-fee');
-  const taxLabel = document.getElementById('cart-tax');
-  const totalLabel = document.getElementById('cart-total');
-  const savingsBanner = document.getElementById('cart-eco-savings-banner');
-  const checkoutContainer = document.getElementById('cart-checkout-container');
-  
+  const container = document.getElementById("cart-items-list");
+  const subtotalLabel = document.getElementById("cart-subtotal");
+  const platformFeeLabel = document.getElementById("cart-platform-fee");
+  const taxLabel = document.getElementById("cart-tax");
+  const totalLabel = document.getElementById("cart-total");
+  const savingsBanner = document.getElementById("cart-eco-savings-banner");
+  const checkoutContainer = document.getElementById("cart-checkout-container");
+
   if (state.cart.length === 0) {
     container.innerHTML = `
       <div class="text-center py-12 px-4">
@@ -807,26 +907,37 @@ function renderCart() {
         <button onclick="switchView('explore')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm text-sm">Mulai Menyelamatkan</button>
       </div>
     `;
-    checkoutContainer.classList.add('hidden');
-    savingsBanner.classList.add('hidden');
+    checkoutContainer.classList.add("hidden");
+    savingsBanner.classList.add("hidden");
     return;
   }
-  
-  checkoutContainer.classList.remove('hidden');
-  savingsBanner.classList.remove('hidden');
-  
+
+  checkoutContainer.classList.remove("hidden");
+  savingsBanner.classList.remove("hidden");
+
   // Subtotal calculations
-  const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalOriginal = state.cart.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+  const subtotal = state.cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+  const totalOriginal = state.cart.reduce(
+    (sum, item) => sum + item.originalPrice * item.quantity,
+    0,
+  );
   const totalSavings = totalOriginal - subtotal;
-  const co2Prevented = state.cart.reduce((sum, item) => sum + (item.co2Reduction * item.quantity), 0);
-  
+  const co2Prevented = state.cart.reduce(
+    (sum, item) => sum + item.co2Reduction * item.quantity,
+    0,
+  );
+
   const platformFee = 0.99;
   const tax = subtotal * 0.05;
   const total = subtotal + platformFee + tax;
-  
+
   // Render Cart Item List
-  container.innerHTML = state.cart.map(item => `
+  container.innerHTML = state.cart
+    .map(
+      (item) => `
     <div class="bg-white rounded-2xl p-3 border border-gray-100 shadow-xs flex gap-3 relative">
       <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-xl object-cover">
       <div class="flex-1 flex flex-col justify-between">
@@ -854,8 +965,10 @@ function renderCart() {
         </div>
       </div>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // Render Savings Box
   savingsBanner.innerHTML = `
     <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-100 flex items-center gap-3">
@@ -870,21 +983,22 @@ function renderCart() {
       </div>
     </div>
   `;
-  
+
   subtotalLabel.innerText = `$${subtotal.toFixed(2)}`;
   platformFeeLabel.innerText = `$${platformFee.toFixed(2)}`;
   taxLabel.innerText = `$${tax.toFixed(2)}`;
   totalLabel.innerText = `$${total.toFixed(2)}`;
-  
+
   // Bottom Sticky Total Card
-  document.getElementById('checkout-bar-total').innerText = `$${total.toFixed(2)}`;
+  document.getElementById("checkout-bar-total").innerText =
+    `$${total.toFixed(2)}`;
 }
 
-window.addItemToCart = function(itemId) {
-  const item = catalog.find(i => i.id === itemId);
+window.addItemToCart = function (itemId) {
+  const item = catalog.find((i) => i.id === itemId);
   if (!item) return;
-  
-  const existing = state.cart.find(c => c.id === itemId);
+
+  const existing = state.cart.find((c) => c.id === itemId);
   if (existing) {
     existing.quantity++;
   } else {
@@ -898,22 +1012,25 @@ window.addItemToCart = function(itemId) {
       image: item.image,
       quantity: 1,
       pickupWindow: item.pickupWindow,
-      co2Reduction: item.co2Reduction
+      co2Reduction: item.co2Reduction,
     });
   }
-  
+
   alert(`${item.name} dimasukkan ke Keranjang!`);
-  
+
   // Update floating badge
-  const floatingCart = document.getElementById('floating-cart-btn');
-  floatingCart.classList.remove('hidden');
-  document.getElementById('cart-badge-count').innerText = state.cart.reduce((sum, item) => sum + item.quantity, 0);
+  const floatingCart = document.getElementById("floating-cart-btn");
+  floatingCart.classList.remove("hidden");
+  document.getElementById("cart-badge-count").innerText = state.cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0,
+  );
 };
 
-window.updateCartQuantity = function(itemId, delta) {
-  const item = state.cart.find(c => c.id === itemId);
+window.updateCartQuantity = function (itemId, delta) {
+  const item = state.cart.find((c) => c.id === itemId);
   if (!item) return;
-  
+
   item.quantity += delta;
   if (item.quantity <= 0) {
     removeFromCart(itemId);
@@ -922,41 +1039,49 @@ window.updateCartQuantity = function(itemId, delta) {
   }
 };
 
-window.removeFromCart = function(itemId) {
-  state.cart = state.cart.filter(c => c.id !== itemId);
-  
+window.removeFromCart = function (itemId) {
+  state.cart = state.cart.filter((c) => c.id !== itemId);
+
   // Update floating badge
   const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
   if (count > 0) {
-    document.getElementById('cart-badge-count').innerText = count;
+    document.getElementById("cart-badge-count").innerText = count;
   } else {
-    document.getElementById('floating-cart-btn').classList.add('hidden');
+    document.getElementById("floating-cart-btn").classList.add("hidden");
   }
-  
+
   renderCart();
 };
 
-window.goToCheckout = function() {
-  switchView('checkout');
+window.goToCheckout = function () {
+  switchView("checkout");
 };
 
 // Checkout Page rendering
 function renderCheckout() {
-  const checkoutItems = document.getElementById('checkout-items-list');
-  const subtotalLabel = document.getElementById('checkout-subtotal');
-  const ecoDiscountLabel = document.getElementById('checkout-eco-discount');
-  const deliveryLabel = document.getElementById('checkout-delivery-fee');
-  const totalLabel = document.getElementById('checkout-total');
-  const addressLabel = document.getElementById('checkout-address');
-  
+  const checkoutItems = document.getElementById("checkout-items-list");
+  const subtotalLabel = document.getElementById("checkout-subtotal");
+  const ecoDiscountLabel = document.getElementById("checkout-eco-discount");
+  const deliveryLabel = document.getElementById("checkout-delivery-fee");
+  const totalLabel = document.getElementById("checkout-total");
+  const addressLabel = document.getElementById("checkout-address");
+
   addressLabel.innerText = state.user.address;
-  
-  const subtotal = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const totalOriginal = state.cart.reduce((sum, item) => sum + (item.originalPrice * item.quantity), 0);
+
+  const subtotal = state.cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
+  const totalOriginal = state.cart.reduce(
+    (sum, item) => sum + item.originalPrice * item.quantity,
+    0,
+  );
   const ecoDiscount = totalOriginal - subtotal;
-  
+
   // Render checkout items (summary list)
-  checkoutItems.innerHTML = state.cart.map(item => `
+  checkoutItems.innerHTML = state.cart
+    .map(
+      (item) => `
     <div class="flex items-center gap-3 py-2 border-b border-gray-50 last:border-0">
       <img src="${item.image}" alt="${item.name}" class="w-10 h-10 rounded-lg object-cover">
       <div class="flex-1">
@@ -965,82 +1090,95 @@ function renderCheckout() {
       </div>
       <span class="text-xs font-bold text-gray-900">$${(item.price * item.quantity).toFixed(2)}</span>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // We mock a fixed delivery fee or self-pickup
-  const deliveryFee = 0.00; // Self-pickup is always $0
+  const deliveryFee = 0.0; // Self-pickup is always $0
   const tax = subtotal * 0.05;
   const platformFee = 0.99;
   const total = subtotal + deliveryFee + tax + platformFee;
-  
+
   subtotalLabel.innerText = `$${(subtotal + tax + platformFee).toFixed(2)}`;
   ecoDiscountLabel.innerText = `-$${ecoDiscount.toFixed(2)}`;
-  deliveryLabel.innerText = deliveryFee === 0 ? 'GRATIS (Ambil Sendiri)' : `$${deliveryFee.toFixed(2)}`;
+  deliveryLabel.innerText =
+    deliveryFee === 0 ? "GRATIS (Ambil Sendiri)" : `$${deliveryFee.toFixed(2)}`;
   totalLabel.innerText = `$${total.toFixed(2)}`;
-  
+
   // Default wallet highlights
   selectPayment(state.selectedPayment);
 }
 
-window.selectPayment = function(method) {
+window.selectPayment = function (method) {
   state.selectedPayment = method;
-  
+
   // Reset border highlights
-  const paymentIds = ['ecopay', 'card', 'cod'];
-  paymentIds.forEach(id => {
+  const paymentIds = ["ecopay", "card", "cod"];
+  paymentIds.forEach((id) => {
     const el = document.getElementById(`pay-method-${id}`);
     const check = document.getElementById(`pay-check-${id}`);
     if (id === method) {
-      el.classList.add('border-emerald-600', 'bg-emerald-50/40');
-      check.classList.remove('hidden');
+      el.classList.add("border-emerald-600", "bg-emerald-50/40");
+      check.classList.remove("hidden");
     } else {
-      el.classList.remove('border-emerald-600', 'bg-emerald-50/40');
-      check.classList.add('hidden');
+      el.classList.remove("border-emerald-600", "bg-emerald-50/40");
+      check.classList.add("hidden");
     }
   });
 };
 
-window.placeOrder = function() {
+window.placeOrder = function () {
   if (state.cart.length === 0) return;
-  
+
   // Create ongoing order
   const orderId = `FR-${Math.floor(1000 + Math.random() * 9000)}`;
   const firstItem = state.cart[0];
   const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = state.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0) + 1.62; // including tax/fees
-  const co2SavedToday = state.cart.reduce((sum, item) => sum + (item.co2Reduction * item.quantity), 0);
-  
+  const totalPrice =
+    state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0) +
+    1.62; // including tax/fees
+  const co2SavedToday = state.cart.reduce(
+    (sum, item) => sum + item.co2Reduction * item.quantity,
+    0,
+  );
+
   const newOrder = {
     id: orderId,
     partnerName: firstItem.partnerName,
     itemName: firstItem.name,
     itemCount: totalItems,
     price: totalPrice,
-    status: 'ongoing',
-    expiresIn: '1h 59m',
-    distance: 'jarak 1,2 km',
-    image: firstItem.image
+    status: "ongoing",
+    expiresIn: "1h 59m",
+    distance: "jarak 1,2 km",
+    image: firstItem.image,
   };
-  
+
   // Add to order list at the beginning
   state.orders.unshift(newOrder);
-  
+
   // Update impact metrics
   state.user.co2Saved += co2SavedToday;
   state.user.mealsRescued += totalItems;
-  
+
   // Show Success Screen with details
-  renderSuccessScreen(orderId, firstItem.partnerName, co2SavedToday, totalItems);
-  switchView('success');
-  
+  renderSuccessScreen(
+    orderId,
+    firstItem.partnerName,
+    co2SavedToday,
+    totalItems,
+  );
+  switchView("success");
+
   // Clear Cart
   state.cart = [];
-  document.getElementById('floating-cart-btn').classList.add('hidden');
+  document.getElementById("floating-cart-btn").classList.add("hidden");
 };
 
 function renderSuccessScreen(orderId, partnerName, co2, meals) {
-  const container = document.getElementById('success-summary-container');
-  
+  const container = document.getElementById("success-summary-container");
+
   container.innerHTML = `
     <div class="bg-emerald-600/10 border border-emerald-500/20 rounded-2xl p-4 text-center">
       <div class="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto text-xl mb-2">✓</div>
@@ -1073,7 +1211,7 @@ function renderSuccessScreen(orderId, partnerName, co2, meals) {
       </div>
       <div class="flex justify-between items-start">
         <span class="text-xs text-gray-400 font-semibold uppercase mt-0.5">Lokasi</span>
-        <span class="text-xs font-bold text-gray-900 text-right max-w-[180px]">${partnerName} - ${state.user.address.split(',')[0]}</span>
+        <span class="text-xs font-bold text-gray-900 text-right max-w-[180px]">${partnerName} - ${state.user.address.split(",")[0]}</span>
       </div>
     </div>
     
@@ -1091,24 +1229,28 @@ function renderSuccessScreen(orderId, partnerName, co2, meals) {
 // Eco-Impact Screen
 function renderImpact() {
   // Update header coins balance
-  document.getElementById('impact-coins-balance').innerText = state.user.coins.toLocaleString();
-  document.getElementById('impact-co2-saved').innerText = `${state.user.co2Saved.toFixed(1)} kg`;
-  document.getElementById('impact-meals-rescued').innerText = `${state.user.mealsRescued} Meals`;
-  
+  document.getElementById("impact-coins-balance").innerText =
+    state.user.coins.toLocaleString();
+  document.getElementById("impact-co2-saved").innerText =
+    `${state.user.co2Saved.toFixed(1)} kg`;
+  document.getElementById("impact-meals-rescued").innerText =
+    `${state.user.mealsRescued} Makanan`;
+
   // Render Quests
-  const questContainer = document.getElementById('quests-list-container');
-  questContainer.innerHTML = state.quests.map(q => {
-    const isCompleted = q.progress >= q.target;
-    const progressPercent = Math.min(100, (q.progress / q.target) * 100);
-    
-    return `
+  const questContainer = document.getElementById("quests-list-container");
+  questContainer.innerHTML = state.quests
+    .map((q) => {
+      const isCompleted = q.progress >= q.target;
+      const progressPercent = Math.min(100, (q.progress / q.target) * 100);
+
+      return `
       <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
         <div class="flex justify-between items-start">
           <div>
             <h4 class="font-bold text-sm text-gray-900 leading-snug">${q.title}</h4>
             <p class="text-xs text-gray-400 font-medium">${q.description}</p>
           </div>
-          <span class="text-xs font-bold ${isCompleted ? 'text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full' : 'text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full'}">
+          <span class="text-xs font-bold ${isCompleted ? "text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full" : "text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full"}">
             +${q.reward}
           </span>
         </div>
@@ -1124,43 +1266,78 @@ function renderImpact() {
         </div>
       </div>
     `;
-  }).join('');
-  
+    })
+    .join("");
+
   // Render Badges
-  const badgeContainer = document.getElementById('badges-grid-container');
-  badgeContainer.innerHTML = state.badges.map(b => `
-    <div class="bg-white rounded-2xl p-3 border border-gray-100 shadow-xs text-center flex flex-col items-center justify-center relative group ${b.unlocked ? '' : 'opacity-50'}">
-      <span class="text-3xl filter ${b.unlocked ? '' : 'grayscale'}">${b.icon}</span>
+  const badgeContainer = document.getElementById("badges-grid-container");
+  badgeContainer.innerHTML = state.badges
+    .map(
+      (b) => `
+    <div class="bg-white rounded-2xl p-3 border border-gray-100 shadow-xs text-center flex flex-col items-center justify-center relative group ${b.unlocked ? "" : "opacity-50"}">
+      <span class="text-3xl filter ${b.unlocked ? "" : "grayscale"}">${b.icon}</span>
       <h5 class="font-bold text-xs text-gray-900 mt-2">${b.name}</h5>
       <p class="text-[9px] text-gray-400 leading-tight mt-0.5 line-clamp-2">${b.desc}</p>
     </div>
-  `).join('');
-  
+  `,
+    )
+    .join("");
+
   // Render Rewards Shop
   renderRewardShop();
 }
 
 function renderRewardShop() {
-  const shopContainer = document.getElementById('reward-shop-container');
-  
+  const shopContainer = document.getElementById("reward-shop-container");
+
   const rewards = [
-    { id: 'reward-1', title: 'Kotak Misteri Kejutan', desc: 'Berisi makanan senilai hingga $30 dari toko roti lokal.', coins: 500, popular: true, tag: 'Populer' },
-    { id: 'reward-2', title: 'Tiket Undian Mega', desc: 'Kesempatan memenangkan Peralatan Dapur Ramah Lingkungan senilai $500.', coins: 100, endsSoon: true, tag: 'Segera Berakhir' },
-    { id: 'reward-3', title: 'Tanam Pohon', desc: 'Kami akan menanam pohon asli atas nama Anda di Amazon.', coins: 500, tag: 'Ramah Lingkungan' },
-    { id: 'reward-4', title: 'Voucher Mitra $10', desc: 'Diskon langsung di salah satu mitra Platinum kami.', coins: 1000, tag: 'Nilai Tunai' }
+    {
+      id: "reward-1",
+      title: "Kotak Misteri Kejutan",
+      desc: "Berisi makanan senilai hingga $30 dari toko roti lokal.",
+      coins: 500,
+      popular: true,
+      tag: "Populer",
+    },
+    {
+      id: "reward-2",
+      title: "Tiket Undian Mega",
+      desc: "Kesempatan memenangkan Peralatan Dapur Ramah Lingkungan senilai $500.",
+      coins: 100,
+      endsSoon: true,
+      tag: "Segera Berakhir",
+    },
+    {
+      id: "reward-3",
+      title: "Tanam Pohon",
+      desc: "Kami akan menanam pohon asli atas nama Anda di Amazon.",
+      coins: 500,
+      tag: "Ramah Lingkungan",
+    },
+    {
+      id: "reward-4",
+      title: "Voucher Mitra $10",
+      desc: "Diskon langsung di salah satu mitra Platinum kami.",
+      coins: 1000,
+      tag: "Nilai Tunai",
+    },
   ];
-  
-  shopContainer.innerHTML = rewards.map(r => {
-    const isAffordable = state.user.coins >= r.coins;
-    
-    // Check if it's the Blind Box to hook the game
-    const clickAction = r.id === 'reward-1' ? 'openBlindBoxModal()' : `redeemReward('${r.id}', ${r.coins})`;
-    
-    return `
+
+  shopContainer.innerHTML = rewards
+    .map((r) => {
+      const isAffordable = state.user.coins >= r.coins;
+
+      // Check if it's the Blind Box to hook the game
+      const clickAction =
+        r.id === "reward-1"
+          ? "openBlindBoxModal()"
+          : `redeemReward('${r.id}', ${r.coins})`;
+
+      return `
       <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm flex flex-col justify-between">
         <div class="p-3.5">
           <div class="flex justify-between items-start">
-            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${r.popular ? 'bg-emerald-50 text-emerald-800' : r.endsSoon ? 'bg-amber-50 text-amber-800' : 'bg-gray-100 text-gray-500'}">
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full ${r.popular ? "bg-emerald-50 text-emerald-800" : r.endsSoon ? "bg-amber-50 text-amber-800" : "bg-gray-100 text-gray-500"}">
               ${r.tag}
             </span>
           </div>
@@ -1173,81 +1350,82 @@ function renderRewardShop() {
           <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-xs">
             🪙 <span>${r.coins}</span>
           </div>
-          <button onclick="${clickAction}" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${isAffordable ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}">
+          <button onclick="${clickAction}" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${isAffordable ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs" : "bg-gray-100 text-gray-400 cursor-not-allowed"}">
             Tukarkan
           </button>
         </div>
       </div>
     `;
-  }).join('');
+    })
+    .join("");
 }
 
-window.redeemReward = function(rewardId, cost) {
+window.redeemReward = function (rewardId, cost) {
   if (state.user.coins < cost) {
-    alert('Saldo Koin Eco tidak mencukupi.');
+    alert("Saldo Koin Eco tidak mencukupi.");
     return;
   }
-  
+
   state.user.coins -= cost;
-  alert('🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke email Anda.');
+  alert("🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke email Anda.");
   renderImpact();
 };
 
 // Interactive Blind Box Mystery Game (Gamification Page)
-window.openBlindBoxModal = function() {
+window.openBlindBoxModal = function () {
   if (state.user.coins < 500) {
-    alert('Saldo Koin Eco tidak mencukupi.');
+    alert("Saldo Koin Eco tidak mencukupi.");
     return;
   }
-  
+
   state.blindBox = {
     tapsRemaining: 3,
-    state: 'closed',
-    revealedItem: null
+    state: "closed",
+    revealedItem: null,
   };
-  
+
   // Show blind box overlay
-  const overlay = document.getElementById('blindbox-overlay');
-  overlay.classList.remove('hidden');
+  const overlay = document.getElementById("blindbox-overlay");
+  overlay.classList.remove("hidden");
   renderBlindBoxState();
 };
 
-window.closeBlindBoxModal = function() {
-  const overlay = document.getElementById('blindbox-overlay');
-  overlay.classList.add('hidden');
+window.closeBlindBoxModal = function () {
+  const overlay = document.getElementById("blindbox-overlay");
+  overlay.classList.add("hidden");
   renderImpact();
 };
 
-window.tapBlindBox = function() {
-  if (state.blindBox.state === 'revealed') return;
-  
-  const box = document.getElementById('blindbox-card');
-  box.classList.add('shake-box');
-  
+window.tapBlindBox = function () {
+  if (state.blindBox.state === "revealed") return;
+
+  const box = document.getElementById("blindbox-card");
+  box.classList.add("shake-box");
+
   // Remove shake after animation completes
   setTimeout(() => {
-    box.classList.remove('shake-box');
+    box.classList.remove("shake-box");
   }, 500);
-  
+
   state.blindBox.tapsRemaining--;
-  
+
   if (state.blindBox.tapsRemaining <= 0) {
-    state.blindBox.state = 'revealed';
+    state.blindBox.state = "revealed";
     // Deduct coins
     state.user.coins -= 500;
     // Select random item from catalog as reward
     const rand = Math.floor(Math.random() * catalog.length);
     state.blindBox.revealedItem = catalog[rand];
   }
-  
+
   renderBlindBoxState();
 };
 
 function renderBlindBoxState() {
-  const container = document.getElementById('blindbox-inner-content');
+  const container = document.getElementById("blindbox-inner-content");
   const bb = state.blindBox;
-  
-  if (bb.state === 'closed') {
+
+  if (bb.state === "closed") {
     container.innerHTML = `
       <div id="blindbox-card" onclick="tapBlindBox()" class="w-40 h-40 bg-amber-50 rounded-3xl border border-amber-200 flex items-center justify-center text-6xl shadow-md cursor-pointer hover:scale-105 transition-transform mx-auto">
         🎁
@@ -1258,7 +1436,7 @@ function renderBlindBoxState() {
         <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Koin</div>
       </div>
     `;
-  } else if (bb.state === 'revealed') {
+  } else if (bb.state === "revealed") {
     const item = bb.revealedItem;
     container.innerHTML = `
       <div class="badge-pop space-y-4">
@@ -1301,10 +1479,10 @@ function renderBlindBoxState() {
   }
 }
 
-window.claimBlindMeal = function(itemId) {
-  const item = catalog.find(i => i.id === itemId);
+window.claimBlindMeal = function (itemId) {
+  const item = catalog.find((i) => i.id === itemId);
   if (!item) return;
-  
+
   // Directly add to ongoing orders (free pickup)
   const orderId = `FR-${Math.floor(1000 + Math.random() * 9000)}`;
   const newOrder = {
@@ -1312,32 +1490,37 @@ window.claimBlindMeal = function(itemId) {
     partnerName: item.partnerName,
     itemName: `${item.name} (Kotak Misteri)`,
     itemCount: 1,
-    price: 0.00, // Claimed via coins
-    status: 'ongoing',
-    expiresIn: '30m 00s',
-    distance: 'jarak 1,9 km',
-    image: item.image
+    price: 0.0, // Claimed via coins
+    status: "ongoing",
+    expiresIn: "30m 00s",
+    distance: "jarak 1,9 km",
+    image: item.image,
   };
-  
+
   state.orders.unshift(newOrder);
   state.user.mealsRescued += 1;
   state.user.co2Saved += item.co2Reduction;
-  
-  alert('🎉 Kotak kejutan diklaim! Lihat di daftar penyelamatan aktif Anda.');
+
+  alert("🎉 Kotak kejutan diklaim! Lihat di daftar penyelamatan aktif Anda.");
   closeBlindBoxModal();
-  switchView('orders');
+  switchView("orders");
 };
 
 // Orders / Rescues screen
 function renderOrders() {
-  const container = document.getElementById('orders-list-container');
-  
-  const ongoing = state.orders.filter(o => o.status === 'ongoing');
-  const past = state.orders.filter(o => o.status === 'completed');
-  
-  const ongoingHtml = ongoing.length === 0 ? `
+  const container = document.getElementById("orders-list-container");
+
+  const ongoing = state.orders.filter((o) => o.status === "ongoing");
+  const past = state.orders.filter((o) => o.status === "completed");
+
+  const ongoingHtml =
+    ongoing.length === 0
+      ? `
     <p class="text-xs text-gray-400 text-center py-4">Tidak ada penyelamatan aktif saat ini.</p>
-  ` : ongoing.map(o => `
+  `
+      : ongoing
+          .map(
+            (o) => `
     <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm flex gap-3.5 relative">
       <img src="${o.image}" alt="${o.itemName}" class="w-16 h-16 rounded-xl object-cover">
       <div class="flex-1 flex flex-col justify-between">
@@ -1359,11 +1542,18 @@ function renderOrders() {
         </div>
       </div>
     </div>
-  `).join('');
-  
-  const pastHtml = past.length === 0 ? `
+  `,
+          )
+          .join("");
+
+  const pastHtml =
+    past.length === 0
+      ? `
     <p class="text-xs text-gray-400 text-center py-4">Belum ada riwayat penyelamatan sebelumnya.</p>
-  ` : past.map(o => `
+  `
+      : past
+          .map(
+            (o) => `
     <div class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between">
       <div class="flex items-center gap-3">
         <img src="${o.image}" alt="${o.itemName}" class="w-12 h-12 rounded-lg object-cover">
@@ -1381,8 +1571,10 @@ function renderOrders() {
         </button>
       </div>
     </div>
-  `).join('');
-  
+  `,
+          )
+          .join("");
+
   container.innerHTML = `
     <div>
       <div class="flex justify-between items-center mb-3">
@@ -1403,11 +1595,11 @@ function renderOrders() {
   `;
 }
 
-window.reorderItem = function(partnerName) {
+window.reorderItem = function (partnerName) {
   // Find partner's items
-  const partner = partners.find(p => p.name === partnerName);
+  const partner = partners.find((p) => p.name === partnerName);
   if (partner) {
-    switchView('partner-detail', { partnerId: partner.id });
+    switchView("partner-detail", { partnerId: partner.id });
   } else {
     alert(`Mengarahkan ke katalog sisa ${partnerName}...`);
   }
@@ -1415,10 +1607,13 @@ window.reorderItem = function(partnerName) {
 
 // Profile Screen rendering
 function renderProfile() {
-  document.getElementById('profile-name').innerText = state.user.name;
-  document.getElementById('profile-address').innerText = state.user.address;
-  document.getElementById('profile-co2').innerText = `${state.user.co2Saved.toFixed(1)} kg`;
-  document.getElementById('profile-meals').innerText = state.user.mealsRescued;
-  document.getElementById('profile-saved').innerText = `$${state.user.moneySaved.toFixed(2)}`;
-  document.getElementById('profile-coins').innerText = state.user.coins.toLocaleString();
+  document.getElementById("profile-name").innerText = state.user.name;
+  document.getElementById("profile-address").innerText = state.user.address;
+  document.getElementById("profile-co2").innerText =
+    `${state.user.co2Saved.toFixed(1)} kg`;
+  document.getElementById("profile-meals").innerText = state.user.mealsRescued;
+  document.getElementById("profile-saved").innerText =
+    `$${state.user.moneySaved.toFixed(2)}`;
+  document.getElementById("profile-coins").innerText =
+    state.user.coins.toLocaleString();
 }
