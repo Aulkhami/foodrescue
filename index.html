@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FoodRescue - Consumer App</title>
+  <title>FoodRescue - Aplikasi Konsumen</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Tailwind Config -->
@@ -67,8 +67,8 @@
       <section id="screen-explore" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4">
         <!-- Welcome banner -->
         <div class="space-y-1">
-          <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">Welcome back, Alex!</h1>
-          <p class="text-xs md:text-sm text-gray-500 font-medium">Ready to rescue delicious surplus food at a discount today?</p>
+          <h1 class="text-xl md:text-2xl font-extrabold text-gray-900 leading-tight">Selamat datang kembali, Alex!</h1>
+          <p class="text-xs md:text-sm text-gray-500 font-medium">Siap menyelamatkan sisa makanan lezat dengan diskon hari ini?</p>
         </div>
 
         <!-- Search Bar & Filters Header (Grid on desktop for cleaner horizontal layout) -->
@@ -78,13 +78,13 @@
             <span class="absolute inset-y-0 left-3 flex items-center text-gray-400">
               <i data-lucide="search" class="w-4 h-4"></i>
             </span>
-            <input type="text" id="search-bar" placeholder="Search for bakeries, cafes, groceries..." class="w-full bg-white border border-gray-100 rounded-2xl py-2.5 pl-10 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400">
+            <input type="text" id="search-bar" placeholder="Cari toko roti, kafe, bahan makanan..." class="w-full bg-white border border-gray-100 rounded-2xl py-2.5 pl-10 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400">
           </div>
 
           <!-- Budget Limit Slider -->
           <div class="bg-white rounded-2xl px-4 py-2 border border-gray-100 shadow-sm flex flex-col justify-center">
             <div class="flex justify-between items-center mb-1">
-              <span class="text-[10px] font-bold text-gray-800 uppercase tracking-wider">Budget Limit</span>
+              <span class="text-[10px] font-bold text-gray-800 uppercase tracking-wider">Batas Anggaran</span>
               <span id="budget-value" class="text-xs font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">$15.00</span>
             </div>
             <input type="range" id="budget-slider" min="3" max="25" step="0.5" value="15" class="w-full h-1 bg-gray-100 rounded-lg appearance-none cursor-pointer accent-emerald-600">
@@ -93,17 +93,17 @@
 
         <!-- Horizontal Category Badge Scroll -->
         <div class="flex gap-2 overflow-x-auto no-scrollbar -mx-4 md:mx-0 px-4 md:px-0 py-1">
-          <button data-category="all" class="category-badge whitespace-nowrap bg-emerald-600 text-white rounded-full px-4 py-1.5 text-xs font-bold shadow-sm transition-all border border-transparent">All Categories</button>
-          <button data-category="bakery" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Bakery</button>
-          <button data-category="veggies" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Veggies</button>
-          <button data-category="meals" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Meals</button>
+          <button data-category="all" class="category-badge whitespace-nowrap bg-emerald-600 text-white rounded-full px-4 py-1.5 text-xs font-bold shadow-sm transition-all border border-transparent">Semua Kategori</button>
+          <button data-category="bakery" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Toko Roti</button>
+          <button data-category="veggies" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Sayuran</button>
+          <button data-category="meals" class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all">Makanan Berat</button>
         </div>
 
         <!-- Map Radar Section -->
         <div class="space-y-2">
           <div class="flex justify-between items-center">
-            <h3 class="font-bold text-gray-900 text-sm">Map Radar View</h3>
-            <span class="text-[10px] text-gray-400 font-bold">📍 Near Green Hills</span>
+            <h3 class="font-bold text-gray-900 text-sm">Pandangan Radar Peta</h3>
+            <span class="text-[10px] text-gray-400 font-bold">📍 Dekat Green Hills</span>
           </div>
           <div class="relative w-full h-44 md:h-64 lg:h-80 rounded-2xl overflow-hidden shadow-sm border border-gray-100 z-10">
             <!-- Map Target -->
@@ -114,8 +114,8 @@
         <!-- Nearby Surplus Catalog -->
         <div class="space-y-3">
           <div class="flex justify-between items-center">
-            <h3 class="font-bold text-gray-900 text-sm">Nearby Rescue Opportunities</h3>
-            <button onclick="resetFilters()" class="text-xs font-bold text-emerald-600 hover:underline">Reset Filters</button>
+            <h3 class="font-bold text-gray-900 text-sm">Kesempatan Penyelamatan Terdekat</h3>
+            <button onclick="resetFilters()" class="text-xs font-bold text-emerald-600 hover:underline">Atur Ulang Filter</button>
           </div>
           <!-- Responsive Food Cards Grid -->
           <div id="surplus-catalog" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
@@ -131,16 +131,16 @@
           <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900">
             <i data-lucide="chevron-left" class="w-5 h-5"></i>
           </button>
-          <h2 class="font-bold text-gray-900 text-lg">Your Cart</h2>
+          <h2 class="font-bold text-gray-900 text-lg">Keranjang Anda</h2>
         </div>
 
         <!-- Delivery/Pickup toggle -->
         <div class="bg-gray-100 rounded-xl p-1 flex max-w-xs">
           <button class="flex-1 bg-white text-gray-900 font-bold text-xs py-1.5 rounded-lg shadow-sm flex items-center justify-center gap-1">
-            <span>🏪</span> Self-Pickup
+            <span>🏪</span> Ambil Sendiri
           </button>
           <button class="flex-1 text-gray-500 font-bold text-xs py-1.5 flex items-center justify-center gap-1 cursor-not-allowed">
-            <span>🛵</span> Delivery
+            <span>🛵</span> Pengiriman
           </button>
         </div>
 
@@ -163,17 +163,17 @@
           <!-- Right Column (Billing and Actions) -->
           <div id="cart-checkout-container" class="space-y-4">
             <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2.5">
-              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Order Summary</h3>
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Ringkasan Pesanan</h3>
               <div class="flex justify-between text-xs text-gray-500">
                 <span>Subtotal</span>
                 <span id="cart-subtotal" class="font-semibold text-gray-900">$0.00</span>
               </div>
               <div class="flex justify-between text-xs text-gray-500">
-                <span>Platform Fee</span>
+                <span>Biaya Layanan</span>
                 <span id="cart-platform-fee" class="font-semibold text-gray-900">$0.00</span>
               </div>
               <div class="flex justify-between text-xs text-gray-500">
-                <span>Tax (5%)</span>
+                <span>Pajak (5%)</span>
                 <span id="cart-tax" class="font-semibold text-gray-900">$0.00</span>
               </div>
               <div class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-extrabold text-gray-950">
@@ -184,7 +184,7 @@
 
             <!-- Checkout button trigger -->
             <button onclick="goToCheckout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl text-center shadow-md transition-transform active:scale-98 flex items-center justify-center gap-2">
-              <span>Proceed to Checkout</span>
+              <span>Lanjutkan ke Pembayaran</span>
               <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
           </div>
@@ -198,7 +198,7 @@
           <button onclick="switchView('cart')" class="text-gray-600 hover:text-gray-900">
             <i data-lucide="chevron-left" class="w-5 h-5"></i>
           </button>
-          <h2 class="font-bold text-gray-900 text-lg">Checkout</h2>
+          <h2 class="font-bold text-gray-900 text-lg">Pembayaran</h2>
         </div>
 
         <!-- Responsive Grid for Checkout Content -->
@@ -209,13 +209,13 @@
             <!-- Address choosing -->
             <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-2">
               <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold uppercase tracking-wider">
-                <span>Pickup Address</span>
-                <button onclick="alert('Address changes are unavailable in prototype')" class="text-emerald-600">Change</button>
+                <span>Alamat Pengambilan</span>
+                <button onclick="alert('Perubahan alamat tidak tersedia dalam prototipe')" class="text-emerald-600">Ubah</button>
               </div>
               <div class="flex items-start gap-2.5">
                 <span class="bg-emerald-50 text-emerald-800 p-2 rounded-xl text-lg mt-0.5">🏠</span>
                 <div>
-                  <h4 class="font-bold text-sm text-gray-900">Home</h4>
+                  <h4 class="font-bold text-sm text-gray-900">Rumah</h4>
                   <p id="checkout-address" class="text-xs text-gray-500 mt-0.5">42 Verdant Avenue, Green Hills, NY 10012</p>
                 </div>
               </div>
@@ -223,26 +223,26 @@
 
             <!-- Order Items Summarized List -->
             <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
-              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Your Items</h3>
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider border-b border-gray-50 pb-2">Barang Anda</h3>
               <div id="checkout-items-list" class="space-y-2">
                 <!-- Dynamic checkout item rows -->
               </div>
               
               <div class="border-t border-gray-100 pt-3 space-y-2.5">
                 <div class="flex justify-between text-xs text-gray-500">
-                  <span>Subtotal & Fees</span>
+                  <span>Subtotal & Biaya</span>
                   <span id="checkout-subtotal" class="font-semibold text-gray-900">$0.00</span>
                 </div>
                 <div class="flex justify-between text-xs text-gray-500">
-                  <span>Delivery Fee</span>
-                  <span id="checkout-delivery-fee" class="font-semibold text-gray-900">FREE</span>
+                  <span>Biaya Pengiriman</span>
+                  <span id="checkout-delivery-fee" class="font-semibold text-gray-900">GRATIS</span>
                 </div>
                 <div class="flex justify-between text-xs text-gray-500">
-                  <span>Eco Discount</span>
+                  <span>Diskon Eco</span>
                   <span id="checkout-eco-discount" class="font-extrabold text-emerald-600">-$0.00</span>
                 </div>
                 <div class="border-t border-gray-100 pt-2.5 flex justify-between text-sm font-black text-gray-900">
-                  <span>Total Payment</span>
+                  <span>Total Pembayaran</span>
                   <span id="checkout-total">$0.00</span>
                 </div>
               </div>
@@ -252,7 +252,7 @@
           <!-- Right Column (Payment Options and Button) -->
           <div class="space-y-4">
             <div class="space-y-2.5">
-              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider">Payment Method</h3>
+              <h3 class="font-bold text-gray-900 text-xs uppercase tracking-wider">Metode Pembayaran</h3>
               
               <div class="space-y-2">
                 <!-- EcoPay Wallet -->
@@ -260,8 +260,8 @@
                   <div class="flex items-center gap-3">
                     <span class="text-xl">💳</span>
                     <div>
-                      <h4 class="font-bold text-sm text-gray-900">EcoPay Wallet</h4>
-                      <p class="text-[10px] text-gray-400">Balance: <span class="font-semibold text-emerald-600">$42.50</span></p>
+                      <h4 class="font-bold text-sm text-gray-900">Dompet EcoPay</h4>
+                      <p class="text-[10px] text-gray-400">Saldo: <span class="font-semibold text-emerald-600">$42.50</span></p>
                     </div>
                   </div>
                   <span id="pay-check-ecopay" class="text-emerald-600 text-sm font-bold">✓</span>
@@ -272,8 +272,8 @@
                   <div class="flex items-center gap-3">
                     <span class="text-xl">🏦</span>
                     <div>
-                      <h4 class="font-bold text-sm text-gray-900">Credit / Debit Card</h4>
-                      <p class="text-[10px] text-gray-400">Visa / Mastercard ending in 4829</p>
+                      <h4 class="font-bold text-sm text-gray-900">Kartu Kredit / Debit</h4>
+                      <p class="text-[10px] text-gray-400">Visa / Mastercard berakhiran 4829</p>
                     </div>
                   </div>
                   <span id="pay-check-card" class="text-emerald-600 text-sm font-bold hidden">✓</span>
@@ -284,8 +284,8 @@
                   <div class="flex items-center gap-3">
                     <span class="text-xl">💵</span>
                     <div>
-                      <h4 class="font-bold text-sm text-gray-900">Cash on Self-Pickup</h4>
-                      <p class="text-[10px] text-gray-400">Pay directly to restaurant staff</p>
+                      <h4 class="font-bold text-sm text-gray-900">Tunai saat Ambil Sendiri</h4>
+                      <p class="text-[10px] text-gray-400">Bayar langsung ke staf restoran</p>
                     </div>
                   </div>
                   <span id="pay-check-cod" class="text-emerald-600 text-sm font-bold hidden">✓</span>
@@ -297,11 +297,11 @@
             <div class="fixed bottom-[65px] left-0 right-0 w-full bg-white/95 backdrop-blur-xs border-t border-gray-100 p-4 shadow-lg z-40 lg:relative lg:bottom-0 lg:border-t-0 lg:shadow-none lg:p-0 lg:bg-transparent lg:z-0 lg:mt-4">
               <div class="flex items-center justify-between max-w-5xl mx-auto md:px-8 lg:px-0 lg:w-full lg:bg-white lg:p-4 lg:rounded-2xl lg:border lg:border-gray-100 lg:shadow-sm">
                 <div class="flex flex-col">
-                  <span class="text-[10px] text-gray-400 font-bold uppercase">Total Payment</span>
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">Total Pembayaran</span>
                   <span id="checkout-bar-total" class="text-lg font-black text-emerald-600 font-heading">$0.00</span>
                 </div>
                 <button onclick="placeOrder()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-6 py-2.5 rounded-xl shadow-md transition-transform active:scale-95 text-xs flex items-center gap-1.5">
-                  <span>Place Order</span>
+                  <span>Buat Pesanan</span>
                   <i data-lucide="check-circle" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -320,10 +320,10 @@
 
         <div class="space-y-2.5 pt-2">
           <button onclick="switchView('orders')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl shadow-sm text-xs transition-colors">
-            View My Rescues
+            Lihat Penyelamatan Saya
           </button>
           <button onclick="switchView('explore')" class="w-full border border-gray-200 text-gray-600 font-bold py-3 rounded-2xl hover:bg-gray-50 text-xs transition-colors">
-            Continue Rescuing
+            Lanjutkan Menyelamatkan
           </button>
         </div>
       </section>
@@ -339,25 +339,25 @@
             <div class="bg-emerald-600 rounded-3xl p-5 text-white shadow-md relative overflow-hidden">
               <div class="absolute right-[-20px] top-[-20px] w-32 h-32 bg-emerald-500/20 rounded-full"></div>
               
-              <span class="bg-emerald-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-white/15">Certified Hero</span>
-              <h2 class="text-xl font-black mt-2 font-heading">Hello, Alex!</h2>
-              <p class="text-xs text-emerald-100 font-medium leading-relaxed mt-1">Your contributions are making a difference in preventing waste.</p>
+              <span class="bg-emerald-500/50 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase border border-white/15">Pahlawan Bersertifikat</span>
+              <h2 class="text-xl font-black mt-2 font-heading">Halo, Alex!</h2>
+              <p class="text-xs text-emerald-100 font-medium leading-relaxed mt-1">Kontribusi Anda membuat perbedaan dalam mencegah pemborosan.</p>
             </div>
 
             <!-- Mini-Game Banner (Sort & Save) -->
             <div class="bg-gradient-to-r from-orange-500 to-amber-500 rounded-3xl p-4 text-white shadow-sm flex items-center justify-between relative overflow-hidden">
               <div class="space-y-1">
-                <span class="bg-white/20 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Arcade Mini-Game</span>
-                <h3 class="font-bold text-sm font-heading">Sort & Save: Trash Bash!</h3>
-                <p class="text-[10px] text-orange-100 font-medium">Beat the clock! Sort food waste for bonus coins.</p>
-                <button onclick="alert('🕹️ Launching Trash Bash Arcade mini-game...')" class="bg-white text-orange-600 font-black text-[10px] px-3 py-1.5 rounded-lg mt-2 transition-transform active:scale-95">Play & Win ➔</button>
+                <span class="bg-white/20 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Game Arkade Mini</span>
+                <h3 class="font-bold text-sm font-heading">Sortir & Hemat: Pesta Sampah!</h3>
+                <p class="text-[10px] text-orange-100 font-medium">Kalahkan waktu! Sortir sampah makanan untuk koin bonus.</p>
+                <button onclick="alert('🕹️ Memulai game mini Trash Bash Arcade...')" class="bg-white text-orange-600 font-black text-[10px] px-3 py-1.5 rounded-lg mt-2 transition-transform active:scale-95">Main & Menang ➔</button>
               </div>
               <span class="text-5xl opacity-40 select-none">🎮</span>
             </div>
 
             <!-- Quests/Quests Sections -->
             <div class="space-y-3">
-              <h3 class="font-bold text-gray-900 text-sm">Points & Quests</h3>
+              <h3 class="font-bold text-gray-900 text-sm">Poin & Misi</h3>
               <div id="quests-list-container" class="space-y-3">
                 <!-- Dynamic active quests -->
               </div>
@@ -365,7 +365,7 @@
 
             <!-- Exchange Eco-Coins Rewards -->
             <div class="space-y-3 pb-6">
-              <h3 class="font-bold text-gray-900 text-sm">Exchange Your Eco-Coins</h3>
+              <h3 class="font-bold text-gray-900 text-sm">Tukarkan Koin Eco Anda</h3>
               <div id="reward-shop-container" class="grid grid-cols-2 gap-3">
                 <!-- Dynamic Rewards Shop Cards -->
               </div>
@@ -380,15 +380,15 @@
                 <span class="text-2xl bg-emerald-50 p-2 rounded-xl">🌍</span>
                 <div>
                   <span id="impact-co2-saved" class="text-base font-extrabold text-gray-900 block font-heading">12.0 kg</span>
-                  <span class="text-[10px] text-gray-400 font-bold uppercase">CO₂ Prevented</span>
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">CO₂ Dicegah</span>
                 </div>
               </div>
               
               <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-start gap-3">
                 <span class="text-2xl bg-amber-50 p-2 rounded-xl">🍲</span>
                 <div>
-                  <span id="impact-meals-rescued" class="text-base font-extrabold text-gray-900 block font-heading">24 Meals</span>
-                  <span class="text-[10px] text-gray-400 font-bold uppercase">Meals Rescued</span>
+                  <span id="impact-meals-rescued" class="text-base font-extrabold text-gray-900 block font-heading">24 Makanan</span>
+                  <span class="text-[10px] text-gray-400 font-bold uppercase">Makanan Diselamatkan</span>
                 </div>
               </div>
             </div>
@@ -398,8 +398,8 @@
               <div class="flex items-center gap-3">
                 <span class="text-2xl">🪙</span>
                 <div>
-                  <h4 class="font-bold text-xs text-gray-900">Eco-Coins Balance</h4>
-                  <p class="text-[10px] text-gray-400">Coins verify automatically after pickup</p>
+                  <h4 class="font-bold text-xs text-gray-900">Saldo Koin Eco</h4>
+                  <p class="text-[10px] text-gray-400">Koin terverifikasi otomatis setelah pengambilan</p>
                 </div>
               </div>
               <span id="impact-coins-balance" class="text-lg font-black text-amber-500 font-heading">1,250</span>
@@ -407,7 +407,7 @@
 
             <!-- Unlocked Badges Grid -->
             <div class="space-y-3">
-              <h3 class="font-bold text-gray-900 text-sm">Unlocked Badges</h3>
+              <h3 class="font-bold text-gray-900 text-sm">Lencana Terbuka</h3>
               <div id="badges-grid-container" class="grid grid-cols-3 gap-2.5">
                 <!-- Dynamic Badges -->
               </div>
@@ -420,8 +420,8 @@
       <!-- SCREEN 4: ORDERS -->
       <section id="screen-orders" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-5xl lg:mx-auto space-y-4 hidden">
         <div class="space-y-1">
-          <h2 class="font-bold text-gray-900 text-lg">Your Rescues</h2>
-          <p class="text-xs text-gray-400 font-medium">Track your active meals and check past sustainability gains.</p>
+          <h2 class="font-bold text-gray-900 text-lg">Penyelamatan Anda</h2>
+          <p class="text-xs text-gray-400 font-medium">Lacak makanan aktif Anda dan periksa keuntungan keberlanjutan masa lalu.</p>
         </div>
         
         <!-- Grid layout for ongoing and past orders on desktop -->
@@ -433,7 +433,7 @@
       <!-- SCREEN 5: PROFILE -->
       <section id="screen-profile" class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-2xl lg:mx-auto space-y-4 hidden">
         <div class="space-y-1">
-          <h2 class="font-bold text-gray-900 text-lg">User Profile</h2>
+          <h2 class="font-bold text-gray-900 text-lg">Profil Pengguna</h2>
         </div>
 
         <!-- User Information -->
@@ -447,19 +447,19 @@
 
         <!-- Summary Stats Card -->
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3">
-          <h4 class="font-bold text-xs text-gray-400 uppercase tracking-wider">Rescue Impact Milestones</h4>
+          <h4 class="font-bold text-xs text-gray-400 uppercase tracking-wider">Pencapaian Dampak Penyelamatan</h4>
           <div class="grid grid-cols-3 gap-2 text-center">
             <div class="bg-gray-50 rounded-xl p-2.5">
               <span id="profile-co2" class="font-black text-sm text-gray-900 block">12.0 kg</span>
-              <span class="text-[9px] text-gray-400 uppercase font-semibold">CO₂ Saved</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">CO₂ Dihemat</span>
             </div>
             <div class="bg-gray-50 rounded-xl p-2.5">
               <span id="profile-meals" class="font-black text-sm text-gray-900 block">24</span>
-              <span class="text-[9px] text-gray-400 uppercase font-semibold">Meals</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">Makanan</span>
             </div>
             <div class="bg-gray-50 rounded-xl p-2.5">
               <span id="profile-saved" class="font-black text-sm text-gray-900 block">$120.00</span>
-              <span class="text-[9px] text-gray-400 uppercase font-semibold">Money Saved</span>
+              <span class="text-[9px] text-gray-400 uppercase font-semibold">Uang Dihemat</span>
             </div>
           </div>
         </div>
@@ -468,27 +468,27 @@
         <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex justify-between items-center">
           <div class="flex items-center gap-2">
             <span class="text-lg">🪙</span>
-            <span class="text-xs font-bold text-gray-900">Total Eco-Coins Earned</span>
+            <span class="text-xs font-bold text-gray-900">Total Koin Eco Didapat</span>
           </div>
           <span id="profile-coins" class="text-sm font-extrabold text-amber-500">1,250</span>
         </div>
 
         <!-- Profile Settings list -->
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden text-xs">
-          <div onclick="alert('Profile Address Management')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-            <span class="font-bold text-gray-800">Manage Addresses</span>
+          <div onclick="alert('Manajemen Alamat Profil')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Kelola Alamat</span>
             <span class="text-gray-400">➔</span>
           </div>
-          <div onclick="alert('Wallet / Payment Settings')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-            <span class="font-bold text-gray-800">Payment & EcoPay Wallet</span>
+          <div onclick="alert('Pengaturan Dompet & Pembayaran')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Pembayaran & Dompet EcoPay</span>
             <span class="text-gray-400">➔</span>
           </div>
-          <div onclick="alert('Help Center & FAQs')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-            <span class="font-bold text-gray-800">Help Center & FAQ</span>
+          <div onclick="alert('Pusat Bantuan & Tanya Jawab')" class="p-3.5 border-b border-gray-50 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Pusat Bantuan & Tanya Jawab</span>
             <span class="text-gray-400">➔</span>
           </div>
-          <div onclick="alert('Privacy & Terms')" class="p-3.5 flex justify-between items-center cursor-pointer hover:bg-gray-50">
-            <span class="font-bold text-gray-800">Privacy Policy & Terms</span>
+          <div onclick="alert('Kebijakan Privasi & Ketentuan')" class="p-3.5 flex justify-between items-center cursor-pointer hover:bg-gray-50">
+            <span class="font-bold text-gray-800">Kebijakan Privasi & Ketentuan</span>
             <span class="text-gray-400">➔</span>
           </div>
         </div>
@@ -532,22 +532,22 @@
         <!-- Explore -->
         <a href="#" id="nav-explore" class="flex flex-col items-center flex-1 py-1">
           <i data-lucide="compass" class="nav-icon text-emerald-600 transition-colors w-5 h-5"></i>
-          <span class="nav-label text-[10px] font-semibold text-emerald-600 transition-colors mt-0.5">Explore</span>
+          <span class="nav-label text-[10px] font-semibold text-emerald-600 transition-colors mt-0.5">Eksplorasi</span>
         </a>
         <!-- Orders -->
         <a href="#" id="nav-orders" class="flex flex-col items-center flex-1 py-1">
           <i data-lucide="shopping-bag" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
-          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Orders</span>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Pesanan</span>
         </a>
         <!-- Impact -->
         <a href="#" id="nav-impact" class="flex flex-col items-center flex-1 py-1">
           <i data-lucide="leaf" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
-          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Impact</span>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Dampak</span>
         </a>
         <!-- Profile -->
         <a href="#" id="nav-profile" class="flex flex-col items-center flex-1 py-1">
           <i data-lucide="user" class="nav-icon text-gray-400 transition-colors w-5 h-5"></i>
-          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Profile</span>
+          <span class="nav-label text-[10px] font-semibold text-gray-400 transition-colors mt-0.5">Profil</span>
         </a>
       </div>
     </nav>

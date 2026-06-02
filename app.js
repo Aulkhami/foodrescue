@@ -21,26 +21,26 @@ const state = {
   cart: [
     {
       id: 'item-1',
-      name: 'End of Day Pastry Box',
+      name: 'Kotak Kue Akhir Hari',
       partnerId: 'partner-1',
       partnerName: 'Sunrise Bakehouse',
       price: 4.50,
       originalPrice: 18.00,
       image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600',
       quantity: 1,
-      pickupWindow: 'Pickup by 6:00 PM',
+      pickupWindow: 'Ambil sebelum jam 18:00',
       co2Reduction: 0.9 // kg
     },
     {
       id: 'item-2',
-      name: 'Imperfect Veggie Bundle',
+      name: 'Bundel Sayuran Tidak Sempurna',
       partnerId: 'partner-2',
       partnerName: 'Green Valley Grocers',
       price: 8.00,
       originalPrice: 22.00,
       image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600',
       quantity: 1,
-      pickupWindow: 'Pickup by 7:30 PM',
+      pickupWindow: 'Ambil sebelum jam 19:30',
       co2Reduction: 1.5 // kg
     }
   ],
@@ -54,41 +54,41 @@ const state = {
     {
       id: 'FR-4829',
       partnerName: "Luigi's Artisanal Bakery",
-      itemName: 'Surprise Pizza Box',
+      itemName: 'Kotak Pizza Misteri',
       itemCount: 2,
       price: 9.50,
       status: 'ongoing',
       expiresIn: '44m 58s',
-      distance: '0.4 miles away',
+      distance: 'jarak 0,6 km',
       image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 'FR-8291',
       partnerName: 'The Green Kitchen',
-      itemName: 'Organic Salad Mix',
+      itemName: 'Campuran Salad Organik',
       itemCount: 1,
       price: 6.50,
       status: 'ongoing',
-      expiresIn: 'Ready for Pickup',
-      distance: '1.2 miles away',
+      expiresIn: 'Siap Diambil',
+      distance: 'jarak 1,9 km',
       image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 'FR-1279',
       partnerName: 'Urban Greens',
-      itemName: 'Superfood Salad Bowl',
+      itemName: 'Mangkuk Salad Superfood',
       price: 4.50,
       status: 'completed',
-      date: 'Oct 24, 2023',
+      date: '24 Okt 2023',
       image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600'
     },
     {
       id: 'FR-1102',
       partnerName: 'The Vegan Joint',
-      itemName: 'Eco-Burger & Sweet Potato Fries',
+      itemName: 'Eco-Burger & Kentang Goreng Manis',
       price: 6.25,
       status: 'completed',
-      date: 'Oct 21, 2023',
+      date: '21 Okt 2023',
       image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600'
     }
   ],
@@ -97,41 +97,41 @@ const state = {
   quests: [
     {
       id: 'q-1',
-      title: 'Rescue 5 meals this week',
-      description: 'Collect 5 rescue boxes to reduce food waste.',
+      title: 'Selamatkan 5 makanan minggu ini',
+      description: 'Kumpulkan 5 kotak penyelamatan untuk mengurangi pemborosan makanan.',
       progress: 3,
       target: 5,
-      reward: '200 Coins',
+      reward: '200 Koin',
       completed: false
     },
     {
       id: 'q-2',
-      title: 'Daily Green Login',
-      description: 'Open the app daily to discover nearby partners.',
+      title: 'Masuk Hijau Harian',
+      description: 'Buka aplikasi setiap hari untuk menemukan mitra terdekat.',
       progress: 1,
       target: 1,
-      reward: '20 Coins',
+      reward: '20 Koin',
       completed: true
     },
     {
       id: 'q-3',
-      title: 'Save 15kg of CO2',
-      description: 'Total ecological impact milestones.',
+      title: 'Hemat 15kg CO2',
+      description: 'Pencapaian total dampak ekologis.',
       progress: 12,
       target: 15,
-      reward: '500 Coins + Eco-badge',
+      reward: '500 Koin + Lencana Eco',
       completed: false
     }
   ],
   
   // Badges Grid
   badges: [
-    { id: 'b-1', name: 'Zero Waste Hero', icon: '🍃', desc: 'Unlocked: Rescued over 10 surplus meals!', unlocked: true },
-    { id: 'b-2', name: 'Pastry Rescuer', icon: '🥐', desc: 'Unlocked: Rescued pastries 5 times!', unlocked: true },
-    { id: 'b-3', name: 'CO2 Champion', icon: '🌍', desc: 'Unlocked: Saved 10kg of CO2 emissions!', unlocked: true },
-    { id: 'b-4', name: 'Morning Savior', icon: '🌅', desc: 'Rescued food before 9:00 AM', unlocked: false },
-    { id: 'b-5', name: 'Eco Ambassador', icon: '🎖️', desc: 'Accumulated 2,000 Eco-Coins', unlocked: false },
-    { id: 'b-6', name: 'Earth Guardian', icon: '🛡️', desc: 'Complete 10 quests', unlocked: false }
+    { id: 'b-1', name: 'Pahlawan Tanpa Sampah', icon: '🍃', desc: 'Terbuka: Menyelamatkan lebih dari 10 makanan sisa!', unlocked: true },
+    { id: 'b-2', name: 'Penyelamat Kue', icon: '🥐', desc: 'Terbuka: Menyelamatkan kue 5 kali!', unlocked: true },
+    { id: 'b-3', name: 'Juara CO2', icon: '🌍', desc: 'Terbuka: Menyelamatkan 10kg emisi CO2!', unlocked: true },
+    { id: 'b-4', name: 'Penyelamat Pagi', icon: '🌅', desc: 'Menyelamatkan makanan sebelum jam 09.00', unlocked: false },
+    { id: 'b-5', name: 'Duta Eco', icon: '🎖️', desc: 'Mengumpulkan 2.000 Koin Eco', unlocked: false },
+    { id: 'b-6', name: 'Pelindung Bumi', icon: '🛡️', desc: 'Selesaikan 10 misi', unlocked: false }
   ],
   
   // Blind Box Tap Interaction
@@ -151,10 +151,10 @@ const partners = [
     lat: 40.7259,
     lng: -73.9930,
     rating: 4.8,
-    distance: '0.3 miles',
+    distance: '0.3 mil',
     image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600',
-    description: 'Artisanal neighborhood bakery committed to zero waste. Specializing in organic sourdough, pastries, and bread loaves.',
-    tags: ['Bakery', 'Vegetarian']
+    description: 'Toko roti lokal artisanal yang berkomitmen pada zero waste. Spesialisasi dalam sourdough organik, kue kering, dan roti tawar.',
+    tags: ['Toko Roti', 'Vegetarian']
   },
   {
     id: 'partner-2',
@@ -163,10 +163,10 @@ const partners = [
     lat: 40.7290,
     lng: -73.9970,
     rating: 4.6,
-    distance: '0.8 miles',
+    distance: '0.8 mil',
     image: 'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600',
-    description: 'Fresh local grocery market rescuing imperfect produce bundles and pre-packaged organic greens.',
-    tags: ['Veggies', 'Organic']
+    description: 'Pasar bahan makanan lokal segar yang menyelamatkan bundel hasil tani tidak sempurna dan sayuran organik kemasan.',
+    tags: ['Sayuran', 'Organik']
   },
   {
     id: 'partner-3',
@@ -175,10 +175,10 @@ const partners = [
     lat: 40.7230,
     lng: -74.0010,
     rating: 4.7,
-    distance: '1.2 miles',
+    distance: '1.2 mil',
     image: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&q=80&w=600',
-    description: 'Eco-conscious coffee shop and kitchen rescuing breakfast bowls, pastries, and lunch grain bowls daily.',
-    tags: ['Meals', 'Coffee']
+    description: 'Kedai kopi dan dapur ramah lingkungan yang menyelamatkan mangkuk sarapan, kue kering, dan mangkuk biji-bijian makan siang setiap hari.',
+    tags: ['Makanan Berat', 'Kopi']
   },
   {
     id: 'partner-4',
@@ -187,10 +187,10 @@ const partners = [
     lat: 40.7275,
     lng: -73.9902,
     rating: 4.9,
-    distance: '0.4 miles',
+    distance: '0.4 mil',
     image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&q=80&w=600',
-    description: 'Italian bakery and eatery offering freshly baked sandwich loaves, pizza sheets, and end-of-day sweet boxes.',
-    tags: ['Bakery', 'Pizza']
+    description: 'Toko roti dan tempat makan Italia yang menawarkan roti lapis segar, loyang pizza, dan kotak manis akhir hari.',
+    tags: ['Toko Roti', 'Pizza']
   }
 ];
 
@@ -198,83 +198,83 @@ const partners = [
 const catalog = [
   {
     id: 'item-1',
-    name: 'End of Day Pastry Box',
+    name: 'Kotak Kue Akhir Hari',
     partnerId: 'partner-1',
     partnerName: 'Sunrise Bakehouse',
     price: 4.50,
     originalPrice: 18.00,
     rating: 4.8,
     image: 'https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Freshly Baked Today',
+    freshnessBadge: 'Baru Dipanggang Hari Ini',
     freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
     stockLeft: 3,
     category: 'bakery',
     co2Reduction: 0.9,
-    pickupWindow: 'Pickup by 6:00 PM'
+    pickupWindow: 'Ambil sebelum jam 18:00'
   },
   {
     id: 'item-2',
-    name: 'Imperfect Veggie Bundle',
+    name: 'Bundel Sayuran Tidak Sempurna',
     partnerId: 'partner-2',
     partnerName: 'Green Valley Grocers',
     price: 8.00,
     originalPrice: 22.00,
     rating: 4.6,
     image: 'https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Fresh Organic Crops',
+    freshnessBadge: 'Hasil Tani Organik Segar',
     freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
     stockLeft: 1,
     category: 'veggies',
     co2Reduction: 1.5,
-    pickupWindow: 'Pickup by 7:30 PM'
+    pickupWindow: 'Ambil sebelum jam 19:30'
   },
   {
     id: 'item-3',
-    name: 'Surplus Grain Bowls',
+    name: 'Mangkuk Biji-bijian Sisa',
     partnerId: 'partner-3',
     partnerName: 'Green Bean Cafe',
     price: 5.00,
     originalPrice: 11.00,
     rating: 4.5,
     image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Prepared 2h ago',
+    freshnessBadge: 'Disiapkan 2 jam lalu',
     freshnessClass: 'bg-amber-50 text-amber-800 border-amber-100',
     stockLeft: 4,
     category: 'meals',
     co2Reduction: 0.8,
-    pickupWindow: 'Pickup by 4:00 PM'
+    pickupWindow: 'Ambil sebelum jam 16:00'
   },
   {
     id: 'item-4',
-    name: 'Artisan Bread Bundle',
+    name: 'Bundel Roti Artisanal',
     partnerId: 'partner-1',
     partnerName: 'Sunrise Bakehouse',
     price: 4.50,
     originalPrice: 18.00,
     rating: 4.8,
     image: 'https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Fresh Sourdough & Baguettes',
+    freshnessBadge: 'Sourdough & Baguette Segar',
     freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
     stockLeft: 2,
     category: 'bakery',
     co2Reduction: 1.1,
-    pickupWindow: 'Pickup by 6:00 PM'
+    pickupWindow: 'Ambil sebelum jam 18:00'
   },
   {
     id: 'item-5',
-    name: 'Surplus Pizza Box',
+    name: 'Kotak Pizza Sisa',
     partnerId: 'partner-4',
     partnerName: "Luigi's Artisanal Bakery",
     price: 9.50,
     originalPrice: 28.00,
     rating: 4.9,
     image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600',
-    freshnessBadge: 'Hot Pizza Slices',
+    freshnessBadge: 'Potongan Pizza Hangat',
     freshnessClass: 'bg-emerald-50 text-emerald-800 border-emerald-100',
     stockLeft: 2,
     category: 'meals',
     co2Reduction: 1.4,
-    pickupWindow: 'Pickup by 8:00 PM'
+    pickupWindow: 'Ambil sebelum jam 20:00'
   }
 ];
 
@@ -296,7 +296,7 @@ function initApp() {
   
   // Notification Bell
   document.getElementById('bell-btn').addEventListener('click', () => {
-    alert('🔔 Notifications: Your order #FR-8291 is ready for self-pickup!');
+    alert('🔔 Notifikasi: Pesanan Anda #FR-8291 siap untuk diambil sendiri!');
   });
 }
 
@@ -515,8 +515,8 @@ function renderExploreCatalog() {
     container.innerHTML = `
       <div class="col-span-full text-center py-8">
         <div class="text-4xl">🔍</div>
-        <p class="text-gray-500 font-medium mt-2">No food items found matching your filters.</p>
-        <button onclick="resetFilters()" class="text-emerald-600 font-semibold text-sm mt-1 underline">Reset Filters</button>
+        <p class="text-gray-500 font-medium mt-2">Tidak ada item makanan yang cocok dengan filter Anda.</p>
+        <button onclick="resetFilters()" class="text-emerald-600 font-semibold text-sm mt-1 underline">Atur Ulang Filter</button>
       </div>
     `;
     return;
@@ -638,27 +638,27 @@ function renderPartnerDetail() {
       <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center justify-around text-center">
         <div>
           <span class="text-emerald-600 text-lg font-bold">★ ${p.rating}</span>
-          <span class="block text-[10px] text-gray-400 font-semibold uppercase">Rating</span>
+          <span class="block text-[10px] text-gray-400 font-semibold uppercase">Penilaian</span>
         </div>
         <div class="border-l border-gray-100 h-8"></div>
         <div>
           <span class="text-gray-900 text-lg font-bold">${p.distance}</span>
-          <span class="block text-[10px] text-gray-400 font-semibold uppercase">Distance</span>
+          <span class="block text-[10px] text-gray-400 font-semibold uppercase">Jarak</span>
         </div>
         <div class="border-l border-gray-100 h-8"></div>
         <div>
           <span class="text-gray-900 text-lg font-bold">0.9kg</span>
-          <span class="block text-[10px] text-gray-400 font-semibold uppercase">CO₂ Saved/Box</span>
+          <span class="block text-[10px] text-gray-400 font-semibold uppercase">CO₂ Dihemat/Kotak</span>
         </div>
       </div>
       
       <div>
-        <h4 class="font-bold text-gray-900 text-sm mb-1">About the Partner</h4>
+        <h4 class="font-bold text-gray-900 text-sm mb-1">Tentang Mitra</h4>
         <p class="text-xs text-gray-500 leading-relaxed">${p.description}</p>
       </div>
       
       <div>
-        <h4 class="font-bold text-gray-900 text-sm mb-3">Available Rescues</h4>
+        <h4 class="font-bold text-gray-900 text-sm mb-3">Penyelamatan Tersedia</h4>
         <div class="space-y-3">
           ${itemsHtml}
         </div>
@@ -679,7 +679,7 @@ function renderFoodDetail() {
     <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
     </button>
-    <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">Product Details</h2>
+    <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">Detail Produk</h2>
   `;
   
   content.innerHTML = `
@@ -697,41 +697,41 @@ function renderFoodDetail() {
         
         <div class="flex items-center gap-2 mt-2">
           <span class="text-yellow-400">★★★★★</span>
-          <span class="text-xs text-gray-600 font-semibold">${item.rating} (5 reviews)</span>
+          <span class="text-xs text-gray-600 font-semibold">${item.rating} (5 ulasan)</span>
         </div>
       </div>
       
       <div class="flex justify-between items-center p-3 bg-emerald-50 rounded-xl border border-emerald-100">
         <div>
-          <span class="text-xs text-emerald-800">Original Price: <span class="line-through font-semibold">$${item.originalPrice.toFixed(2)}</span></span>
+          <span class="text-xs text-emerald-800">Harga Asli: <span class="line-through font-semibold">$${item.originalPrice.toFixed(2)}</span></span>
           <div class="text-xl font-extrabold text-emerald-600 mt-0.5">$${item.price.toFixed(2)}</div>
         </div>
         <div class="bg-emerald-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg">
-          Save 75% OFF
+          Hemat 75%
         </div>
       </div>
       
       <div class="bg-white rounded-xl p-3 border border-gray-100 shadow-sm flex items-center gap-3">
         <span class="text-2xl">🌱</span>
         <div>
-          <h4 class="font-bold text-xs text-gray-900">Eco-Savings Impact</h4>
-          <p class="text-[11px] text-gray-500">Rescuing this bag prevents approx. <span class="font-bold text-emerald-600">${item.co2Reduction} kg of CO2</span> from entering the atmosphere!</p>
+          <h4 class="font-bold text-xs text-gray-900">Dampak Penghematan Eco</h4>
+          <p class="text-[11px] text-gray-500">Menyelamatkan kantong ini mencegah sekitar <span class="font-bold text-emerald-600">${item.co2Reduction} kg CO2</span> memasuki atmosfer!</p>
         </div>
       </div>
       
       <div>
-        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-1">What's Inside</h4>
-        <p class="text-xs text-gray-500 leading-relaxed">A surprise assortment of our daily-baked goods that didn't sell today. Usually includes bread loaves, croissants, bagels, and sweet pastries. Perfectly fresh, delicious, and ready to be rescued!</p>
+        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-1">Apa Isi di Dalamnya</h4>
+        <p class="text-xs text-gray-500 leading-relaxed">Pilihan acak kejutan dari produk panggang harian kami yang tidak terjual hari ini. Biasanya mencakup roti tawar, croissant, bagel, dan kue manis. Sangat segar, lezat, dan siap diselamatkan!</p>
       </div>
       
       <div>
         <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-2">Akreditasi Kesegaran (Freshness Accreditation)</h4>
         <div class="flex gap-2">
           <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-100 flex items-center gap-1">
-            <span>🛡️</span> Safe to Consume
+            <span>🛡️</span> Aman Dikonsumsi
           </span>
           <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 font-bold border border-blue-100 flex items-center gap-1">
-            <span>❄️</span> Keep Refrigerated
+            <span>❄️</span> Simpan di Lemari Es
           </span>
         </div>
       </div>
@@ -746,7 +746,7 @@ function renderFoodDetail() {
           <button onclick="adjustDetailsQty(1)" class="w-6 h-6 flex items-center justify-center font-bold text-gray-500 hover:text-gray-950">+</button>
         </div>
         <button onclick="addDetailsToCart()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
-          <span>Rescue Now</span>
+          <span>Selamatkan Sekarang</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
@@ -784,7 +784,7 @@ window.addDetailsToCart = function() {
     });
   }
   
-  alert(`Added ${state.detailQty}x ${item.name} to Cart!`);
+  alert(`${state.detailQty}x ${item.name} dimasukkan ke Keranjang!`);
   switchView('cart');
 };
 
@@ -802,9 +802,9 @@ function renderCart() {
     container.innerHTML = `
       <div class="text-center py-12 px-4">
         <div class="text-5xl mb-4">🛒</div>
-        <h3 class="font-bold text-gray-900 text-lg">Your Cart is empty</h3>
-        <p class="text-gray-500 text-xs mt-1">Rescuing meals will keep money in your wallet and prevent CO2 from polluting the atmosphere!</p>
-        <button onclick="switchView('explore')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm text-sm">Start Rescuing</button>
+        <h3 class="font-bold text-gray-900 text-lg">Keranjang Anda kosong</h3>
+        <p class="text-gray-500 text-xs mt-1">Menyelamatkan makanan akan menghemat uang Anda dan mencegah emisi CO₂ mencemari atmosfer!</p>
+        <button onclick="switchView('explore')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm text-sm">Mulai Menyelamatkan</button>
       </div>
     `;
     checkoutContainer.classList.add('hidden');
@@ -865,8 +865,8 @@ function renderCart() {
         </svg>
       </div>
       <div>
-        <h4 class="font-bold text-sm text-emerald-900">Total Savings: $${totalSavings.toFixed(2)}!</h4>
-        <p class="text-[11px] text-emerald-700">Plus, you're preventing <span class="font-bold">${co2Prevented.toFixed(1)}kg</span> of CO₂ emissions today.</p>
+        <h4 class="font-bold text-sm text-emerald-900">Total Penghematan: $${totalSavings.toFixed(2)}!</h4>
+        <p class="text-[11px] text-emerald-700">Plus, Anda mencegah emisi CO₂ sebesar <span class="font-bold">${co2Prevented.toFixed(1)} kg</span> hari ini.</p>
       </div>
     </div>
   `;
@@ -902,7 +902,7 @@ window.addItemToCart = function(itemId) {
     });
   }
   
-  alert(`Added ${item.name} to Cart!`);
+  alert(`${item.name} dimasukkan ke Keranjang!`);
   
   // Update floating badge
   const floatingCart = document.getElementById('floating-cart-btn');
@@ -975,7 +975,7 @@ function renderCheckout() {
   
   subtotalLabel.innerText = `$${(subtotal + tax + platformFee).toFixed(2)}`;
   ecoDiscountLabel.innerText = `-$${ecoDiscount.toFixed(2)}`;
-  deliveryLabel.innerText = deliveryFee === 0 ? 'FREE (Self-Pickup)' : `$${deliveryFee.toFixed(2)}`;
+  deliveryLabel.innerText = deliveryFee === 0 ? 'GRATIS (Ambil Sendiri)' : `$${deliveryFee.toFixed(2)}`;
   totalLabel.innerText = `$${total.toFixed(2)}`;
   
   // Default wallet highlights
@@ -1018,7 +1018,7 @@ window.placeOrder = function() {
     price: totalPrice,
     status: 'ongoing',
     expiresIn: '1h 59m',
-    distance: '0.8 miles away',
+    distance: 'jarak 1,2 km',
     image: firstItem.image
   };
   
@@ -1044,35 +1044,35 @@ function renderSuccessScreen(orderId, partnerName, co2, meals) {
   container.innerHTML = `
     <div class="bg-emerald-600/10 border border-emerald-500/20 rounded-2xl p-4 text-center">
       <div class="w-12 h-12 bg-emerald-600 text-white rounded-full flex items-center justify-center mx-auto text-xl mb-2">✓</div>
-      <h3 class="font-bold text-gray-900 text-base">Order Placed Successfully!</h3>
-      <p class="text-xs text-gray-500 mt-1">Thank you for rescuing delicious food and helping our planet thrive.</p>
+      <h3 class="font-bold text-gray-900 text-base">Pesanan Berhasil Dibuat!</h3>
+      <p class="text-xs text-gray-500 mt-1">Terima kasih telah menyelamatkan makanan lezat dan membantu planet kita berkembang.</p>
     </div>
     
     <div class="grid grid-cols-2 gap-3 mt-4">
       <div class="bg-emerald-800 text-white rounded-2xl p-3 border border-emerald-700 shadow-sm flex flex-col justify-between">
-        <span class="text-[10px] uppercase font-semibold tracking-wider text-emerald-200">CO₂ Prevented</span>
+        <span class="text-[10px] uppercase font-semibold tracking-wider text-emerald-200">CO₂ Dicegah</span>
         <span class="text-lg font-black mt-2 font-heading">${co2.toFixed(1)}kg CO₂</span>
-        <span class="text-[9px] text-emerald-200 mt-1">Environmental Gain</span>
+        <span class="text-[9px] text-emerald-200 mt-1">Keuntungan Lingkungan</span>
       </div>
       
       <div class="bg-amber-500 text-white rounded-2xl p-3 border border-amber-400 shadow-sm flex flex-col justify-between">
-        <span class="text-[10px] uppercase font-semibold tracking-wider text-amber-100">Meals Rescued</span>
-        <span class="text-lg font-black mt-2 font-heading">${meals} ${meals === 1 ? 'Meal' : 'Meals'}</span>
-        <span class="text-[9px] text-amber-100 mt-1">Social Contribution</span>
+        <span class="text-[10px] uppercase font-semibold tracking-wider text-amber-100">Makanan Diselamatkan</span>
+        <span class="text-lg font-black mt-2 font-heading">${meals} Makanan</span>
+        <span class="text-[9px] text-amber-100 mt-1">Kontribusi Sosial</span>
       </div>
     </div>
     
     <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm mt-4 space-y-3">
       <div class="flex justify-between items-center pb-2 border-b border-gray-50">
-        <span class="text-xs text-gray-400 font-semibold uppercase">Order ID</span>
+        <span class="text-xs text-gray-400 font-semibold uppercase">ID Pesanan</span>
         <span class="text-xs font-bold text-gray-900">#${orderId}</span>
       </div>
       <div class="flex justify-between items-center pb-2 border-b border-gray-50">
-        <span class="text-xs text-gray-400 font-semibold uppercase">Pickup Window</span>
-        <span class="text-xs font-bold text-gray-900">Today, 4:00 PM - 6:00 PM</span>
+        <span class="text-xs text-gray-400 font-semibold uppercase">Waktu Pengambilan</span>
+        <span class="text-xs font-bold text-gray-900">Hari ini, 16:00 - 18:00</span>
       </div>
       <div class="flex justify-between items-start">
-        <span class="text-xs text-gray-400 font-semibold uppercase mt-0.5">Location</span>
+        <span class="text-xs text-gray-400 font-semibold uppercase mt-0.5">Lokasi</span>
         <span class="text-xs font-bold text-gray-900 text-right max-w-[180px]">${partnerName} - ${state.user.address.split(',')[0]}</span>
       </div>
     </div>
@@ -1082,7 +1082,7 @@ function renderSuccessScreen(orderId, partnerName, co2, meals) {
       <img src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover">
       <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
       <p class="relative text-white font-medium text-[11px] p-3 leading-relaxed italic z-10">
-        "Small actions, big change. Every rescue reduces methane from landfills and feeds our community."
+        "Tindakan kecil, perubahan besar. Setiap penyelamatan mengurangi metana dari TPA dan memberi makan komunitas kita."
       </p>
     </div>
   `;
@@ -1118,8 +1118,8 @@ function renderImpact() {
             <div class="bg-emerald-600 h-2 rounded-full transition-all duration-500" style="width: ${progressPercent}%"></div>
           </div>
           <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold">
-            <span>Progress</span>
-            <span>${q.progress}/${q.target} completed</span>
+            <span>Kemajuan</span>
+            <span>${q.progress}/${q.target} selesai</span>
           </div>
         </div>
       </div>
@@ -1144,10 +1144,10 @@ function renderRewardShop() {
   const shopContainer = document.getElementById('reward-shop-container');
   
   const rewards = [
-    { id: 'reward-1', title: 'Surprise Blind Box', desc: 'Contains food worth up to $30 from local bakeries.', coins: 500, popular: true, tag: 'Popular' },
-    { id: 'reward-2', title: 'Mega Raffle Entry', desc: 'Chance to win a $500 Zero-Waste Kitchen Kit.', coins: 100, endsSoon: true, tag: 'Ends Soon' },
-    { id: 'reward-3', title: 'Plant a Tree', desc: "We'll plant a native tree in your name in the Amazon.", coins: 500, tag: 'Eco Friendly' },
-    { id: 'reward-4', title: '$10 Partner Voucher', desc: 'Direct discount at any of our Platinum partners.', coins: 1000, tag: 'Cash Value' }
+    { id: 'reward-1', title: 'Kotak Misteri Kejutan', desc: 'Berisi makanan senilai hingga $30 dari toko roti lokal.', coins: 500, popular: true, tag: 'Populer' },
+    { id: 'reward-2', title: 'Tiket Undian Mega', desc: 'Kesempatan memenangkan Peralatan Dapur Ramah Lingkungan senilai $500.', coins: 100, endsSoon: true, tag: 'Segera Berakhir' },
+    { id: 'reward-3', title: 'Tanam Pohon', desc: 'Kami akan menanam pohon asli atas nama Anda di Amazon.', coins: 500, tag: 'Ramah Lingkungan' },
+    { id: 'reward-4', title: 'Voucher Mitra $10', desc: 'Diskon langsung di salah satu mitra Platinum kami.', coins: 1000, tag: 'Nilai Tunai' }
   ];
   
   shopContainer.innerHTML = rewards.map(r => {
@@ -1174,7 +1174,7 @@ function renderRewardShop() {
             🪙 <span>${r.coins}</span>
           </div>
           <button onclick="${clickAction}" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${isAffordable ? 'bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}">
-            Exchange
+            Tukarkan
           </button>
         </div>
       </div>
@@ -1184,19 +1184,19 @@ function renderRewardShop() {
 
 window.redeemReward = function(rewardId, cost) {
   if (state.user.coins < cost) {
-    alert('Insufficient Eco-Coins balance.');
+    alert('Saldo Koin Eco tidak mencukupi.');
     return;
   }
   
   state.user.coins -= cost;
-  alert('🎉 Reward Redeemed Successfully! Code sent to your email.');
+  alert('🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke email Anda.');
   renderImpact();
 };
 
 // Interactive Blind Box Mystery Game (Gamification Page)
 window.openBlindBoxModal = function() {
   if (state.user.coins < 500) {
-    alert('Insufficient Eco-Coins balance.');
+    alert('Saldo Koin Eco tidak mencukupi.');
     return;
   }
   
@@ -1253,9 +1253,9 @@ function renderBlindBoxState() {
         🎁
       </div>
       <div class="text-center mt-6">
-        <h3 class="font-bold text-gray-900 text-base">Surprise Blind Box</h3>
-        <p class="text-xs text-gray-400 mt-1">Tap the gift box <span class="font-bold text-emerald-600">${bb.tapsRemaining} times</span> to reveal your rescue surprise!</p>
-        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Coins</div>
+        <h3 class="font-bold text-gray-900 text-base">Kotak Misteri Kejutan</h3>
+        <p class="text-xs text-gray-400 mt-1">Ketuk kotak hadiah <span class="font-bold text-emerald-600">${bb.tapsRemaining} kali</span> untuk melihat kejutan penyelamatan Anda!</p>
+        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Koin</div>
       </div>
     `;
   } else if (bb.state === 'revealed') {
@@ -1270,19 +1270,19 @@ function renderBlindBoxState() {
         </div>
         
         <div class="text-center">
-          <span class="text-[9px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-100">Mystery Meal Revealed!</span>
+          <span class="text-[9px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded-full border border-emerald-100">Makanan Misterius Terungkap!</span>
           <h3 class="font-bold text-gray-950 text-base mt-2 leading-snug">${item.name}</h3>
-          <p class="text-[11px] text-gray-500 mt-1">Claim this fresh surplus meal. Highly rated and ready for self-pickup.</p>
+          <p class="text-[11px] text-gray-500 mt-1">Klaim makanan sisa segar ini. Dinilai tinggi dan siap untuk diambil sendiri.</p>
         </div>
         
         <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 text-center space-y-1.5">
-          <div class="text-[10px] text-gray-400 font-semibold uppercase">Claiming Policy</div>
-          <p class="text-[9px] text-gray-500 leading-normal">⚠️ You have <span class="font-bold text-amber-500">30 minutes</span> to pick up once claimed. Cancel penalty refunds only 25% of coins (125 coins).</p>
+          <div class="text-[10px] text-gray-400 font-semibold uppercase">Kebijakan Klaim</div>
+          <p class="text-[9px] text-gray-500 leading-normal">⚠️ Anda memiliki waktu <span class="font-bold text-amber-500">30 menit</span> untuk mengambil setelah diklaim. Pembatalan hanya mengembalikan 25% koin (125 koin).</p>
         </div>
         
         <div class="flex gap-2">
-          <button onclick="closeBlindBoxModal()" class="flex-1 border border-gray-200 text-gray-600 font-bold py-2 rounded-xl text-xs hover:bg-gray-50">Cancel (25% Refund)</button>
-          <button onclick="claimBlindMeal('${item.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-sm">Claim Meal!</button>
+          <button onclick="closeBlindBoxModal()" class="flex-1 border border-gray-200 text-gray-600 font-bold py-2 rounded-xl text-xs hover:bg-gray-50">Batal (Kembali 25%)</button>
+          <button onclick="claimBlindMeal('${item.id}')" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs shadow-sm">Klaim Makanan!</button>
         </div>
       </div>
     `;
@@ -1293,9 +1293,9 @@ function renderBlindBoxState() {
         🎁
       </div>
       <div class="text-center mt-6">
-        <h3 class="font-bold text-gray-900 text-base">Surprise Blind Box</h3>
-        <p class="text-xs text-gray-400 mt-1">Keep tapping! <span class="font-bold text-emerald-600">${bb.tapsRemaining} more</span> to open!</p>
-        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Coins</div>
+        <h3 class="font-bold text-gray-900 text-base">Kotak Misteri Kejutan</h3>
+        <p class="text-xs text-gray-400 mt-1">Terus ketuk! <span class="font-bold text-emerald-600">${bb.tapsRemaining} kali lagi</span> untuk membuka!</p>
+        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Koin</div>
       </div>
     `;
   }
@@ -1310,12 +1310,12 @@ window.claimBlindMeal = function(itemId) {
   const newOrder = {
     id: orderId,
     partnerName: item.partnerName,
-    itemName: `${item.name} (Mystery Box)`,
+    itemName: `${item.name} (Kotak Misteri)`,
     itemCount: 1,
     price: 0.00, // Claimed via coins
     status: 'ongoing',
     expiresIn: '30m 00s',
-    distance: '1.2 miles away',
+    distance: 'jarak 1,9 km',
     image: item.image
   };
   
@@ -1323,7 +1323,7 @@ window.claimBlindMeal = function(itemId) {
   state.user.mealsRescued += 1;
   state.user.co2Saved += item.co2Reduction;
   
-  alert('🎉 Surprise box claimed! View it in your ongoing rescues list.');
+  alert('🎉 Kotak kejutan diklaim! Lihat di daftar penyelamatan aktif Anda.');
   closeBlindBoxModal();
   switchView('orders');
 };
@@ -1336,7 +1336,7 @@ function renderOrders() {
   const past = state.orders.filter(o => o.status === 'completed');
   
   const ongoingHtml = ongoing.length === 0 ? `
-    <p class="text-xs text-gray-400 text-center py-4">No active ongoing rescues at the moment.</p>
+    <p class="text-xs text-gray-400 text-center py-4">Tidak ada penyelamatan aktif saat ini.</p>
   ` : ongoing.map(o => `
     <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm flex gap-3.5 relative">
       <img src="${o.image}" alt="${o.itemName}" class="w-16 h-16 rounded-xl object-cover">
@@ -1348,13 +1348,13 @@ function renderOrders() {
               ⏱️ ${o.expiresIn}
             </span>
           </div>
-          <p class="text-[10px] text-gray-400 mt-0.5">${o.itemName} (${o.itemCount} ${o.itemCount === 1 ? 'item' : 'items'})</p>
+          <p class="text-[10px] text-gray-400 mt-0.5">${o.itemName} (${o.itemCount} barang)</p>
         </div>
         
         <div class="flex items-center justify-between mt-3">
           <span class="text-[10px] text-gray-400 font-semibold">📍 ${o.distance}</span>
-          <button onclick="alert('🧭 Opening Active Navigation Map to ${o.partnerName}...')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
-            Track Order
+          <button onclick="alert('🧭 Membuka Peta Navigasi Aktif ke ${o.partnerName}...')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
+            Lacak Pesanan
           </button>
         </div>
       </div>
@@ -1362,7 +1362,7 @@ function renderOrders() {
   `).join('');
   
   const pastHtml = past.length === 0 ? `
-    <p class="text-xs text-gray-400 text-center py-4">No past rescue history yet.</p>
+    <p class="text-xs text-gray-400 text-center py-4">Belum ada riwayat penyelamatan sebelumnya.</p>
   ` : past.map(o => `
     <div class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -1377,7 +1377,7 @@ function renderOrders() {
       <div class="text-right space-y-1.5">
         <div class="text-xs font-bold text-gray-900">$${o.price.toFixed(2)}</div>
         <button onclick="reorderItem('${o.partnerName}')" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 hover:bg-emerald-100 transition-colors">
-          Reorder
+          Pesan Lagi
         </button>
       </div>
     </div>
@@ -1386,8 +1386,8 @@ function renderOrders() {
   container.innerHTML = `
     <div>
       <div class="flex justify-between items-center mb-3">
-        <h3 class="font-bold text-gray-900 text-sm">Ongoing Rescues</h3>
-        <span class="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full">${ongoing.length} Active</span>
+        <h3 class="font-bold text-gray-900 text-sm">Penyelamatan Aktif</h3>
+        <span class="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 rounded-full">${ongoing.length} Aktif</span>
       </div>
       <div class="space-y-3.5">
         ${ongoingHtml}
@@ -1395,7 +1395,7 @@ function renderOrders() {
     </div>
     
     <div class="pt-2">
-      <h3 class="font-bold text-gray-900 text-sm mb-3">Past Rescues</h3>
+      <h3 class="font-bold text-gray-900 text-sm mb-3">Penyelamatan Selesai</h3>
       <div class="space-y-3">
         ${pastHtml}
       </div>
@@ -1409,7 +1409,7 @@ window.reorderItem = function(partnerName) {
   if (partner) {
     switchView('partner-detail', { partnerId: partner.id });
   } else {
-    alert(`Redirecting to ${partnerName} surplus catalog...`);
+    alert(`Mengarahkan ke katalog sisa ${partnerName}...`);
   }
 };
 
