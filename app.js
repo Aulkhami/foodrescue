@@ -412,11 +412,17 @@ function switchView(viewName, params = {}) {
       (viewName === "partner-detail" && tab === "explore") ||
       (viewName === "food-detail" && tab === "explore")
     ) {
-      icon.className = "nav-icon text-emerald-600 transition-colors";
+      icon.setAttribute(
+        "class",
+        icon.getAttribute("class").replace("text-gray-400", "text-emerald-600"),
+      );
       label.className =
         "nav-label text-[10px] font-semibold text-emerald-600 transition-colors";
     } else {
-      icon.className = "nav-icon text-gray-400 transition-colors";
+      icon.setAttribute(
+        "class",
+        icon.getAttribute("class").replace("text-emerald-600", "text-gray-400"),
+      );
       label.className =
         "nav-label text-[10px] font-semibold text-gray-400 transition-colors";
     }
