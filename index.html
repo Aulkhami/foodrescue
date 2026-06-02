@@ -75,16 +75,45 @@
               >FoodRescue</span
             >
           </div>
-          <button
-            id="bell-btn"
-            class="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 relative transition-colors"
-          >
-            <i data-lucide="bell" class="w-5 h-5"></i>
-            <!-- Red dot indicator -->
-            <span
-              class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"
-            ></span>
-          </button>
+          <div class="relative">
+            <button
+              id="bell-btn"
+              class="p-1.5 hover:bg-gray-100 rounded-full text-gray-500 relative transition-colors"
+            >
+              <i data-lucide="bell" class="w-5 h-5"></i>
+              <!-- Red dot indicator -->
+              <span
+                id="bell-dot"
+                class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"
+              ></span>
+            </button>
+
+            <!-- Dropdown Menu -->
+            <div
+              id="notif-dropdown"
+              class="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-gray-100 shadow-xl hidden z-50 overflow-hidden"
+            >
+              <div
+                class="p-3.5 border-b border-gray-50 flex justify-between items-center bg-gray-50/50"
+              >
+                <span class="font-extrabold text-gray-900 text-xs tracking-wide uppercase"
+                  >Notifikasi</span
+                >
+                <button
+                  id="mark-read-btn"
+                  class="text-[10px] text-emerald-600 font-bold hover:underline"
+                >
+                  Tandai semua dibaca
+                </button>
+              </div>
+              <div
+                id="notif-list"
+                class="max-h-64 overflow-y-auto no-scrollbar divide-y divide-gray-50"
+              >
+                <!-- Dynamic Notifications -->
+              </div>
+            </div>
+          </div>
         </div>
       </header>
 

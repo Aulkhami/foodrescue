@@ -7,6 +7,37 @@ const state = {
   selectedPartner: null,
   selectedFoodItem: null,
 
+  // Notifications State
+  notifications: [
+    {
+      id: "n-1",
+      title: "Pesanan Siap Diambil!",
+      desc: "Pesanan Anda #FR-8291 di Sunrise Bakehouse siap untuk diambil sendiri.",
+      time: "Baru saja",
+      read: false,
+      icon: "shopping-bag",
+      color: "text-emerald-600 bg-emerald-50",
+    },
+    {
+      id: "n-2",
+      title: "Misi Baru Tersedia!",
+      desc: 'Misi baru "Selamatkan 5 makanan minggu ini" telah dimulai. Dapatkan koin bonus!',
+      time: "2 jam lalu",
+      read: true,
+      icon: "compass",
+      color: "text-blue-600 bg-blue-50",
+    },
+    {
+      id: "n-3",
+      title: "Lencana Baru Terbuka!",
+      desc: 'Selamat! Anda telah membuka lencana "Juara CO2".',
+      time: "1 hari lalu",
+      read: true,
+      icon: "award",
+      color: "text-amber-500 bg-amber-50",
+    },
+  ],
+
   // User Profile
   user: {
     name: "Alex",
@@ -348,13 +379,138 @@ function initApp() {
   setupNavEventListeners();
   setupSearchAndFilters();
   setupMap();
+  setupNotificationDropdown();
   renderAll();
-
-  // Notification Bell
-  document.getElementById("bell-btn").addEventListener("click", () => {
-    alert("🔔 Notifikasi: Pesanan Anda #FR-8291 siap untuk diambil sendiri!");
-  });
 }
+
+function setupNotificationDropdown() {
+  const bellBtn = document.getElementById("bell-btn");
+  const dropdown = document.getElementById("notif-dropdown");
+  const markReadBtn = document.getElementById("mark-read-btn");
+
+  if (bellBtn && dropdown) {
+    bellBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      dropdown.classList.toggle("hidden");
+      renderNotifications();
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (e) => {
+      if (
+        !dropdown.contains(e.target) &&
+        e.target !== bellBtn &&
+        !bellBtn.contains(e.target)
+      ) {
+        dropdown.classList.add("hidden");
+      }
+    });
+  }
+
+  if (markReadBtn) {
+    markReadBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      markAllNotifsAsRead();
+    });
+  }
+
+  updateBellDot();
+}
+
+function updateBellDot() {
+  const bellDot = document.getElementById("bell-dot");
+  if (bellDot) {
+    const unreadCount = state.notifications.filter((n) => !n.read).length;
+    if (unreadCount > 0) {
+      bellDot.classList.remove("hidden");
+    } else {
+      bellDot.classList.add("hidden");
+    }
+  }
+}
+
+function renderNotifications() {
+  const container = document.getElementById("notif-list");
+  if (!container) return;
+
+  if (state.notifications.length === 0) {
+    container.innerHTML = `
+      <div class="text-center py-8 text-gray-400">
+        <i data-lucide="bell-off" class="w-8 h-8 mx-auto mb-2 text-gray-300"></i>
+        <p class="text-xs font-semibold">Tidak ada notifikasi baru</p>
+      </div>
+    `;
+    lucide.createIcons();
+    return;
+  }
+
+  container.innerHTML = state.notifications
+    .map(
+      (n) => `
+    <div onclick="clickNotification('${n.id}')" class="p-3 flex items-start gap-3 hover:bg-gray-50/50 transition-colors cursor-pointer ${
+      n.read ? "" : "bg-emerald-50/10"
+    }">
+      <div class="p-2 rounded-xl flex-shrink-0 ${
+        n.color || "text-gray-500 bg-gray-50"
+      }">
+        <i data-lucide="${n.icon || "bell"}" class="w-4 h-4"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex justify-between items-baseline">
+          <h4 class="font-bold text-xs text-gray-900 truncate leading-snug">${
+            n.title
+          }</h4>
+          <span class="text-[9px] text-gray-400 font-semibold whitespace-nowrap ml-2">${
+            n.time
+          }</span>
+        </div>
+        <p class="text-[10px] text-gray-500 leading-normal mt-0.5">${n.desc}</p>
+      </div>
+    </div>
+  `,
+    )
+    .join("");
+
+  lucide.createIcons();
+}
+
+window.clickNotification = function (notifId) {
+  const notif = state.notifications.find((n) => n.id === notifId);
+  if (!notif) return;
+
+  // Mark as read
+  notif.read = true;
+  updateBellDot();
+  renderNotifications();
+
+  // Close dropdown
+  const dropdown = document.getElementById("notif-dropdown");
+  if (dropdown) {
+    dropdown.classList.add("hidden");
+  }
+
+  // Navigate based on icon/category type
+  if (
+    notif.icon === "shopping-bag" ||
+    notif.icon === "check-circle" ||
+    notif.icon === "package" ||
+    notif.icon === "gift"
+  ) {
+    switchView("orders");
+  } else if (
+    notif.icon === "compass" ||
+    notif.icon === "award" ||
+    notif.icon === "leaf"
+  ) {
+    switchView("impact");
+  }
+};
+
+window.markAllNotifsAsRead = function () {
+  state.notifications.forEach((n) => (n.read = true));
+  updateBellDot();
+  renderNotifications();
+};
 
 // Global Nav & Screen Controllers
 function setupNavEventListeners() {
@@ -1168,6 +1324,18 @@ window.placeOrder = function () {
   state.user.co2Saved += co2SavedToday;
   state.user.mealsRescued += totalItems;
 
+  // Add notification
+  state.notifications.unshift({
+    id: `n-${Date.now()}`,
+    title: "Pesanan Berhasil Dibuat!",
+    desc: `Pesanan Anda #${orderId} di ${firstItem.partnerName} berhasil dibuat.`,
+    time: "Baru saja",
+    read: false,
+    icon: "shopping-bag",
+    color: "text-emerald-600 bg-emerald-50",
+  });
+  updateBellDot();
+
   // Show Success Screen with details
   renderSuccessScreen(
     orderId,
@@ -1507,6 +1675,18 @@ window.claimBlindMeal = function (itemId) {
   state.user.mealsRescued += 1;
   state.user.co2Saved += item.co2Reduction;
 
+  // Add notification
+  state.notifications.unshift({
+    id: `n-${Date.now()}`,
+    title: "Kotak Misteri Diklaim!",
+    desc: `Kotak Misteri Anda #${orderId} (${item.name}) berhasil diklaim.`,
+    time: "Baru saja",
+    read: false,
+    icon: "gift",
+    color: "text-amber-500 bg-amber-50",
+  });
+  updateBellDot();
+
   alert("🎉 Kotak kejutan diklaim! Lihat di daftar penyelamatan aktif Anda.");
   closeBlindBoxModal();
   switchView("orders");
@@ -1542,7 +1722,7 @@ function renderOrders() {
         
         <div class="flex items-center justify-between mt-3">
           <span class="text-[10px] text-gray-400 font-semibold">📍 ${o.distance}</span>
-          <button onclick="alert('🧭 Membuka Peta Navigasi Aktif ke ${o.partnerName}...')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
+          <button onclick="alert(\`🧭 Membuka Peta Navigasi Aktif ke ${o.partnerName}...\`)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
             Lacak Pesanan
           </button>
         </div>
