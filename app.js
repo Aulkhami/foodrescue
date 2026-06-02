@@ -3,6 +3,13 @@ function formatRupiah(amount) {
   return "Rp " + Math.round(amount).toLocaleString("id-ID");
 }
 
+function formatRupiahAbbr(amount) {
+  if (amount >= 1000) {
+    return "Rp " + Math.round(amount / 1000) + "rb";
+  }
+  return "Rp " + Math.round(amount);
+}
+
 const state = {
   currentView: "explore", // 'explore', 'cart', 'checkout', 'impact', 'orders', 'profile', 'success', 'partner-detail', 'food-detail'
   searchQuery: "",
@@ -709,8 +716,8 @@ function updateMapMarkers() {
 
     const priceMarker = L.divIcon({
       className: "custom-marker",
-      html: `<div class="marker-label">${formatRupiah(lowestPrice)}</div>`,
-      iconSize: [50, 24],
+      html: `<div class="marker-label">${formatRupiahAbbr(lowestPrice)}</div>`,
+      iconSize: [70, 32],
     });
 
     const marker = L.marker([partner.lat, partner.lng], {

@@ -59,11 +59,11 @@ h1, h2, h3, h4, .font-heading {
 .marker-label {
   background-color: #059669;
   color: white;
-  padding: 4px 8px;
+  padding: 5px 10px;
   border-radius: 9999px;
-  font-weight: 700;
-  font-size: 11px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  font-weight: 800;
+  font-size: 12px;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.35), 0 2px 4px rgba(0, 0, 0, 0.1);
   border: 2px solid white;
   font-family: 'Plus Jakarta Sans', sans-serif;
   white-space: nowrap;
