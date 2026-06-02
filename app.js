@@ -1256,7 +1256,7 @@ function renderImpact() {
             <h4 class="font-bold text-sm text-gray-900 leading-snug">${q.title}</h4>
             <p class="text-xs text-gray-400 font-medium">${q.description}</p>
           </div>
-          <span class="text-xs font-bold ${isCompleted ? "text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full" : "text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full"}">
+          <span class="min-w-[96px] text-xs text-center font-bold ${isCompleted ? "text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full" : "text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full"}">
             +${q.reward}
           </span>
         </div>
@@ -1354,7 +1354,7 @@ function renderRewardShop() {
         
         <div class="px-3.5 pb-3.5 pt-2 border-t border-gray-50 flex items-center justify-between gap-1">
           <div class="flex items-center gap-0.5 text-amber-500 font-extrabold text-xs">
-            🪙 <span>${r.coins}</span>
+            <i data-lucide="coins" class="w-3 h-3 text-amber-500 mr-1"></i><span>${r.coins}</span>
           </div>
           <button onclick="${clickAction}" class="text-[10px] font-bold px-3 py-1.5 rounded-lg ${isAffordable ? "bg-emerald-600 hover:bg-emerald-700 text-white shadow-xs" : "bg-gray-100 text-gray-400 cursor-not-allowed"}">
             Tukarkan
