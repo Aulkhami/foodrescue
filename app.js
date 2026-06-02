@@ -53,34 +53,7 @@ const state = {
   },
 
   // Cart State
-  cart: [
-    {
-      id: "item-1",
-      name: "Kotak Kue Akhir Hari",
-      partnerId: "partner-1",
-      partnerName: "Sunrise Bakehouse",
-      price: 15000,
-      originalPrice: 60000,
-      image:
-        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
-      quantity: 1,
-      pickupWindow: "Ambil sebelum jam 18:00",
-      co2Reduction: 0.9, // kg
-    },
-    {
-      id: "item-2",
-      name: "Bundel Sayuran Tidak Sempurna",
-      partnerId: "partner-2",
-      partnerName: "Green Valley Grocers",
-      price: 20000,
-      originalPrice: 80000,
-      image:
-        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
-      quantity: 1,
-      pickupWindow: "Ambil sebelum jam 19:30",
-      co2Reduction: 1.5, // kg
-    },
-  ],
+  cart: [],
 
   // Payment Options
   selectedPayment: "ecopay", // 'ecopay', 'card', 'cod'
@@ -544,14 +517,20 @@ function updateFloatingCart() {
   const showViews = ["explore", "food-detail"];
 
   if (showViews.includes(state.currentView) && count > 0) {
-    floatingCart.classList.remove("hidden");
-    
+    if (floatingCart.classList.contains("hidden")) {
+      floatingCart.classList.remove("hidden");
+      floatingCart.classList.add("animate-cart-bounce");
+      setTimeout(() => {
+        floatingCart.classList.remove("animate-cart-bounce");
+      }, 550);
+    }
+
     // Update count text
     const badgeCount = document.getElementById("cart-badge-count");
     if (badgeCount) {
       badgeCount.innerText = `${count} Barang`;
     }
-    
+
     // Calculate and update subtotal price
     const subtotal = state.cart.reduce(
       (sum, item) => sum + item.price * item.quantity,
@@ -1176,8 +1155,7 @@ function renderCart() {
   totalLabel.innerText = formatRupiah(total);
 
   // Bottom Sticky Total Card
-  document.getElementById("checkout-bar-total").innerText =
-    formatRupiah(total);
+  document.getElementById("checkout-bar-total").innerText = formatRupiah(total);
 }
 
 window.addItemToCart = function (itemId) {
@@ -1311,7 +1289,10 @@ window.placeOrder = function () {
   const orderId = `FR-${Math.floor(1000 + Math.random() * 9000)}`;
   const firstItem = state.cart[0];
   const totalItems = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  const subtotal = state.cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const subtotal = state.cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
   const platformFee = 2000;
   const tax = subtotal * 0.05;
   const totalPrice = subtotal + platformFee + tax;
@@ -1813,8 +1794,9 @@ function renderProfile() {
   document.getElementById("profile-co2").innerText =
     `${state.user.co2Saved.toFixed(1)} kg`;
   document.getElementById("profile-meals").innerText = state.user.mealsRescued;
-  document.getElementById("profile-saved").innerText =
-    formatRupiah(state.user.moneySaved);
+  document.getElementById("profile-saved").innerText = formatRupiah(
+    state.user.moneySaved,
+  );
   document.getElementById("profile-coins").innerText =
     state.user.coins.toLocaleString();
 }
