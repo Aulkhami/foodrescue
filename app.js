@@ -1046,7 +1046,7 @@ window.addDetailsToCart = function () {
     });
   }
 
-  alert(`${state.detailQty}x ${item.name} dimasukkan ke Keranjang!`);
+  showToast("Berhasil dimasukkan ke Keranjang!");
   switchView("cart");
 };
 
@@ -1178,8 +1178,6 @@ window.addItemToCart = function (itemId) {
     });
   }
 
-  alert(`${item.name} dimasukkan ke Keranjang!`);
-
   // Update floating badge
   const floatingCart = document.getElementById("floating-cart-btn");
   floatingCart.classList.remove("hidden");
@@ -1187,6 +1185,8 @@ window.addItemToCart = function (itemId) {
     (sum, item) => sum + item.quantity,
     0,
   );
+
+  showToast("Berhasil dimasukkan ke Keranjang!");
 };
 
 window.updateCartQuantity = function (itemId, delta) {
@@ -1802,4 +1802,34 @@ function renderProfile() {
     `$${state.user.moneySaved.toFixed(2)}`;
   document.getElementById("profile-coins").innerText =
     state.user.coins.toLocaleString();
+}
+
+function showToast(message, iconName = "shopping-bag") {
+  const container = document.getElementById("toast-container");
+  if (!container) return;
+
+  const toast = document.createElement("div");
+  toast.className =
+    "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-8 opacity-0 max-w-xs md:max-w-lg border border-gray-100";
+
+  toast.innerHTML = `
+    <i data-lucide="${iconName}" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
+    <span class="flex-1 line-clamp-2">${message}</span>
+  `;
+
+  container.appendChild(toast);
+  lucide.createIcons();
+
+  setTimeout(() => {
+    toast.className =
+      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-0 opacity-100 max-w-xs md:max-w-lg border border-gray-100";
+  }, 10);
+
+  setTimeout(() => {
+    toast.className =
+      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform -translate-y-4 opacity-0 max-w-xs md:max-w-lg border border-gray-100";
+    setTimeout(() => {
+      toast.remove();
+    }, 300);
+  }, 3000);
 }
