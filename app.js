@@ -1225,9 +1225,27 @@ function renderCheckout() {
   const ecoDiscountLabel = document.getElementById("checkout-eco-discount");
   const deliveryLabel = document.getElementById("checkout-delivery-fee");
   const totalLabel = document.getElementById("checkout-total");
-  const addressLabel = document.getElementById("checkout-address");
+  const addressLabel = document.getElementById("partner-addresses");
 
-  addressLabel.innerText = state.user.address;
+  const orderedPartners = new Set();
+  state.cart.forEach(item => {
+    orderedPartners.add(item.partnerId);
+  });
+  let addresses = "";
+  orderedPartners.forEach(partnerId => {
+    const partner = partners.find((p) => p.id == partnerId);
+    addresses += `
+      <div>
+        <div class="text-xs text-gray-700 font-bold">
+          ${partner.name}
+        </div>
+        <p class="text-xs text-gray-500 mt-0.5">
+          ${partner.address}
+        </p>
+      </div>
+    `
+  });
+  addressLabel.innerHTML = addresses;
 
   const subtotal = state.cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
