@@ -521,7 +521,7 @@ function updateFloatingCart() {
   if (!floatingCart) return;
 
   const count = state.cart.reduce((sum, item) => sum + item.quantity, 0);
-  const showViews = ["explore", "food-detail"];
+  const showViews = ["explore", "food-detail", "partner-detail"];
 
   if (showViews.includes(state.currentView) && count > 0) {
     if (floatingCart.classList.contains("hidden")) {
@@ -530,6 +530,12 @@ function updateFloatingCart() {
       setTimeout(() => {
         floatingCart.classList.remove("animate-cart-bounce");
       }, 550);
+    }
+
+    if (state.currentView == "food-detail") {
+      floatingCart.setAttribute("style", "bottom: 9rem;");
+    } else {
+      floatingCart.removeAttribute("style");
     }
 
     // Update count text
