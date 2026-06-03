@@ -1064,6 +1064,7 @@ window.addDetailsToCart = function () {
   }
 
   showToast("Berhasil dimasukkan ke Keranjang!");
+  updateFloatingCart();
 };
 
 // Cart Rendering & Handlers
