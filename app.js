@@ -1468,8 +1468,15 @@ window.placeOrder = function () {
   state.orders.unshift(newOrder);
 
   // Update impact metrics
+  const totalOriginal = state.cart.reduce(
+    (sum, item) => sum + item.originalPrice * item.quantity,
+    0,
+  );
+  const savingsToday = totalOriginal - subtotal;
+
   state.user.co2Saved += co2SavedToday;
   state.user.mealsRescued += totalItems;
+  state.user.moneySaved += savingsToday;
   saveUserState();
 
   // Add notification
