@@ -2822,3 +2822,39 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
+window.completeTrackedOrder = function () {
+  const order = window.activeTrackOrder;
+  if (!order) return;
+
+  const orderInState = state.orders.find((o) => o.id === order.id);
+  if (orderInState) {
+    orderInState.status = "completed";
+  }
+
+  // Refresh dynamic parts & save state
+  renderOrders();
+  saveUserState();
+
+  // Award eco coins
+  state.user.coins += 50;
+  saveUserState();
+
+  // Add success notification
+  state.notifications.unshift({
+    id: `n-${Date.now()}`,
+    title: "Penyelamatan Selesai!",
+    desc: `Hebat! Makanan Anda dari ${order.partnerName} telah diambil. Anda mendapat 50 koin Eco!`,
+    time: "Baru saja",
+    read: false,
+    icon: "check-circle",
+    color: "text-emerald-600 bg-emerald-50",
+  });
+  updateBellDot();
+
+  showToast(
+    `Pesanan #${order.id} selesai diambil! +50 Koin Eco`,
+    "check-circle",
+  );
+  switchView("orders");
+};
+
