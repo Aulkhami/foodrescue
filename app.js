@@ -360,6 +360,15 @@ let loginMap = null;
 let loginMarker = null;
 window.loginSelectedLat = 40.7265;
 window.loginSelectedLng = -73.995;
+window.lastGeocodedAddress = "";
+
+let profileEditMap = null;
+let profileEditMarker = null;
+window.profileSelectedLat = 40.7265;
+window.profileSelectedLng = -73.995;
+window.lastGeocodedProfileAddress = "";
+
+
 
 
 // DOM References & Render Controllers
@@ -617,6 +626,14 @@ function switchView(viewName, params = {}) {
   } else {
     if (header) header.classList.remove("hidden");
     if (nav) nav.classList.remove("hidden");
+
+    if (viewName === "explore" && map) {
+      setTimeout(() => {
+        map.invalidateSize();
+        updateUserMapMarker();
+        updateMapMarkers();
+      }, 150);
+    }
   }
 
   // Manage details parameters
@@ -715,8 +732,30 @@ function setupSearchAndFilters() {
   });
 }
 
+function updatePartnerCoordinates() {
+  const userLat = (state.user && state.user.lat) || 40.7265;
+  const userLng = (state.user && state.user.lng) || -73.995;
+
+  const offsets = [
+    { id: "partner-1", latOffset: -0.0006, lngOffset: 0.002 },
+    { id: "partner-2", latOffset: 0.0025, lngOffset: -0.002 },
+    { id: "partner-3", latOffset: -0.0035, lngOffset: -0.006 },
+    { id: "partner-4", latOffset: 0.001, lngOffset: 0.0048 },
+  ];
+
+  offsets.forEach((off) => {
+    const partner = partners.find((p) => p.id === off.id);
+    if (partner) {
+      partner.lat = userLat + off.latOffset;
+      partner.lng = userLng + off.lngOffset;
+    }
+  });
+}
+
 // Leaflet Map Integration
 function setupMap() {
+  updatePartnerCoordinates();
+
   const userLat = (state.user && state.user.lat) || 40.7265;
   const userLng = (state.user && state.user.lng) || -73.995;
 
@@ -743,6 +782,8 @@ function setupMap() {
 
 function updateUserMapMarker() {
   if (!map) return;
+
+  updatePartnerCoordinates();
 
   const userLat = (state.user && state.user.lat) || 40.7265;
   const userLng = (state.user && state.user.lng) || -73.995;
@@ -1934,13 +1975,25 @@ function showToast(message, iconName = "shopping-bag") {
 // DUMMY LOGIN FEATURE LOGIC
 // ==========================================
 
-window.handleCustomLogin = function (event) {
+window.handleCustomLogin = async function (event) {
   event.preventDefault();
   const usernameInput = document.getElementById("login-username").value.trim();
   const emailInput = document.getElementById("login-email").value.trim();
   const addressInput = document.getElementById("login-address").value.trim();
 
   if (usernameInput && addressInput) {
+    let lat = window.loginSelectedLat || 40.7265;
+    let lng = window.loginSelectedLng || -73.995;
+
+    // Check if the user manually modified or typed a new address
+    if (window.lastGeocodedAddress !== addressInput) {
+      const coords = await forwardGeocode(addressInput);
+      if (coords) {
+        lat = coords.lat;
+        lng = coords.lng;
+      }
+    }
+
     state.user = {
       name: usernameInput,
       email: emailInput,
@@ -1949,8 +2002,8 @@ window.handleCustomLogin = function (event) {
       mealsRescued: 0,
       moneySaved: 0,
       address: addressInput,
-      lat: window.loginSelectedLat || 40.7265,
-      lng: window.loginSelectedLng || -73.995,
+      lat: lat,
+      lng: lng,
     };
     state.isAuthenticated = true;
     localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
@@ -1969,6 +2022,7 @@ window.handleCustomLogin = function (event) {
     // Reset login coordinates
     window.loginSelectedLat = 40.7265;
     window.loginSelectedLng = -73.995;
+    window.lastGeocodedAddress = "";
     if (loginMarker) {
       loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
     }
@@ -2000,6 +2054,7 @@ window.logoutUser = function () {
   // Reset login map selection state
   window.loginSelectedLat = 40.7265;
   window.loginSelectedLng = -73.995;
+  window.lastGeocodedAddress = "";
   if (loginMarker) {
     loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
   }
@@ -2118,6 +2173,7 @@ async function updateLoginLocation(lat, lng) {
   const address = await reverseGeocode(lat, lng);
 
   if (addressInput) addressInput.value = address;
+  window.lastGeocodedAddress = address;
   if (statusEl) statusEl.innerText = "Lokasi diset dari peta";
 }
 
@@ -2195,3 +2251,206 @@ async function reverseGeocode(lat, lng) {
     return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
   }
 }
+
+async function forwardGeocode(addressStr) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(addressStr)}`,
+      {
+        headers: {
+          "Accept-Language": "id, en",
+          "User-Agent": "FoodRescue/1.0",
+        },
+      },
+    );
+    const data = await response.json();
+    if (data && data.length > 0) {
+      return {
+        lat: parseFloat(data[0].lat),
+        lng: parseFloat(data[0].lon),
+      };
+    }
+  } catch (error) {
+    console.error("Forward geocoding error:", error);
+  }
+  return null;
+}
+
+// ==========================================
+// PROFILE EDIT ADDRESS MODAL LOGIC
+// ==========================================
+
+window.openProfileAddressModal = function () {
+  const modal = document.getElementById("profile-address-modal");
+  if (!modal) return;
+
+  // Show modal
+  modal.classList.remove("hidden");
+
+  // Get user location
+  window.profileSelectedLat = (state.user && state.user.lat) || 40.7265;
+  window.profileSelectedLng = (state.user && state.user.lng) || -73.995;
+  const currentAddress = (state.user && state.user.address) || "";
+
+  // Set input field
+  const input = document.getElementById("profile-edit-address");
+  if (input) input.value = currentAddress;
+  window.lastGeocodedProfileAddress = currentAddress;
+
+  // Render status
+  const statusEl = document.getElementById("profile-map-status");
+  if (statusEl) statusEl.innerText = "Klik peta / geser pin";
+
+  // Create or refresh map
+  setTimeout(() => {
+    if (profileEditMap) {
+      profileEditMap.setView([window.profileSelectedLat, window.profileSelectedLng], 14);
+      if (profileEditMarker) {
+        profileEditMarker.setLatLng([window.profileSelectedLat, window.profileSelectedLng]);
+      }
+      profileEditMap.invalidateSize();
+      return;
+    }
+
+    const container = document.getElementById("profile-edit-map");
+    if (!container) return;
+
+    profileEditMap = L.map("profile-edit-map", {
+      zoomControl: true,
+      attributionControl: false,
+    }).setView([window.profileSelectedLat, window.profileSelectedLng], 14);
+
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 20,
+      },
+    ).addTo(profileEditMap);
+
+    const loginIcon = L.divIcon({
+      className: "login-marker-container",
+      html: '<div class="marker-pin-login"></div>',
+      iconSize: [28, 28],
+      iconAnchor: [14, 28],
+    });
+
+    profileEditMarker = L.marker([window.profileSelectedLat, window.profileSelectedLng], {
+      icon: loginIcon,
+      draggable: true,
+    }).addTo(profileEditMap);
+
+    profileEditMap.on("click", async (e) => {
+      updateProfileEditLocation(e.latlng.lat, e.latlng.lng);
+    });
+
+    profileEditMarker.on("dragend", async (e) => {
+      const latLng = profileEditMarker.getLatLng();
+      updateProfileEditLocation(latLng.lat, latLng.lng);
+    });
+
+    profileEditMap.invalidateSize();
+  }, 100);
+};
+
+window.closeProfileAddressModal = function () {
+  const modal = document.getElementById("profile-address-modal");
+  if (modal) modal.classList.add("hidden");
+};
+
+async function updateProfileEditLocation(lat, lng) {
+  window.profileSelectedLat = lat;
+  window.profileSelectedLng = lng;
+
+  if (profileEditMarker) {
+    profileEditMarker.setLatLng([lat, lng]);
+  }
+  if (profileEditMap) {
+    profileEditMap.panTo([lat, lng]);
+  }
+
+  const statusEl = document.getElementById("profile-map-status");
+  const addressInput = document.getElementById("profile-edit-address");
+
+  if (statusEl) statusEl.innerText = "Mendapatkan alamat...";
+  if (addressInput) addressInput.value = "Mencari lokasi...";
+
+  const address = await reverseGeocode(lat, lng);
+
+  if (addressInput) addressInput.value = address;
+  window.lastGeocodedProfileAddress = address;
+  if (statusEl) statusEl.innerText = "Lokasi diset dari peta";
+}
+
+window.detectProfileLocation = function (event) {
+  if (event) event.preventDefault();
+
+  const statusEl = document.getElementById("profile-map-status");
+  if (statusEl) statusEl.innerText = "Mencari lokasi GPS...";
+
+  if (!navigator.geolocation) {
+    showToast("Geolocation tidak didukung oleh browser Anda", "compass");
+    if (statusEl) statusEl.innerText = "GPS tidak didukung";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      if (!profileEditMap) {
+        window.openProfileAddressModal();
+      }
+
+      await updateProfileEditLocation(lat, lng);
+      showToast("Lokasi GPS berhasil dideteksi!", "compass");
+    },
+    (error) => {
+      console.error("Geolocation error:", error);
+      let errMsg = "Gagal mengakses GPS.";
+      if (error.code === error.PERMISSION_DENIED) {
+        errMsg = "Izin lokasi ditolak oleh pengguna.";
+      }
+      showToast(errMsg, "compass");
+      if (statusEl) statusEl.innerText = "Gagal mendeteksi lokasi";
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+};
+
+window.saveProfileAddress = async function () {
+  const addressInput = document.getElementById("profile-edit-address");
+  if (!addressInput) return;
+
+  const addressVal = addressInput.value.trim();
+  if (!addressVal) {
+    showToast("Alamat tidak boleh kosong", "compass");
+    return;
+  }
+
+  let lat = window.profileSelectedLat;
+  let lng = window.profileSelectedLng;
+
+  if (window.lastGeocodedProfileAddress !== addressVal) {
+    showToast("Menggeocoding alamat baru...", "compass");
+    const coords = await forwardGeocode(addressVal);
+    if (coords) {
+      lat = coords.lat;
+      lng = coords.lng;
+    }
+  }
+
+  // Update user state
+  if (state.user) {
+    state.user.address = addressVal;
+    state.user.lat = lat;
+    state.user.lng = lng;
+    saveUserState();
+    updateUserMapMarker();
+
+    showToast("Alamat berhasil diperbarui!", "compass");
+    window.closeProfileAddressModal();
+  }
+};
+
+
