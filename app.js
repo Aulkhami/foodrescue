@@ -106,7 +106,7 @@ const state = {
       id: "FR-1102",
       partnerName: "The Vegan Joint",
       itemName: "Eco-Burger & Kentang Goreng Manis",
-      price: 6.25,
+      price: 26500,
       status: "completed",
       date: "21 Okt 2023",
       image:
