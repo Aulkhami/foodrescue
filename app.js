@@ -554,6 +554,7 @@ function updateFloatingCart() {
 
 function switchView(viewName, params = {}) {
   state.currentView = viewName;
+  window.scrollTo(0, 0);
 
   // Hide all screens
   const screens = document.querySelectorAll(".app-screen");
@@ -1018,7 +1019,7 @@ function renderFoodDetail() {
           <button onclick="adjustDetailsQty(1)" class="w-6 h-6 flex items-center justify-center font-bold text-gray-500 hover:text-gray-950">+</button>
         </div>
         <button onclick="addDetailsToCart()" class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-center shadow-md transition-all flex items-center justify-center gap-2">
-          <span>Selamatkan Sekarang</span>
+          <span>Selamatkan</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
             <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
           </svg>
@@ -1057,7 +1058,6 @@ window.addDetailsToCart = function () {
   }
 
   showToast("Berhasil dimasukkan ke Keranjang!");
-  switchView("cart");
 };
 
 // Cart Rendering & Handlers
