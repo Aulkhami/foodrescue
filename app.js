@@ -368,9 +368,6 @@ window.profileSelectedLat = 40.7265;
 window.profileSelectedLng = -73.995;
 window.lastGeocodedProfileAddress = "";
 
-
-
-
 // DOM References & Render Controllers
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
@@ -733,8 +730,17 @@ function setupSearchAndFilters() {
 }
 
 function updatePartnerCoordinates() {
-  const userLat = (state.user && state.user.lat) || 40.7265;
-  const userLng = (state.user && state.user.lng) || -73.995;
+  let userLat = (state.user && state.user.lat) || 40.7265;
+  let userLng = (state.user && state.user.lng) || -73.995;
+
+  if (
+    window.exploreLocationMode === "live" &&
+    window.liveUserLat &&
+    window.liveUserLng
+  ) {
+    userLat = window.liveUserLat;
+    userLng = window.liveUserLng;
+  }
 
   const offsets = [
     { id: "partner-1", latOffset: -0.0006, lngOffset: 0.002 },
@@ -785,8 +791,17 @@ function updateUserMapMarker() {
 
   updatePartnerCoordinates();
 
-  const userLat = (state.user && state.user.lat) || 40.7265;
-  const userLng = (state.user && state.user.lng) || -73.995;
+  let userLat = (state.user && state.user.lat) || 40.7265;
+  let userLng = (state.user && state.user.lng) || -73.995;
+
+  if (
+    window.exploreLocationMode === "live" &&
+    window.liveUserLat &&
+    window.liveUserLng
+  ) {
+    userLat = window.liveUserLat;
+    userLng = window.liveUserLng;
+  }
 
   map.setView([userLat, userLng], map.getZoom() || 15);
 
@@ -2061,6 +2076,9 @@ window.logoutUser = function () {
   if (loginMap) {
     loginMap.setView([window.loginSelectedLat, window.loginSelectedLng], 14);
   }
+  if (window.highlightSegmentedMode) {
+    window.highlightSegmentedMode("login", "default");
+  }
 
   showToast("Anda telah keluar dari aplikasi.", "log-out");
   switchView("login");
@@ -2139,11 +2157,13 @@ window.initLoginMap = function () {
 
     // Click on map to position pin and update address
     loginMap.on("click", async (e) => {
+      clearSegmentedHighlights("login");
       updateLoginLocation(e.latlng.lat, e.latlng.lng);
     });
 
     // Drag pin to update location and address
     loginMarker.on("dragend", async (e) => {
+      clearSegmentedHighlights("login");
       const latLng = loginMarker.getLatLng();
       updateLoginLocation(latLng.lat, latLng.lng);
     });
@@ -2198,6 +2218,7 @@ window.detectUserLocation = function (event) {
         window.initLoginMap();
       }
 
+      highlightSegmentedMode("login", "gps");
       await updateLoginLocation(lat, lng);
       showToast("Lokasi GPS berhasil dideteksi!", "compass");
     },
@@ -2210,7 +2231,7 @@ window.detectUserLocation = function (event) {
       showToast(errMsg, "compass");
       if (statusEl) statusEl.innerText = "Gagal mendeteksi lokasi";
     },
-    { enableHighAccuracy: true, timeout: 8000 }
+    { enableHighAccuracy: true, timeout: 8000 },
   );
 };
 
@@ -2304,9 +2325,15 @@ window.openProfileAddressModal = function () {
   // Create or refresh map
   setTimeout(() => {
     if (profileEditMap) {
-      profileEditMap.setView([window.profileSelectedLat, window.profileSelectedLng], 14);
+      profileEditMap.setView(
+        [window.profileSelectedLat, window.profileSelectedLng],
+        14,
+      );
       if (profileEditMarker) {
-        profileEditMarker.setLatLng([window.profileSelectedLat, window.profileSelectedLng]);
+        profileEditMarker.setLatLng([
+          window.profileSelectedLat,
+          window.profileSelectedLng,
+        ]);
       }
       profileEditMap.invalidateSize();
       return;
@@ -2334,16 +2361,21 @@ window.openProfileAddressModal = function () {
       iconAnchor: [14, 28],
     });
 
-    profileEditMarker = L.marker([window.profileSelectedLat, window.profileSelectedLng], {
-      icon: loginIcon,
-      draggable: true,
-    }).addTo(profileEditMap);
+    profileEditMarker = L.marker(
+      [window.profileSelectedLat, window.profileSelectedLng],
+      {
+        icon: loginIcon,
+        draggable: true,
+      },
+    ).addTo(profileEditMap);
 
     profileEditMap.on("click", async (e) => {
+      clearSegmentedHighlights("profile");
       updateProfileEditLocation(e.latlng.lat, e.latlng.lng);
     });
 
     profileEditMarker.on("dragend", async (e) => {
+      clearSegmentedHighlights("profile");
       const latLng = profileEditMarker.getLatLng();
       updateProfileEditLocation(latLng.lat, latLng.lng);
     });
@@ -2402,6 +2434,7 @@ window.detectProfileLocation = function (event) {
         window.openProfileAddressModal();
       }
 
+      highlightSegmentedMode("profile", "gps");
       await updateProfileEditLocation(lat, lng);
       showToast("Lokasi GPS berhasil dideteksi!", "compass");
     },
@@ -2414,7 +2447,7 @@ window.detectProfileLocation = function (event) {
       showToast(errMsg, "compass");
       if (statusEl) statusEl.innerText = "Gagal mendeteksi lokasi";
     },
-    { enableHighAccuracy: true, timeout: 8000 }
+    { enableHighAccuracy: true, timeout: 8000 },
   );
 };
 
@@ -2453,4 +2486,84 @@ window.saveProfileAddress = async function () {
   }
 };
 
+// ==========================================
+// SEGMENTED LOCATION SELECTOR UTILITIES
+// ==========================================
 
+function clearSegmentedHighlights(prefix) {
+  const defaultBtn = document.getElementById(`${prefix}-loc-default`);
+  const gpsBtn = document.getElementById(`${prefix}-loc-gps`);
+  if (defaultBtn) {
+    defaultBtn.className =
+      "py-2.5 rounded-xl cursor-pointer hover:bg-white/50 transition-all duration-200";
+  }
+  if (gpsBtn) {
+    gpsBtn.className =
+      "py-2.5 rounded-xl cursor-pointer hover:bg-white/50 transition-all duration-200";
+  }
+}
+
+function highlightSegmentedMode(prefix, mode) {
+  clearSegmentedHighlights(prefix);
+  const activeBtn = document.getElementById(`${prefix}-loc-${mode}`);
+  if (activeBtn) {
+    activeBtn.className =
+      "py-2.5 rounded-xl cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+  }
+}
+
+window.exploreLocationMode = "saved";
+window.liveUserLat = null;
+window.liveUserLng = null;
+
+window.selectExploreLocationMode = function (mode, event) {
+  if (event) event.preventDefault();
+  window.exploreLocationMode = mode;
+
+  const savedBtn = document.getElementById("explore-loc-saved");
+  const liveBtn = document.getElementById("explore-loc-live");
+
+  if (savedBtn && liveBtn) {
+    if (mode === "saved") {
+      savedBtn.className =
+        "px-2.5 py-1.5 rounded-lg cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+      liveBtn.className =
+        "px-2.5 py-1.5 rounded-lg cursor-pointer hover:bg-white/50 transition-all duration-200";
+
+      updateUserMapMarker();
+      updateMapMarkers();
+      showToast("Radar diatur ke alamat tersimpan Anda!", "compass");
+    } else if (mode === "live") {
+      savedBtn.className =
+        "px-2.5 py-1.5 rounded-lg cursor-pointer hover:bg-white/50 transition-all duration-200";
+      liveBtn.className =
+        "px-2.5 py-1.5 rounded-lg cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+
+      if (navigator.geolocation) {
+        showToast("Mendeteksi lokasi GPS live...", "compass");
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            window.liveUserLat = position.coords.latitude;
+            window.liveUserLng = position.coords.longitude;
+
+            updateUserMapMarker();
+            updateMapMarkers();
+            showToast("Radar diatur ke lokasi GPS live Anda!", "compass");
+          },
+          (error) => {
+            console.error("Live GPS error:", error);
+            showToast(
+              "Gagal mengakses GPS live. Kembali ke alamat tersimpan.",
+              "compass",
+            );
+            window.selectExploreLocationMode("saved");
+          },
+          { enableHighAccuracy: true, timeout: 8000 },
+        );
+      } else {
+        showToast("GPS live tidak didukung browser Anda.", "compass");
+        window.selectExploreLocationMode("saved");
+      }
+    }
+  }
+};
