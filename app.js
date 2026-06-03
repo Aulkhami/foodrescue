@@ -81,6 +81,9 @@ const state = {
       distance: "jarak 0,6 km",
       image:
         "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Kotak Pizza Misteri", quantity: 2, price: 12500 }
+      ],
     },
     {
       id: "FR-8291",
@@ -93,26 +96,37 @@ const state = {
       distance: "jarak 1,9 km",
       image:
         "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Kotak Kue Akhir Hari", quantity: 1, price: 15000 }
+      ],
     },
     {
       id: "FR-1279",
       partnerName: "Urban Greens",
       itemName: "Mangkuk Salad Superfood",
+      itemCount: 1,
       price: 15000,
       status: "completed",
       date: "24 Okt 2023",
       image:
         "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Mangkuk Salad Superfood", quantity: 1, price: 15000 }
+      ],
     },
     {
       id: "FR-1102",
       partnerName: "The Vegan Joint",
       itemName: "Eco-Burger & Kentang Goreng Manis",
+      itemCount: 1,
       price: 26500,
       status: "completed",
       date: "21 Okt 2023",
       image:
         "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Eco-Burger & Kentang Goreng Manis", quantity: 1, price: 26500 }
+      ],
     },
   ],
 
@@ -1477,6 +1491,11 @@ window.placeOrder = function () {
     expiresIn: "1h 59m",
     distance: "jarak 1,2 km",
     image: firstItem.image,
+    items: state.cart.map((item) => ({
+      name: item.name,
+      quantity: item.quantity,
+      price: item.price,
+    })),
   };
 
   // Add to order list at the beginning
@@ -1841,6 +1860,13 @@ window.claimBlindMeal = function (itemId) {
     expiresIn: "30m 00s",
     distance: "jarak 1,9 km",
     image: item.image,
+    items: [
+      {
+        name: `${item.name} (Kotak Misteri)`,
+        quantity: 1,
+        price: 0.0,
+      },
+    ],
   };
 
   state.orders.unshift(newOrder);
@@ -1881,7 +1907,7 @@ function renderOrders() {
           .map(
             (o) => `
     <div class="bg-white rounded-2xl p-3.5 border border-gray-100 shadow-sm flex gap-3.5 relative">
-      <img src="${o.image}" alt="${o.itemName}" class="w-16 h-16 rounded-xl object-cover">
+      <img src="${o.image}" alt="${o.partnerName}" class="w-16 h-16 rounded-xl object-cover">
       <div class="flex-1 flex flex-col justify-between">
         <div>
           <div class="flex justify-between items-start">
@@ -1890,7 +1916,17 @@ function renderOrders() {
               ⏱️ ${o.expiresIn}
             </span>
           </div>
-          <p class="text-[10px] text-gray-400 mt-0.5">${o.itemName} (${o.itemCount} barang)</p>
+          <div class="flex flex-wrap gap-1 mt-1">
+            ${(o.items || [{ name: o.itemName, quantity: o.itemCount }])
+              .map(
+                (item) => `
+              <span class="bg-gray-50 text-[9px] text-gray-500 font-bold px-2 py-0.5 rounded-full border border-gray-100 flex items-center whitespace-nowrap">
+                ${item.name} x${item.quantity}
+              </span>
+            `,
+              )
+              .join("")}
+          </div>
         </div>
         
         <div class="flex items-center justify-between mt-3">
@@ -1915,11 +1951,21 @@ function renderOrders() {
             (o) => `
     <div class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <img src="${o.image}" alt="${o.itemName}" class="w-12 h-12 rounded-lg object-cover">
+        <img src="${o.image}" alt="${o.partnerName}" class="w-12 h-12 rounded-lg object-cover">
         <div>
           <h4 class="font-bold text-xs text-gray-900 leading-tight">${o.partnerName}</h4>
-          <p class="text-[9px] text-gray-400 mt-0.5">${o.itemName}</p>
-          <span class="text-[9px] text-gray-400 block">${o.date}</span>
+          <div class="flex flex-wrap gap-1 mt-0.5">
+            ${(o.items || [{ name: o.itemName, quantity: 1 }])
+              .map(
+                (item) => `
+              <span class="bg-gray-50 text-[8px] text-gray-400 font-bold px-1.5 py-0.5 rounded-md whitespace-nowrap">
+                ${item.name} x${item.quantity}
+              </span>
+            `,
+              )
+              .join("")}
+          </div>
+          <span class="text-[9px] text-gray-400 block mt-0.5">${o.date || "Selesai"}</span>
         </div>
       </div>
       
@@ -2606,7 +2652,40 @@ window.trackOrderRoute = function (orderId) {
   // Set titles
   const partnerTitleEl = document.getElementById("route-partner-title");
   if (partnerTitleEl) {
-    partnerTitleEl.innerText = `Rute ke ${order.partnerName} (${order.itemName})`;
+    const isMultiItem = order.items && order.items.length > 1;
+    const titleSuffix = isMultiItem ? `${order.itemName} +${order.items.length - 1}` : order.itemName;
+    partnerTitleEl.innerText = `Rute ke ${order.partnerName} (${titleSuffix})`;
+  }
+
+  // Set order details card content
+  const detailsEl = document.getElementById("route-order-details");
+  if (detailsEl) {
+    detailsEl.classList.remove("items-center");
+    detailsEl.classList.add("items-start");
+    detailsEl.innerHTML = `
+      <img src="${order.image}" alt="${order.itemName}" class="w-12 h-12 rounded-xl object-cover flex-shrink-0 mt-0.5">
+      <div class="flex-1 min-w-0">
+        <div class="flex justify-between items-baseline">
+          <h4 class="font-extrabold text-xs text-gray-900 truncate">${order.partnerName}</h4>
+          <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">${order.id}</span>
+        </div>
+        <div class="flex flex-wrap gap-1 mt-1 mb-1.5">
+          ${(order.items || [{ name: order.itemName, quantity: order.itemCount || 1 }])
+            .map(
+              (item) => `
+            <span class="bg-gray-50 text-[9px] text-gray-500 font-bold px-2 py-0.5 rounded-full border border-gray-100 flex items-center whitespace-nowrap">
+              ${item.name} x${item.quantity}
+            </span>
+          `,
+            )
+            .join("")}
+        </div>
+        <div class="flex justify-between items-center mt-1">
+          <span class="text-[9px] text-gray-400 font-semibold">Total Pembayaran:</span>
+          <strong class="text-xs font-black text-gray-900">${formatRupiah(order.price)}</strong>
+        </div>
+      </div>
+    `;
   }
 
   // Update button highlights
