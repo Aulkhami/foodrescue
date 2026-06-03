@@ -11,6 +11,7 @@ function formatRupiahAbbr(amount) {
 }
 
 const state = {
+  isAuthenticated: false,
   currentView: "explore", // 'explore', 'cart', 'checkout', 'impact', 'orders', 'profile', 'success', 'partner-detail', 'food-detail'
   searchQuery: "",
   budgetLimit: 50000,
@@ -52,6 +53,7 @@ const state = {
   // User Profile
   user: {
     name: "Alex",
+    email: "example@gmail.com",
     coins: 1250,
     co2Saved: 12.0, // kg
     mealsRescued: 24,
@@ -359,12 +361,28 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function initApp() {
-  switchView("explore");
   setupNavEventListeners();
   setupSearchAndFilters();
   setupMap();
   setupNotificationDropdown();
-  renderAll();
+
+  // Check localStorage for logged-in user
+  const savedUser = localStorage.getItem("foodrescue_user");
+  if (savedUser) {
+    try {
+      state.user = JSON.parse(savedUser);
+      state.isAuthenticated = true;
+      updateUserDynamicElements();
+      switchView("explore");
+    } catch (e) {
+      localStorage.removeItem("foodrescue_user");
+      state.isAuthenticated = false;
+      switchView("login");
+    }
+  } else {
+    state.isAuthenticated = false;
+    switchView("login");
+  }
 }
 
 function setupNotificationDropdown() {
@@ -559,6 +577,11 @@ function updateFloatingCart() {
 }
 
 function switchView(viewName, params = {}) {
+  // If not authenticated and trying to go to any page other than login, redirect to login
+  if (!state.isAuthenticated && viewName !== "login") {
+    viewName = "login";
+  }
+
   state.currentView = viewName;
   window.scrollTo(0, 0);
 
@@ -572,6 +595,17 @@ function switchView(viewName, params = {}) {
     activeScreen.classList.remove("hidden");
     // Scroll to top
     activeScreen.scrollTop = 0;
+  }
+
+  // Manage header and nav visibility for login page
+  const header = document.getElementById("app-header");
+  const nav = document.getElementById("app-nav");
+  if (viewName === "login") {
+    if (header) header.classList.add("hidden");
+    if (nav) nav.classList.add("hidden");
+  } else {
+    if (header) header.classList.remove("hidden");
+    if (nav) nav.classList.remove("hidden");
   }
 
   // Manage details parameters
@@ -1235,11 +1269,11 @@ function renderCheckout() {
   const addressLabel = document.getElementById("partner-addresses");
 
   const orderedPartners = new Set();
-  state.cart.forEach(item => {
+  state.cart.forEach((item) => {
     orderedPartners.add(item.partnerId);
   });
   let addresses = "";
-  orderedPartners.forEach(partnerId => {
+  orderedPartners.forEach((partnerId) => {
     const partner = partners.find((p) => p.id == partnerId);
     addresses += `
       <div>
@@ -1250,7 +1284,7 @@ function renderCheckout() {
           ${partner.address}
         </p>
       </div>
-    `
+    `;
   });
   addressLabel.innerHTML = addresses;
 
@@ -1351,6 +1385,7 @@ window.placeOrder = function () {
   // Update impact metrics
   state.user.co2Saved += co2SavedToday;
   state.user.mealsRescued += totalItems;
+  saveUserState();
 
   // Add notification
   state.notifications.unshift({
@@ -1569,6 +1604,7 @@ window.redeemReward = function (rewardId, cost) {
   }
 
   state.user.coins -= cost;
+  saveUserState();
   alert("🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke email Anda.");
   renderImpact();
 };
@@ -1615,6 +1651,7 @@ window.tapBlindBox = function () {
     state.blindBox.state = "revealed";
     // Deduct coins
     state.user.coins -= 500;
+    saveUserState();
     // Select random item from catalog as reward
     const rand = Math.floor(Math.random() * catalog.length);
     state.blindBox.revealedItem = catalog[rand];
@@ -1702,6 +1739,7 @@ window.claimBlindMeal = function (itemId) {
   state.orders.unshift(newOrder);
   state.user.mealsRescued += 1;
   state.user.co2Saved += item.co2Reduction;
+  saveUserState();
 
   // Add notification
   state.notifications.unshift({
@@ -1861,4 +1899,80 @@ function showToast(message, iconName = "shopping-bag") {
       toast.remove();
     }, 300);
   }, 3000);
+}
+
+// ==========================================
+// DUMMY LOGIN FEATURE LOGIC
+// ==========================================
+
+window.handleCustomLogin = function (event) {
+  event.preventDefault();
+  const usernameInput = document.getElementById("login-username").value.trim();
+  const emailInput = document.getElementById("login-email").value.trim();
+  const addressInput = document.getElementById("login-address").value.trim();
+
+  if (usernameInput && addressInput) {
+    state.user = {
+      name: usernameInput,
+      email: emailInput,
+      coins: 0,
+      co2Saved: 0.0,
+      mealsRescued: 0,
+      moneySaved: 0,
+      address: addressInput,
+    };
+    state.isAuthenticated = true;
+    localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
+
+    updateUserDynamicElements();
+    showToast(
+      `Akun berhasil dibuat. Selamat datang, ${state.user.name}!`,
+      "user",
+    );
+    switchView("explore");
+
+    // Reset form
+    document.getElementById("login-form").reset();
+  }
+};
+
+window.logoutUser = function () {
+  localStorage.removeItem("foodrescue_user");
+  state.user = {
+    name: "",
+    email: "",
+    coins: 0,
+    co2Saved: 0,
+    mealsRescued: 0,
+    moneySaved: 0,
+    address: "",
+  };
+  state.isAuthenticated = false;
+
+  // Clear any inputs in custom form
+  const loginForm = document.getElementById("login-form");
+  if (loginForm) loginForm.reset();
+
+  showToast("Anda telah keluar dari aplikasi.", "log-out");
+  switchView("login");
+};
+
+function saveUserState() {
+  if (state.user) {
+    localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
+    updateUserDynamicElements();
+  }
+}
+
+function updateUserDynamicElements() {
+  if (!state.user) return;
+
+  const welcomeName = document.getElementById("welcome-user-name");
+  if (welcomeName) welcomeName.innerText = state.user.name;
+
+  const impactName = document.getElementById("impact-user-name");
+  if (impactName) impactName.innerText = state.user.name;
+
+  // Update Profile screen metrics
+  renderProfile();
 }
