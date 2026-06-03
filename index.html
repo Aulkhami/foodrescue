@@ -224,7 +224,7 @@
               <label for="login-address" class="text-xs font-bold text-gray-700"
                 >Alamat Anda Sekarang</label
               >
-              <div class="relative">
+              <div class="relative flex items-center">
                 <span
                   class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
                 >
@@ -234,11 +234,30 @@
                   type="text"
                   id="login-address"
                   placeholder="Masukkan alamat Anda..."
-                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-12 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
                   required
                 />
+                <button
+                  type="button"
+                  id="btn-detect-location"
+                  title="Gunakan Lokasi Saat Ini"
+                  class="absolute right-3 p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors flex items-center justify-center cursor-pointer"
+                  onclick="detectUserLocation(event)"
+                >
+                  <i data-lucide="locate" class="w-4 h-4"></i>
+                </button>
+              </div>
+
+              <!-- Login Map Selector -->
+              <div class="space-y-1.5 mt-2">
+                <div class="flex justify-between items-center px-1">
+                  <span class="text-[10px] font-bold text-gray-500">Pilih lokasi Anda di peta:</span>
+                  <span id="login-map-status" class="text-[10px] text-emerald-600 font-bold">Klik peta / geser pin</span>
+                </div>
+                <div id="login-map" class="w-full h-44 rounded-2xl border border-gray-100 shadow-xs z-10"></div>
               </div>
             </div>
+
 
             <!-- Login Button -->
             <button

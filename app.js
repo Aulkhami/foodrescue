@@ -351,9 +351,16 @@ const catalog = [
   },
 ];
 
-// Leaflet Map instance
+// Leaflet Map instances
 let map = null;
 let markers = [];
+let userMarker = null;
+
+let loginMap = null;
+let loginMarker = null;
+window.loginSelectedLat = 40.7265;
+window.loginSelectedLng = -73.995;
+
 
 // DOM References & Render Controllers
 document.addEventListener("DOMContentLoaded", () => {
@@ -373,6 +380,7 @@ function initApp() {
       state.user = JSON.parse(savedUser);
       state.isAuthenticated = true;
       updateUserDynamicElements();
+      updateUserMapMarker();
       switchView("explore");
     } catch (e) {
       localStorage.removeItem("foodrescue_user");
@@ -603,6 +611,9 @@ function switchView(viewName, params = {}) {
   if (viewName === "login") {
     if (header) header.classList.add("hidden");
     if (nav) nav.classList.add("hidden");
+    if (window.initLoginMap) {
+      window.initLoginMap();
+    }
   } else {
     if (header) header.classList.remove("hidden");
     if (nav) nav.classList.remove("hidden");
@@ -706,11 +717,14 @@ function setupSearchAndFilters() {
 
 // Leaflet Map Integration
 function setupMap() {
-  // Center map around New York coordinates where partners are
+  const userLat = (state.user && state.user.lat) || 40.7265;
+  const userLng = (state.user && state.user.lng) || -73.995;
+
+  // Center map around user coordinates
   map = L.map("map", {
     zoomControl: false,
     attributionControl: false,
-  }).setView([40.7265, -73.995], 15);
+  }).setView([userLat, userLng], 15);
 
   // Style with beautiful Stadia Alidade Smooth or OpenStreetMap tiles
   L.tileLayer(
@@ -721,15 +735,30 @@ function setupMap() {
   ).addTo(map);
 
   // Add User Location Pin
-  const userIcon = L.divIcon({
-    className: "custom-marker",
-    html: '<div class="marker-user"></div>',
-    iconSize: [20, 20],
-  });
-  L.marker([40.7265, -73.995], { icon: userIcon }).addTo(map);
+  updateUserMapMarker();
 
   // Load Partner Markers
   updateMapMarkers();
+}
+
+function updateUserMapMarker() {
+  if (!map) return;
+
+  const userLat = (state.user && state.user.lat) || 40.7265;
+  const userLng = (state.user && state.user.lng) || -73.995;
+
+  map.setView([userLat, userLng], map.getZoom() || 15);
+
+  if (userMarker) {
+    userMarker.setLatLng([userLat, userLng]);
+  } else {
+    const userIcon = L.divIcon({
+      className: "custom-marker",
+      html: '<div class="marker-user"></div>',
+      iconSize: [20, 20],
+    });
+    userMarker = L.marker([userLat, userLng], { icon: userIcon }).addTo(map);
+  }
 }
 
 function updateMapMarkers() {
@@ -1920,11 +1949,14 @@ window.handleCustomLogin = function (event) {
       mealsRescued: 0,
       moneySaved: 0,
       address: addressInput,
+      lat: window.loginSelectedLat || 40.7265,
+      lng: window.loginSelectedLng || -73.995,
     };
     state.isAuthenticated = true;
     localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
 
     updateUserDynamicElements();
+    updateUserMapMarker();
     showToast(
       `Akun berhasil dibuat. Selamat datang, ${state.user.name}!`,
       "user",
@@ -1933,6 +1965,16 @@ window.handleCustomLogin = function (event) {
 
     // Reset form
     document.getElementById("login-form").reset();
+
+    // Reset login coordinates
+    window.loginSelectedLat = 40.7265;
+    window.loginSelectedLng = -73.995;
+    if (loginMarker) {
+      loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
+    }
+    if (loginMap) {
+      loginMap.setView([window.loginSelectedLat, window.loginSelectedLng], 14);
+    }
   }
 };
 
@@ -1946,12 +1988,24 @@ window.logoutUser = function () {
     mealsRescued: 0,
     moneySaved: 0,
     address: "",
+    lat: 40.7265,
+    lng: -73.995,
   };
   state.isAuthenticated = false;
 
   // Clear any inputs in custom form
   const loginForm = document.getElementById("login-form");
   if (loginForm) loginForm.reset();
+
+  // Reset login map selection state
+  window.loginSelectedLat = 40.7265;
+  window.loginSelectedLng = -73.995;
+  if (loginMarker) {
+    loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
+  }
+  if (loginMap) {
+    loginMap.setView([window.loginSelectedLat, window.loginSelectedLng], 14);
+  }
 
   showToast("Anda telah keluar dari aplikasi.", "log-out");
   switchView("login");
@@ -1973,6 +2027,171 @@ function updateUserDynamicElements() {
   const impactName = document.getElementById("impact-user-name");
   if (impactName) impactName.innerText = state.user.name;
 
+  // Update welcome location text if present
+  const welcomeLocation = document.getElementById("welcome-user-location");
+  if (welcomeLocation && state.user.address) {
+    const addressParts = state.user.address.split(",");
+    welcomeLocation.innerText = addressParts[0] || state.user.address;
+  }
+
   // Update Profile screen metrics
   renderProfile();
+}
+
+// ==========================================
+// LOGIN MAP & GEOLOCATION FEATURES
+// ==========================================
+
+window.initLoginMap = function () {
+  if (loginMap) {
+    // If already created, ensure Leaflet calculates container bounds correctly after view switch
+    setTimeout(() => {
+      loginMap.invalidateSize();
+    }, 150);
+    return;
+  }
+
+  // Delay slightly to ensure DOM transition has finished and elements are visible
+  setTimeout(() => {
+    const container = document.getElementById("login-map");
+    if (!container) return;
+
+    loginMap = L.map("login-map", {
+      zoomControl: true,
+      attributionControl: false,
+    }).setView([window.loginSelectedLat, window.loginSelectedLng], 14);
+
+    // Style tiles
+    L.tileLayer(
+      "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+      {
+        maxZoom: 20,
+      },
+    ).addTo(loginMap);
+
+    // Custom marker pin
+    const loginIcon = L.divIcon({
+      className: "login-marker-container",
+      html: '<div class="marker-pin-login"></div>',
+      iconSize: [28, 28],
+      iconAnchor: [14, 28],
+    });
+
+    loginMarker = L.marker([window.loginSelectedLat, window.loginSelectedLng], {
+      icon: loginIcon,
+      draggable: true,
+    }).addTo(loginMap);
+
+    // Click on map to position pin and update address
+    loginMap.on("click", async (e) => {
+      updateLoginLocation(e.latlng.lat, e.latlng.lng);
+    });
+
+    // Drag pin to update location and address
+    loginMarker.on("dragend", async (e) => {
+      const latLng = loginMarker.getLatLng();
+      updateLoginLocation(latLng.lat, latLng.lng);
+    });
+
+    // Force redraw map bounds
+    loginMap.invalidateSize();
+  }, 100);
+};
+
+async function updateLoginLocation(lat, lng) {
+  window.loginSelectedLat = lat;
+  window.loginSelectedLng = lng;
+
+  if (loginMarker) {
+    loginMarker.setLatLng([lat, lng]);
+  }
+  if (loginMap) {
+    loginMap.panTo([lat, lng]);
+  }
+
+  const statusEl = document.getElementById("login-map-status");
+  const addressInput = document.getElementById("login-address");
+
+  if (statusEl) statusEl.innerText = "Mendapatkan alamat...";
+  if (addressInput) addressInput.value = "Mencari lokasi...";
+
+  const address = await reverseGeocode(lat, lng);
+
+  if (addressInput) addressInput.value = address;
+  if (statusEl) statusEl.innerText = "Lokasi diset dari peta";
+}
+
+window.detectUserLocation = function (event) {
+  if (event) event.preventDefault();
+
+  const statusEl = document.getElementById("login-map-status");
+  if (statusEl) statusEl.innerText = "Mencari lokasi GPS...";
+
+  if (!navigator.geolocation) {
+    showToast("Geolocation tidak didukung oleh browser Anda", "compass");
+    if (statusEl) statusEl.innerText = "GPS tidak didukung";
+    return;
+  }
+
+  navigator.geolocation.getCurrentPosition(
+    async (position) => {
+      const lat = position.coords.latitude;
+      const lng = position.coords.longitude;
+
+      if (!loginMap) {
+        window.initLoginMap();
+      }
+
+      await updateLoginLocation(lat, lng);
+      showToast("Lokasi GPS berhasil dideteksi!", "compass");
+    },
+    (error) => {
+      console.error("Geolocation error:", error);
+      let errMsg = "Gagal mengakses GPS.";
+      if (error.code === error.PERMISSION_DENIED) {
+        errMsg = "Izin lokasi ditolak oleh pengguna.";
+      }
+      showToast(errMsg, "compass");
+      if (statusEl) statusEl.innerText = "Gagal mendeteksi lokasi";
+    },
+    { enableHighAccuracy: true, timeout: 8000 }
+  );
+};
+
+async function reverseGeocode(lat, lng) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
+      {
+        headers: {
+          "Accept-Language": "id, en",
+          "User-Agent": "FoodRescue/1.0",
+        },
+      },
+    );
+    const data = await response.json();
+
+    if (data && data.address) {
+      const addr = data.address;
+      const street = addr.road || addr.suburb || addr.neighbourhood || "";
+      const number = addr.house_number ? `${addr.house_number} ` : "";
+      const city =
+        addr.city || addr.town || addr.municipality || addr.county || "";
+      const stateName = addr.state || "";
+
+      const parts = [];
+      if (street) parts.push(number + street);
+      if (city) parts.push(city);
+      if (stateName) parts.push(stateName);
+
+      if (parts.length > 0) {
+        return parts.join(", ");
+      }
+    }
+
+    return data.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  } catch (error) {
+    console.error("Reverse geocoding error:", error);
+    return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  }
 }

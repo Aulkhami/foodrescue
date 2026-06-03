@@ -138,3 +138,29 @@ h1, h2, h3, h4, .font-heading {
 .animate-cart-bounce {
   animation: slide-up-bounce 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
+
+/* Custom Marker Pin for Login Map */
+.marker-pin-login {
+  width: 28px;
+  height: 28px;
+  background-color: #059669; /* Emerald-600 */
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  border: 2px solid white;
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.4);
+  position: relative;
+}
+.marker-pin-login::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: white;
+  position: absolute;
+  border-radius: 50%;
+  top: 7px;
+  left: 7px;
+}
+.login-marker-container {
+  display: block;
+}
+
