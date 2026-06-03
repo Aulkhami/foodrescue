@@ -368,6 +368,17 @@ window.profileSelectedLat = 40.7265;
 window.profileSelectedLng = -73.995;
 window.lastGeocodedProfileAddress = "";
 
+let routeMap = null;
+let routePolyline = null;
+let routeUserMarker = null;
+let routePartnerMarker = null;
+window.activeTrackOrder = null;
+window.activeTrackPartner = null;
+window.routeOriginMode = "saved";
+window.liveRouteLat = null;
+window.liveRouteLng = null;
+
+
 // DOM References & Render Controllers
 document.addEventListener("DOMContentLoaded", () => {
   initApp();
@@ -630,6 +641,10 @@ function switchView(viewName, params = {}) {
         updateUserMapMarker();
         updateMapMarkers();
       }, 150);
+    }
+
+    if (viewName === "order-route" && window.initRouteMap) {
+      window.initRouteMap();
     }
   }
 
@@ -1880,7 +1895,7 @@ function renderOrders() {
         
         <div class="flex items-center justify-between mt-3">
           <span class="text-[10px] text-gray-400 font-semibold">📍 ${o.distance}</span>
-          <button onclick="alert(\`🧭 Membuka Peta Navigasi Aktif ke ${o.partnerName}...\`)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
+          <button onclick="trackOrderRoute('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
             Lacak Pesanan
           </button>
         </div>
@@ -2574,3 +2589,236 @@ window.selectExploreLocationMode = function (mode, event) {
     }
   }
 };
+
+// ==========================================
+// ORDER ROUTE NAVIGATION VIEW LOGIC
+// ==========================================
+
+window.trackOrderRoute = function (orderId) {
+  const order = state.orders.find((o) => o.id === orderId);
+  if (!order) return;
+
+  const partner = partners.find((p) => p.name === order.partnerName);
+  window.activeTrackOrder = order;
+  window.activeTrackPartner = partner;
+  window.routeOriginMode = "saved"; // Default back to saved
+
+  // Set titles
+  const partnerTitleEl = document.getElementById("route-partner-title");
+  if (partnerTitleEl) {
+    partnerTitleEl.innerText = `Rute ke ${order.partnerName} (${order.itemName})`;
+  }
+
+  // Update button highlights
+  const savedBtn = document.getElementById("route-origin-saved");
+  const liveBtn = document.getElementById("route-origin-live");
+  if (savedBtn && liveBtn) {
+    savedBtn.className =
+      "py-2.5 rounded-xl cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+    liveBtn.className =
+      "py-2.5 rounded-xl cursor-pointer hover:bg-white/50 transition-all duration-200";
+  }
+
+  switchView("order-route");
+};
+
+window.selectRouteOriginMode = function (mode, event) {
+  if (event) event.preventDefault();
+  window.routeOriginMode = mode;
+
+  const savedBtn = document.getElementById("route-origin-saved");
+  const liveBtn = document.getElementById("route-origin-live");
+  if (savedBtn && liveBtn) {
+    if (mode === "saved") {
+      savedBtn.className =
+        "py-2.5 rounded-xl cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+      liveBtn.className =
+        "py-2.5 rounded-xl cursor-pointer hover:bg-white/50 transition-all duration-200";
+      window.initRouteMap();
+    } else if (mode === "live") {
+      savedBtn.className =
+        "py-2.5 rounded-xl cursor-pointer hover:bg-white/50 transition-all duration-200";
+      liveBtn.className =
+        "py-2.5 rounded-xl cursor-pointer bg-white text-emerald-600 shadow-xs transition-all duration-200";
+
+      // Fetch GPS live and render
+      if (navigator.geolocation) {
+        showToast("Mengakses lokasi GPS live...", "compass");
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            window.liveRouteLat = position.coords.latitude;
+            window.liveRouteLng = position.coords.longitude;
+            window.initRouteMap();
+          },
+          (error) => {
+            console.error("GPS error:", error);
+            showToast(
+              "Gagal mengakses GPS live. Kembali ke alamat tersimpan.",
+              "compass",
+            );
+            window.selectRouteOriginMode("saved");
+          },
+          { enableHighAccuracy: true, timeout: 8000 },
+        );
+      } else {
+        showToast("GPS live tidak didukung browser Anda.", "compass");
+        window.selectRouteOriginMode("saved");
+      }
+    }
+  }
+};
+
+window.initRouteMap = function () {
+  const order = window.activeTrackOrder;
+  const partner = window.activeTrackPartner;
+  if (!order) return;
+
+  // 1. Get Coordinates
+  let userLat = (state.user && state.user.lat) || 40.7265;
+  let userLng = (state.user && state.user.lng) || -73.995;
+
+  if (window.routeOriginMode === "live") {
+    if (window.liveRouteLat && window.liveRouteLng) {
+      userLat = window.liveRouteLat;
+      userLng = window.liveRouteLng;
+    } else {
+      // Trigger GPS fetch
+      window.selectRouteOriginMode("live");
+      return;
+    }
+  }
+
+  let partnerLat = (partner && partner.lat) || 40.7259;
+  let partnerLng = (partner && partner.lng) || -73.993;
+
+  // 2. Initialize Map
+  setTimeout(() => {
+    const container = document.getElementById("route-map");
+    if (!container) return;
+
+    if (!routeMap) {
+      routeMap = L.map("route-map", {
+        zoomControl: true,
+        attributionControl: false,
+      });
+
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+        {
+          maxZoom: 20,
+        },
+      ).addTo(routeMap);
+    }
+
+    // Clear old route items
+    if (routeUserMarker) routeMap.removeLayer(routeUserMarker);
+    if (routePartnerMarker) routeMap.removeLayer(routePartnerMarker);
+    if (routePolyline) routeMap.removeLayer(routePolyline);
+
+    // 3. Draw Route Markers
+    const userIcon = L.divIcon({
+      className: "custom-marker",
+      html: '<div class="marker-user"></div>',
+      iconSize: [20, 20],
+    });
+    routeUserMarker = L.marker([userLat, userLng], { icon: userIcon }).addTo(
+      routeMap,
+    );
+
+    const partnerIcon = L.divIcon({
+      className: "login-marker-container",
+      html: '<div class="marker-pin-login"></div>',
+      iconSize: [28, 28],
+      iconAnchor: [14, 28],
+    });
+    routePartnerMarker = L.marker([partnerLat, partnerLng], {
+      icon: partnerIcon,
+    }).addTo(routeMap);
+
+    // 4. Draw Route Line (dashed glowing emerald line)
+    routePolyline = L.polyline(
+      [
+        [userLat, userLng],
+        [partnerLat, partnerLng],
+      ],
+      {
+        color: "#059669",
+        weight: 4,
+        opacity: 0.8,
+        dashArray: "6, 6",
+      },
+    ).addTo(routeMap);
+
+    // 5. Fit Map view to show both points
+    routeMap.fitBounds(
+      [
+        [userLat, userLng],
+        [partnerLat, partnerLng],
+      ],
+      { padding: [50, 50] },
+    );
+    routeMap.invalidateSize();
+
+    // 6. Calculate Route Info
+    const distanceKm = getHaversineDistance(
+      userLat,
+      userLng,
+      partnerLat,
+      partnerLng,
+    );
+    const distanceText =
+      distanceKm < 1
+        ? `${Math.round(distanceKm * 1000)} m`
+        : `${distanceKm.toFixed(2)} km`;
+    const durationMin = Math.round(distanceKm * 12) || 1; // 12 min per km walk
+
+    const distanceEl = document.getElementById("route-distance-text");
+    const durationEl = document.getElementById("route-duration-text");
+    if (distanceEl) distanceEl.innerText = `Jarak tempuh: ${distanceText}`;
+    if (durationEl) durationEl.innerText = `${durationMin} mnt`;
+
+    // 7. Render dynamic turn directions
+    const stepsContainer = document.getElementById("route-steps-container");
+    if (stepsContainer) {
+      const originName =
+        window.routeOriginMode === "saved"
+          ? "Alamat Tersimpan"
+          : "Lokasi GPS Live";
+      const partnerName = order.partnerName;
+
+      stepsContainer.innerHTML = `
+        <div class="flex items-start gap-2">
+          <i data-lucide="navigation" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+          <span>Mulai dari <strong class="text-gray-900">${originName}</strong> Anda.</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <i data-lucide="arrow-up-right" class="w-3.5 h-3.5 text-gray-400 flex-shrink-0 mt-0.5"></i>
+          <span>Jalan lurus sepanjang rute navigasi (${(distanceKm * 0.75).toFixed(2)} km).</span>
+        </div>
+        <div class="flex items-start gap-2">
+          <i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-600 flex-shrink-0 mt-0.5"></i>
+          <span>Tiba di <strong class="text-gray-900">${partnerName}</strong>. Makanan penyelamatan siap diambil!</span>
+        </div>
+      `;
+      // Initialize Lucide icons inside steps container
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+  }, 100);
+};
+
+function getHaversineDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Earth radius in km
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
