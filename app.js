@@ -168,42 +168,48 @@ const state = {
     {
       id: "b-1",
       name: "Pahlawan Tanpa Sampah",
-      icon: "🍃",
+      icon: "leaf",
+      color: "text-emerald-500",
       desc: "Terbuka: Menyelamatkan lebih dari 10 makanan sisa!",
       unlocked: true,
     },
     {
       id: "b-2",
       name: "Penyelamat Kue",
-      icon: "🥐",
+      icon: "cookie",
+      color: "text-amber-500",
       desc: "Terbuka: Menyelamatkan kue 5 kali!",
       unlocked: true,
     },
     {
       id: "b-3",
       name: "Juara CO2",
-      icon: "🌍",
+      icon: "globe",
+      color: "text-blue-500",
       desc: "Terbuka: Menyelamatkan 10kg emisi CO2!",
       unlocked: true,
     },
     {
       id: "b-4",
       name: "Penyelamat Pagi",
-      icon: "🌅",
+      icon: "sun",
+      color: "text-orange-500",
       desc: "Menyelamatkan makanan sebelum jam 09.00",
       unlocked: false,
     },
     {
       id: "b-5",
       name: "Duta Eco",
-      icon: "🎖️",
+      icon: "award",
+      color: "text-yellow-500",
       desc: "Mengumpulkan 2.000 Koin Eco",
       unlocked: false,
     },
     {
       id: "b-6",
       name: "Pelindung Bumi",
-      icon: "🛡️",
+      icon: "shield",
+      color: "text-indigo-500",
       desc: "Selesaikan 10 misi",
       unlocked: false,
     },
@@ -939,7 +945,7 @@ function renderExploreCatalog() {
   if (items.length === 0) {
     container.innerHTML = `
       <div class="col-span-full text-center py-8">
-        <div class="text-4xl">🔍</div>
+        <div class="text-4xl text-gray-300 mb-2 flex justify-center"><i data-lucide="search" class="w-12 h-12"></i></div>
         <p class="text-gray-500 font-medium mt-2">Tidak ada item makanan yang cocok dengan filter Anda.</p>
         <button onclick="resetFilters()" class="text-emerald-600 font-semibold text-sm mt-1 underline">Atur Ulang Filter</button>
       </div>
@@ -966,13 +972,13 @@ function renderExploreCatalog() {
         <div>
           <div class="flex items-center gap-1">
             <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">${item.partnerName}</span>
-            ${isFavoritePartner ? `<span class="text-red-500 text-[10px]" title="Mitra Favorit">❤️</span>` : ""}
+            ${isFavoritePartner ? `<i data-lucide="heart" class="w-3 h-3 text-red-500 fill-red-500 inline-block align-middle"></i>` : ""}
           </div>
           <h3 class="font-bold text-gray-900 text-sm leading-tight mt-0.5 line-clamp-1">${item.name}</h3>
           
           <div class="flex items-center mt-1">
-            <span class="text-yellow-400 text-xs">★</span>
-            <span class="text-xs text-gray-600 font-medium ml-1">${item.rating}</span>
+            <i data-lucide="star" class="w-3 h-3 text-yellow-400 fill-yellow-400 inline-block align-middle mr-1"></i>
+            <span class="text-xs text-gray-600 font-medium">${item.rating}</span>
             <span class="text-[10px] text-gray-400 ml-1">(5)</span>
             <span class="text-[10px] text-emerald-600 font-bold ml-auto">${item.stockLeft} left</span>
           </div>
@@ -1088,7 +1094,7 @@ function renderPartnerDetail() {
     <div class="p-4 space-y-4">
       <div class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm flex items-center justify-around text-center">
         <div>
-          <span class="text-emerald-600 text-lg font-bold">★ ${p.rating}</span>
+          <span class="text-emerald-600 text-lg font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i> ${p.rating}</span>
           <span class="block text-[10px] text-gray-400 font-semibold uppercase">Penilaian</span>
         </div>
         <div class="border-l border-gray-100 h-8"></div>
@@ -1133,6 +1139,36 @@ function renderFoodDetail() {
     <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">Detail Produk</h2>
   `;
 
+  // Get other items from this partner (excluding current item)
+  const otherItems = catalog.filter((i) => i.partnerId === item.partnerId && i.id !== item.id);
+  
+  let otherItemsHtml = "";
+  if (otherItems.length > 0) {
+    otherItemsHtml = `
+      <div class="pt-4 border-t border-gray-100 mt-4">
+        <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-3 flex items-center gap-1.5 text-gray-700">
+          <span>✨</span> Rekomendasi Lain dari Mitra Ini
+        </h4>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          ${otherItems.map(oi => `
+            <div class="bg-gray-50 hover:bg-gray-100/70 border border-gray-100 rounded-2xl p-2.5 flex gap-3 transition-colors cursor-pointer" onclick="switchView('food-detail', { itemId: '${oi.id}' })">
+              <img src="${oi.image}" alt="${oi.name}" class="w-14 h-14 rounded-xl object-cover flex-shrink-0">
+              <div class="flex-1 min-w-0 flex flex-col justify-between">
+                <div>
+                  <h5 class="font-bold text-xs text-gray-900 line-clamp-1 leading-tight">${oi.name}</h5>
+                  <span class="text-[9px] bg-emerald-50 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full mt-0.5 inline-block">${oi.freshnessBadge}</span>
+                </div>
+                <div class="flex justify-between items-baseline mt-1">
+                  <span class="text-xs font-bold text-emerald-600">${formatRupiah(oi.price)}</span>
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      </div>
+    `;
+  }
+
   content.innerHTML = `
     <div class="relative h-64 w-full">
       <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover">
@@ -1146,9 +1182,13 @@ function renderFoodDetail() {
         <button onclick="switchView('partner-detail', { partnerId: '${item.partnerId}' })" class="text-xs text-emerald-600 font-bold hover:underline mb-1 inline-block uppercase tracking-wider">${item.partnerName} ➔</button>
         <h3 class="text-xl font-bold text-gray-900 leading-snug">${item.name}</h3>
         
-        <div class="flex items-center gap-2 mt-2">
-          <span class="text-yellow-400">★★★★★</span>
-          <span class="text-xs text-gray-600 font-semibold">${item.rating} (5 ulasan)</span>
+        <div class="flex items-center gap-1 mt-2 text-yellow-400">
+          <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-yellow-400"></i>
+          <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-yellow-400"></i>
+          <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-yellow-400"></i>
+          <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-yellow-400"></i>
+          <i data-lucide="star" class="w-3.5 h-3.5 fill-current text-yellow-400"></i>
+          <span class="text-xs text-gray-600 font-semibold ml-1.5">${item.rating} (5 ulasan)</span>
         </div>
       </div>
       
@@ -1163,7 +1203,9 @@ function renderFoodDetail() {
       </div>
       
       <div class="bg-white rounded-xl p-3 border border-gray-100 shadow-sm flex items-center gap-3">
-        <span class="text-2xl">🌱</span>
+        <div class="bg-emerald-50 p-2 rounded-xl flex items-center justify-center text-emerald-600 flex-shrink-0">
+          <i data-lucide="leaf" class="w-5 h-5"></i>
+        </div>
         <div>
           <h4 class="font-bold text-xs text-gray-900">Dampak Penghematan Eco</h4>
           <p class="text-[11px] text-gray-500">Menyelamatkan kantong ini mencegah sekitar <span class="font-bold text-emerald-600">${item.co2Reduction} kg CO2</span> memasuki atmosfer!</p>
@@ -1178,14 +1220,16 @@ function renderFoodDetail() {
       <div>
         <h4 class="font-bold text-gray-900 text-xs uppercase tracking-wider mb-2">Akreditasi Kesegaran (Freshness Accreditation)</h4>
         <div class="flex gap-2">
-          <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-100 flex items-center gap-1">
-            <span>🛡️</span> Aman Dikonsumsi
+          <span class="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-800 font-bold border border-emerald-100 flex items-center gap-1.5">
+            <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i> Aman Dikonsumsi
           </span>
-          <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 font-bold border border-blue-100 flex items-center gap-1">
-            <span>❄️</span> Simpan di Lemari Es
+          <span class="text-xs px-2.5 py-1 rounded-full bg-blue-50 text-blue-800 font-bold border border-blue-100 flex items-center gap-1.5">
+            <i data-lucide="snowflake" class="w-3.5 h-3.5 text-blue-600"></i> Simpan di Lemari Es
           </span>
         </div>
       </div>
+      
+      ${otherItemsHtml}
     </div>
     
     <!-- Sticky Product Footer -->
@@ -1255,12 +1299,15 @@ function renderCart() {
   const savingsBanner = document.getElementById("cart-eco-savings-banner");
   const checkoutContainer = document.getElementById("cart-checkout-container");
 
+  const recSection = document.getElementById("cart-recommendations-section");
+  if (recSection) recSection.classList.add("hidden");
+
   if (state.cart.length === 0) {
     container.innerHTML = `
-      <div class="text-center py-12 px-4">
-        <div class="text-5xl mb-4">🛒</div>
+      <div class="text-center py-12 px-4 flex flex-col items-center justify-center">
+        <div class="text-gray-300 mb-4 flex justify-center"><i data-lucide="shopping-cart" class="w-16 h-16"></i></div>
         <h3 class="font-bold text-gray-900 text-lg">Keranjang Anda kosong</h3>
-        <p class="text-gray-500 text-xs mt-1">Menyelamatkan makanan akan menghemat uang Anda dan mencegah emisi CO₂ mencemari atmosfer!</p>
+        <p class="text-gray-500 text-xs mt-1 text-center max-w-xs">Menyelamatkan makanan akan menghemat uang Anda dan mencegah emisi CO₂ mencemari atmosfer!</p>
         <button onclick="switchView('explore')" class="mt-6 bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-6 py-2.5 rounded-xl shadow-sm text-sm">Mulai Menyelamatkan</button>
       </div>
     `;
@@ -1348,6 +1395,45 @@ function renderCart() {
 
   // Bottom Sticky Total Card
   document.getElementById("checkout-bar-total").innerText = formatRupiah(total);
+
+  // Render recommendations
+  if (recSection) {
+    const recList = document.getElementById("cart-recommendations-list");
+    if (recList) {
+      const partnerId = state.cart[0].partnerId;
+      const cartItemIds = state.cart.map((c) => c.id);
+      const recItems = catalog.filter((i) => i.partnerId === partnerId && !cartItemIds.includes(i.id));
+      
+      if (recItems.length === 0) {
+        recSection.classList.add("hidden");
+      } else {
+        recSection.classList.remove("hidden");
+        recList.innerHTML = recItems
+          .map(
+            (item) => `
+          <div class="bg-gray-50 border border-gray-100 rounded-xl p-3 flex gap-3 shadow-xs hover:shadow-sm transition-shadow">
+            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 cursor-pointer" onclick="switchView('food-detail', { itemId: '${item.id}' })">
+            <div class="flex-1 flex flex-col justify-between min-w-0">
+              <div class="cursor-pointer" onclick="switchView('food-detail', { itemId: '${item.id}' })">
+                <h5 class="font-bold text-xs text-gray-900 leading-tight line-clamp-1">${item.name}</h5>
+                <span class="text-[9px] bg-emerald-50 text-emerald-800 font-bold px-1.5 py-0.5 rounded-full mt-1 inline-block">${item.freshnessBadge}</span>
+              </div>
+              <div class="flex justify-between items-center mt-2">
+                <span class="text-xs font-bold text-emerald-600">${formatRupiah(item.price)}</span>
+                <button onclick="addItemToCart('${item.id}'); renderCart();" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1 shadow-sm transition-all hover:scale-105 active:scale-95 flex items-center justify-center cursor-pointer">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `
+          )
+          .join("");
+      }
+    }
+  }
 }
 
 window.addItemToCart = function (itemId) {
@@ -1674,7 +1760,9 @@ function renderImpact() {
     .map(
       (b) => `
     <div class="bg-white rounded-2xl p-3 border border-gray-100 shadow-xs text-center flex flex-col items-center justify-center relative group ${b.unlocked ? "" : "opacity-50"}">
-      <span class="text-3xl filter ${b.unlocked ? "" : "grayscale"}">${b.icon}</span>
+      <div class="w-12 h-12 rounded-full bg-emerald-50/50 flex items-center justify-center filter ${b.unlocked ? "" : "grayscale"} mb-1 text-emerald-600">
+        <i data-lucide="${b.icon}" class="w-6 h-6 ${b.color || 'text-emerald-600'}"></i>
+      </div>
       <h5 class="font-bold text-xs text-gray-900 mt-2">${b.name}</h5>
       <p class="text-[9px] text-gray-400 leading-tight mt-0.5 line-clamp-2">${b.desc}</p>
     </div>
@@ -1828,13 +1916,13 @@ function renderBlindBoxState() {
 
   if (bb.state === "closed") {
     container.innerHTML = `
-      <div id="blindbox-card" onclick="tapBlindBox()" class="w-40 h-40 bg-amber-50 rounded-3xl border border-amber-200 flex items-center justify-center text-6xl shadow-md cursor-pointer hover:scale-105 transition-transform mx-auto">
-        🎁
+      <div id="blindbox-card" onclick="tapBlindBox()" class="w-40 h-40 bg-amber-50 rounded-3xl border border-amber-200 flex items-center justify-center shadow-md cursor-pointer hover:scale-105 transition-transform mx-auto">
+        <i data-lucide="gift" class="w-16 h-16 text-amber-500"></i>
       </div>
       <div class="text-center mt-6">
         <h3 class="font-bold text-gray-900 text-base">Kotak Misteri Kejutan</h3>
         <p class="text-xs text-gray-400 mt-1">Ketuk kotak hadiah <span class="font-bold text-emerald-600">${bb.tapsRemaining} kali</span> untuk melihat kejutan penyelamatan Anda!</p>
-        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Koin</div>
+        <div class="text-amber-500 font-black text-sm mt-3 flex items-center justify-center gap-1"><i data-lucide="coins" class="w-4 h-4 text-amber-500"></i> 500 Koin</div>
       </div>
     `;
   } else if (bb.state === "revealed") {
@@ -1856,7 +1944,7 @@ function renderBlindBoxState() {
         
         <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 text-center space-y-1.5">
           <div class="text-[10px] text-gray-400 font-semibold uppercase">Kebijakan Klaim</div>
-          <p class="text-[9px] text-gray-500 leading-normal">⚠️ Anda memiliki waktu <span class="font-bold text-amber-500">30 menit</span> untuk mengambil setelah diklaim. Pembatalan hanya mengembalikan 25% koin (125 koin).</p>
+          <p class="text-[9px] text-gray-500 leading-normal flex items-start gap-1 justify-center"><i data-lucide="alert-triangle" class="w-4 h-4 text-amber-500 flex-shrink-0 mt-0.5"></i> <span>Anda memiliki waktu <span class="font-bold text-amber-500">30 menit</span> untuk mengambil setelah diklaim. Pembatalan hanya mengembalikan 25% koin (125 koin).</span></p>
         </div>
         
         <div class="flex gap-2">
@@ -1868,13 +1956,13 @@ function renderBlindBoxState() {
   } else {
     // Shaking states
     container.innerHTML = `
-      <div id="blindbox-card" onclick="tapBlindBox()" class="w-40 h-40 bg-amber-50 rounded-3xl border border-amber-200 flex items-center justify-center text-6xl shadow-md cursor-pointer shake-box mx-auto">
-        🎁
+      <div id="blindbox-card" onclick="tapBlindBox()" class="w-40 h-40 bg-amber-50 rounded-3xl border border-amber-200 flex items-center justify-center shadow-md cursor-pointer shake-box mx-auto">
+        <i data-lucide="gift" class="w-16 h-16 text-amber-500 animate-bounce"></i>
       </div>
       <div class="text-center mt-6">
         <h3 class="font-bold text-gray-900 text-base">Kotak Misteri Kejutan</h3>
         <p class="text-xs text-gray-400 mt-1">Terus ketuk! <span class="font-bold text-emerald-600">${bb.tapsRemaining} kali lagi</span> untuk membuka!</p>
-        <div class="text-amber-500 font-black text-sm mt-3">🪙 500 Koin</div>
+        <div class="text-amber-500 font-black text-sm mt-3 flex items-center justify-center gap-1"><i data-lucide="coins" class="w-4 h-4 text-amber-500"></i> 500 Koin</div>
       </div>
     `;
   }
@@ -2065,8 +2153,8 @@ function renderProfile() {
     const favoriteIds = state.user.favoritePartners || [];
     if (favoriteIds.length === 0) {
       favoriteContainer.innerHTML = `
-        <div class="text-center py-5 text-gray-400 text-xs bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
-          <span class="text-2xl block mb-1">❤️</span>
+        <div class="text-center py-5 text-gray-400 text-xs bg-gray-50/50 rounded-xl border border-dashed border-gray-100 flex flex-col items-center justify-center">
+          <i data-lucide="heart" class="w-8 h-8 text-gray-300 mb-1"></i>
           Belum ada mitra favorit.<br>Tandai mitra sebagai favorit Anda untuk melihatnya di sini!
         </div>
       `;
@@ -2081,7 +2169,7 @@ function renderProfile() {
             <div>
               <h5 class="font-bold text-xs text-gray-900 leading-tight">${p.name}</h5>
               <div class="flex items-center gap-1 mt-0.5">
-                <span class="text-yellow-400 text-[10px]">★</span>
+                <i data-lucide="star" class="w-2.5 h-2.5 text-yellow-400 fill-yellow-400 inline-block align-middle"></i>
                 <span class="text-[10px] text-gray-500 font-medium">${p.rating}</span>
                 <span class="text-[9px] text-gray-400">• ${p.distance}</span>
               </div>
