@@ -126,156 +126,270 @@
           id="screen-login"
           class="app-screen p-4 md:px-8 lg:px-16 lg:max-w-md lg:mx-auto space-y-6 hidden flex flex-col justify-center py-10 min-h-[80vh]"
         >
-          <!-- Logo & Header -->
-          <div class="flex flex-col items-center text-center space-y-2">
-            <div
-              class="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center shadow-xs"
+          <!-- Login Container -->
+          <div id="login-container" class="space-y-6 w-full">
+            <!-- Logo & Header -->
+            <div class="flex flex-col items-center text-center space-y-2">
+              <div
+                class="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center shadow-xs"
+              >
+                <svg
+                  class="w-10 h-10 text-emerald-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17 8C8 10 5.9 16.17 6 20c3.83.1 10-2 12-11 .83-3.75-.5-5-1-9-.5 4-1.25 5.75-9 8 5-2 7-5 8-8z"
+                  />
+                </svg>
+              </div>
+              <h2 class="text-2xl font-black text-gray-900 tracking-tight mt-4">
+                Masuk ke FoodRescue
+              </h2>
+              <p class="text-xs text-gray-500 font-medium max-w-xs">
+                Silakan masuk dengan nomor telepon dan kata sandi Anda.
+              </p>
+            </div>
+
+            <!-- Login Form -->
+            <form
+              id="login-form-submit"
+              class="w-full space-y-4"
+              onsubmit="handleCustomLogin(event)"
             >
-              <svg
-                class="w-10 h-10 text-emerald-600"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  d="M17 8C8 10 5.9 16.17 6 20c3.83.1 10-2 12-11 .83-3.75-.5-5-1-9-.5 4-1.25 5.75-9 8 5-2 7-5 8-8z"
-                />
-              </svg>
-            </div>
-            <h2 class="text-2xl font-black text-gray-900 tracking-tight mt-4">
-              Selamat Datang di FoodRescue
-            </h2>
-            <p class="text-xs text-gray-500 font-medium max-w-xs">
-              Selamatkan makanan sisa lezat, kurangi pemborosan, dan bantu
-              lestarikan bumi kita!
-            </p>
-          </div>
-
-          <!-- Login Form -->
-          <form
-            id="login-form"
-            class="w-full space-y-4"
-            onsubmit="handleCustomLogin(event)"
-          >
-            <div class="space-y-1">
-              <label
-                for="login-username"
-                class="text-xs font-bold text-gray-700"
-                >Nama Lengkap</label
-              >
-              <div class="relative">
-                <span
-                  class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+              <div class="space-y-1">
+                <label
+                  for="login-phone"
+                  class="text-xs font-bold text-gray-700"
+                  >Nomor Telepon</label
                 >
-                  <i data-lucide="user" class="w-4 h-4"></i>
-                </span>
-                <input
-                  type="text"
-                  id="login-username"
-                  placeholder="Masukkan nama Anda..."
-                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
-                  required
-                />
+                <div class="relative">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="tel"
+                    id="login-phone"
+                    placeholder="Contoh: 08123456789"
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            <div class="space-y-1">
-              <label for="login-email" class="text-xs font-bold text-gray-700"
-                >Email</label
-              >
-              <div class="relative">
-                <span
-                  class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+              <div class="space-y-1">
+                <label
+                  for="login-password-field"
+                  class="text-xs font-bold text-gray-700"
+                  >Kata Sandi</label
                 >
-                  <i data-lucide="mail" class="w-4 h-4"></i>
-                </span>
-                <input
-                  type="email"
-                  id="login-email"
-                  placeholder="contoh@gmail.com"
-                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
-                  required
-                />
+                <div class="relative">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="password"
+                    id="login-password-field"
+                    placeholder="Password"
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                </div>
               </div>
-            </div>
 
-            <div class="space-y-1">
-              <label
-                for="login-password"
-                class="text-xs font-bold text-gray-700"
-                >Kata Sandi</label
+              <!-- Login Button -->
+              <button
+                type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-md transition-transform active:scale-98 flex items-center justify-center gap-2 mt-2 cursor-pointer"
               >
-              <div class="relative">
-                <span
-                  class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
-                >
-                  <i data-lucide="lock" class="w-4 h-4"></i>
-                </span>
-                <input
-                  type="password"
-                  id="login-password"
-                  placeholder="Password"
-                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
-                  required
-                />
-              </div>
-            </div>
+                <span>Masuk Sekarang</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
 
-            <div class="space-y-1">
-              <label for="login-address" class="text-xs font-bold text-gray-700"
-                >Alamat Anda Sekarang</label
-              >
-              <div class="relative flex items-center">
-                <span
-                  class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
-                >
-                  <i data-lucide="map-pin" class="w-4 h-4"></i>
-                </span>
-                <input
-                  type="text"
-                  id="login-address"
-                  placeholder="Masukkan alamat Anda..."
-                  class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-12 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
-                  required
-                />
+              <div class="text-center mt-4">
+                <span class="text-xs text-gray-500">Belum punya akun? </span>
                 <button
                   type="button"
-                  id="btn-detect-location"
-                  title="Gunakan Lokasi Saat Ini"
-                  class="absolute right-3 p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors flex items-center justify-center cursor-pointer"
-                  onclick="detectUserLocation(event)"
+                  class="text-xs text-emerald-600 font-bold hover:underline cursor-pointer"
+                  onclick="toggleAuthView('register')"
                 >
-                  <i data-lucide="locate" class="w-4 h-4"></i>
+                  Daftar Sekarang
                 </button>
               </div>
+            </form>
+          </div>
 
-              <!-- Login Map Selector -->
-              <div class="space-y-1.5 mt-2">
-                <div class="flex justify-between items-center px-1">
-                  <span class="text-[10px] font-bold text-gray-500"
-                    >Pilih lokasi Anda di peta:</span
-                  >
-                  <span
-                    id="login-map-status"
-                    class="text-[10px] text-emerald-600 font-bold"
-                    >Klik peta / geser pin</span
-                  >
-                </div>
-                <div
-                  id="login-map"
-                  class="w-full h-44 rounded-2xl border border-gray-100 shadow-xs z-10"
-                ></div>
+          <!-- Register Container -->
+          <div id="register-container" class="space-y-6 w-full hidden">
+            <!-- Logo & Header -->
+            <div class="flex flex-col items-center text-center space-y-2">
+              <div
+                class="w-16 h-16 bg-emerald-50 rounded-3xl flex items-center justify-center shadow-xs"
+              >
+                <svg
+                  class="w-10 h-10 text-emerald-600"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    d="M17 8C8 10 5.9 16.17 6 20c3.83.1 10-2 12-11 .83-3.75-.5-5-1-9-.5 4-1.25 5.75-9 8 5-2 7-5 8-8z"
+                  />
+                </svg>
               </div>
+              <h2 class="text-2xl font-black text-gray-900 tracking-tight mt-4">
+                Daftar Akun Baru
+              </h2>
+              <p class="text-xs text-gray-500 font-medium max-w-xs">
+                Selamatkan makanan sisa lezat, kurangi pemborosan, dan lestarikan bumi!
+              </p>
             </div>
 
-            <!-- Login Button -->
-            <button
-              type="submit"
-              class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-md transition-transform active:scale-98 flex items-center justify-center gap-2 mt-2"
+            <!-- Register Form -->
+            <form
+              id="register-form"
+              class="w-full space-y-4"
+              onsubmit="handleCustomRegister(event)"
             >
-              <span>Masuk Sekarang</span>
-              <i data-lucide="arrow-right" class="w-4 h-4"></i>
-            </button>
-          </form>
+              <div class="space-y-1">
+                <label
+                  for="register-username"
+                  class="text-xs font-bold text-gray-700"
+                  >Nama Lengkap</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="user" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="text"
+                    id="register-username"
+                    placeholder="Masukkan nama lengkap Anda..."
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label
+                  for="register-phone"
+                  class="text-xs font-bold text-gray-700"
+                  >Nomor Telepon</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="phone" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="tel"
+                    id="register-phone"
+                    placeholder="Contoh: 08123456789"
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label
+                  for="register-password"
+                  class="text-xs font-bold text-gray-700"
+                  >Kata Sandi</label
+                >
+                <div class="relative">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="password"
+                    id="register-password"
+                    placeholder="Password minimal 6 karakter..."
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label
+                  for="login-address"
+                  class="text-xs font-bold text-gray-700"
+                  >Alamat Anda Sekarang</label
+                >
+                <div class="relative flex items-center">
+                  <span
+                    class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+                  >
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                  </span>
+                  <input
+                    type="text"
+                    id="login-address"
+                    placeholder="Masukkan alamat Anda..."
+                    class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-12 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+                    required
+                  />
+                  <button
+                    type="button"
+                    id="btn-detect-location"
+                    title="Gunakan Lokasi Saat Ini"
+                    class="absolute right-3 p-1.5 text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 rounded-xl transition-colors flex items-center justify-center cursor-pointer"
+                    onclick="detectUserLocation(event)"
+                  >
+                    <i data-lucide="locate" class="w-4 h-4"></i>
+                  </button>
+                </div>
+
+                <!-- Register Map Selector -->
+                <div class="space-y-1.5 mt-2">
+                  <div class="flex justify-between items-center px-1">
+                    <span class="text-[10px] font-bold text-gray-500"
+                      >Pilih lokasi Anda di peta:</span
+                    >
+                    <span
+                      id="login-map-status"
+                      class="text-[10px] text-emerald-600 font-bold"
+                      >Klik peta / geser pin</span
+                    >
+                  </div>
+                  <div
+                    id="login-map"
+                    class="w-full h-44 rounded-2xl border border-gray-100 shadow-xs z-10"
+                  ></div>
+                </div>
+              </div>
+
+              <!-- Register Button -->
+              <button
+                type="submit"
+                class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3.5 rounded-2xl text-center shadow-md transition-transform active:scale-98 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+              >
+                <span>Daftar Sekarang</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+
+              <div class="text-center mt-4">
+                <span class="text-xs text-gray-500">Sudah punya akun? </span>
+                <button
+                  type="button"
+                  class="text-xs text-emerald-600 font-bold hover:underline cursor-pointer"
+                  onclick="toggleAuthView('login')"
+                >
+                  Masuk Sekarang
+                </button>
+              </div>
+            </form>
+          </div>
         </section>
 
         <!-- SCREEN 1: EXPLORE / HOME -->

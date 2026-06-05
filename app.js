@@ -53,7 +53,7 @@ const state = {
   // User Profile
   user: {
     name: "Alex",
-    email: "example@gmail.com",
+    phone: "08123456789",
     coins: 1250,
     co2Saved: 12.0, // kg
     mealsRescued: 24,
@@ -761,9 +761,12 @@ function switchView(viewName, params = {}) {
   if (viewName === "login") {
     if (header) header.classList.add("hidden");
     if (nav) nav.classList.add("hidden");
-    if (window.initLoginMap) {
-      window.initLoginMap();
-    }
+    
+    // Reset view to show login container by default and hide register container
+    const loginContainer = document.getElementById("login-container");
+    const registerContainer = document.getElementById("register-container");
+    if (loginContainer) loginContainer.classList.remove("hidden");
+    if (registerContainer) registerContainer.classList.add("hidden");
   } else {
     if (header) header.classList.remove("hidden");
     if (nav) nav.classList.remove("hidden");
@@ -2066,7 +2069,7 @@ window.redeemReward = function (rewardId, cost) {
 
   state.user.coins -= cost;
   saveUserState();
-  alert("🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke email Anda.");
+  alert("🎉 Hadiah Berhasil Ditukarkan! Kode telah dikirim ke nomor telepon Anda melalui WhatsApp/SMS.");
   renderImpact();
 };
 
@@ -2434,11 +2437,11 @@ function showToast(message, iconName = "shopping-bag") {
 
   const toast = document.createElement("div");
   toast.className =
-    "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-8 opacity-0 max-w-xs md:max-w-lg border border-gray-100";
+    "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-8 opacity-0 w-max max-w-[90vw] border border-gray-100";
 
   toast.innerHTML = `
     <i data-lucide="${iconName}" class="w-4 h-4 text-emerald-500 flex-shrink-0"></i>
-    <span class="flex-1 line-clamp-2">${message}</span>
+    <span class="flex-1 whitespace-nowrap">${message}</span>
   `;
 
   container.appendChild(toast);
@@ -2446,12 +2449,12 @@ function showToast(message, iconName = "shopping-bag") {
 
   setTimeout(() => {
     toast.className =
-      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-0 opacity-100 max-w-xs md:max-w-lg border border-gray-100";
+      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform translate-y-0 opacity-100 w-max max-w-[90vw] border border-gray-100";
   }, 10);
 
   setTimeout(() => {
     toast.className =
-      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform -translate-y-4 opacity-0 max-w-xs md:max-w-lg border border-gray-100";
+      "pointer-events-auto bg-gray-50/95 backdrop-blur-xs px-4 py-3 rounded-2xl shadow-xl flex items-center gap-2.5 text-xs font-bold transition-all duration-300 transform -translate-y-4 opacity-0 w-max max-w-[90vw] border border-gray-100";
     setTimeout(() => {
       toast.remove();
     }, 300);
@@ -2462,61 +2465,153 @@ function showToast(message, iconName = "shopping-bag") {
 // DUMMY LOGIN FEATURE LOGIC
 // ==========================================
 
+function getRegisteredUsers() {
+  const users = localStorage.getItem("foodrescue_users");
+  if (!users) {
+    const defaultUsers = [
+      {
+        name: "Alex",
+        phone: "08123456789",
+        password: "password",
+        coins: 1250,
+        co2Saved: 12.0,
+        mealsRescued: 24,
+        moneySaved: 500000,
+        address: "Gang Hijau No. 42, Sukajadi, Bandung 40162",
+        lat: 40.7265,
+        lng: -73.995,
+        favoritePartners: ["partner-1"],
+      }
+    ];
+    localStorage.setItem("foodrescue_users", JSON.stringify(defaultUsers));
+    return defaultUsers;
+  }
+  try {
+    return JSON.parse(users);
+  } catch (e) {
+    return [];
+  }
+}
+
+window.toggleAuthView = function (mode) {
+  const loginContainer = document.getElementById("login-container");
+  const registerContainer = document.getElementById("register-container");
+
+  if (mode === "register") {
+    if (loginContainer) loginContainer.classList.add("hidden");
+    if (registerContainer) registerContainer.classList.remove("hidden");
+    // Initialize map when registration form is shown (visible)
+    if (window.initLoginMap) {
+      window.initLoginMap();
+    }
+  } else {
+    if (registerContainer) registerContainer.classList.add("hidden");
+    if (loginContainer) loginContainer.classList.remove("hidden");
+  }
+};
+
 window.handleCustomLogin = async function (event) {
   event.preventDefault();
-  const usernameInput = document.getElementById("login-username").value.trim();
-  const emailInput = document.getElementById("login-email").value.trim();
+  const phoneInput = document.getElementById("login-phone").value.trim();
+  const passwordInput = document.getElementById("login-password-field").value.trim();
+
+  const users = getRegisteredUsers();
+  const userExists = users.some((u) => u.phone === phoneInput);
+
+  if (!userExists) {
+    showToast("Nomor telepon belum terdaftar. Silakan daftar terlebih dahulu!", "alert-triangle");
+    toggleAuthView("register");
+    const regPhone = document.getElementById("register-phone");
+    if (regPhone) regPhone.value = phoneInput;
+  } else {
+    const user = users.find((u) => u.phone === phoneInput && u.password === passwordInput);
+    if (user) {
+      state.user = user;
+      state.isAuthenticated = true;
+      localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
+
+      updateUserDynamicElements();
+      updateUserMapMarker();
+      showToast(`Selamat datang kembali, ${state.user.name}!`, "user");
+      switchView("explore");
+
+      // Reset login form
+      const loginForm = document.getElementById("login-form-submit");
+      if (loginForm) loginForm.reset();
+    } else {
+      showToast("Kata sandi salah!", "alert-triangle");
+    }
+  }
+};
+
+window.handleCustomRegister = async function (event) {
+  event.preventDefault();
+  const nameInput = document.getElementById("register-username").value.trim();
+  const phoneInput = document.getElementById("register-phone").value.trim();
+  const passwordInput = document.getElementById("register-password").value.trim();
   const addressInput = document.getElementById("login-address").value.trim();
 
-  if (usernameInput && addressInput) {
-    let lat = window.loginSelectedLat || 40.7265;
-    let lng = window.loginSelectedLng || -73.995;
+  if (!nameInput || !phoneInput || !passwordInput || !addressInput) {
+    showToast("Semua field harus diisi!", "alert-triangle");
+    return;
+  }
 
-    // Check if the user manually modified or typed a new address
-    if (window.lastGeocodedAddress !== addressInput) {
-      const coords = await forwardGeocode(addressInput);
-      if (coords) {
-        lat = coords.lat;
-        lng = coords.lng;
-      }
+  const users = getRegisteredUsers();
+  if (users.some((u) => u.phone === phoneInput)) {
+    showToast("Nomor telepon sudah terdaftar!", "alert-triangle");
+    return;
+  }
+
+  let lat = window.loginSelectedLat || 40.7265;
+  let lng = window.loginSelectedLng || -73.995;
+
+  if (window.lastGeocodedAddress !== addressInput) {
+    const coords = await forwardGeocode(addressInput);
+    if (coords) {
+      lat = coords.lat;
+      lng = coords.lng;
     }
+  }
 
-    state.user = {
-      name: usernameInput,
-      email: emailInput,
-      coins: 0,
-      co2Saved: 0.0,
-      mealsRescued: 0,
-      moneySaved: 0,
-      address: addressInput,
-      lat: lat,
-      lng: lng,
-      favoritePartners: [],
-    };
-    state.isAuthenticated = true;
-    localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
+  const newUser = {
+    name: nameInput,
+    phone: phoneInput,
+    password: passwordInput,
+    coins: 0,
+    co2Saved: 0.0,
+    mealsRescued: 0,
+    moneySaved: 0,
+    address: addressInput,
+    lat: lat,
+    lng: lng,
+    favoritePartners: [],
+  };
 
-    updateUserDynamicElements();
-    updateUserMapMarker();
-    showToast(
-      `Akun berhasil dibuat. Selamat datang, ${state.user.name}!`,
-      "user",
-    );
-    switchView("explore");
+  users.push(newUser);
+  localStorage.setItem("foodrescue_users", JSON.stringify(users));
 
-    // Reset form
-    document.getElementById("login-form").reset();
+  state.user = newUser;
+  state.isAuthenticated = true;
+  localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
 
-    // Reset login coordinates
-    window.loginSelectedLat = 40.7265;
-    window.loginSelectedLng = -73.995;
-    window.lastGeocodedAddress = "";
-    if (loginMarker) {
-      loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
-    }
-    if (loginMap) {
-      loginMap.setView([window.loginSelectedLat, window.loginSelectedLng], 14);
-    }
+  updateUserDynamicElements();
+  updateUserMapMarker();
+  showToast(`Registrasi sukses. Selamat datang, ${state.user.name}!`, "user");
+  switchView("explore");
+
+  // Reset register form
+  const registerForm = document.getElementById("register-form");
+  if (registerForm) registerForm.reset();
+
+  // Reset login coordinates
+  window.loginSelectedLat = 40.7265;
+  window.loginSelectedLng = -73.995;
+  window.lastGeocodedAddress = "";
+  if (loginMarker) {
+    loginMarker.setLatLng([window.loginSelectedLat, window.loginSelectedLng]);
+  }
+  if (loginMap) {
+    loginMap.setView([window.loginSelectedLat, window.loginSelectedLng], 14);
   }
 };
 
@@ -2524,7 +2619,7 @@ window.logoutUser = function () {
   localStorage.removeItem("foodrescue_user");
   state.user = {
     name: "",
-    email: "",
+    phone: "",
     coins: 0,
     co2Saved: 0,
     mealsRescued: 0,
@@ -2537,8 +2632,10 @@ window.logoutUser = function () {
   state.isAuthenticated = false;
 
   // Clear any inputs in custom form
-  const loginForm = document.getElementById("login-form");
+  const loginForm = document.getElementById("login-form-submit");
   if (loginForm) loginForm.reset();
+  const registerForm = document.getElementById("register-form");
+  if (registerForm) registerForm.reset();
 
   // Reset login map selection state
   window.loginSelectedLat = 40.7265;
@@ -2561,6 +2658,22 @@ window.logoutUser = function () {
 function saveUserState() {
   if (state.user) {
     localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
+    
+    // Also update in registered users list
+    const usersJson = localStorage.getItem("foodrescue_users");
+    if (usersJson) {
+      try {
+        const users = JSON.parse(usersJson);
+        const index = users.findIndex((u) => u.phone === state.user.phone);
+        if (index !== -1) {
+          users[index] = { ...users[index], ...state.user };
+          localStorage.setItem("foodrescue_users", JSON.stringify(users));
+        }
+      } catch (e) {
+        console.error("Error updating users list:", e);
+      }
+    }
+
     updateUserDynamicElements();
   }
 }
