@@ -996,7 +996,7 @@ function setupSearchAndFilters() {
   });
 }
 
-function updatePartnerCoordinates() {
+async function updatePartnerCoordinates() {
   let userLat = (state.user && state.user.lat) || 40.7265;
   let userLng = (state.user && state.user.lng) || -73.995;
 
@@ -1016,16 +1016,49 @@ function updatePartnerCoordinates() {
     { id: "partner-4", latOffset: 0.001, lngOffset: 0.0048 },
   ];
 
-  offsets.forEach((off) => {
+  for (const off of offsets) {
     const partner = partners.find((p) => p.id === off.id);
     if (partner) {
-      partner.lat = userLat + off.latOffset;
-      partner.lng = userLng + off.lngOffset;
+      const newLat = userLat + off.latOffset;
+      const newLng = userLng + off.lngOffset;
+
+      // Check if coordinates changed significantly
+      const coordChanged =
+        !partner.lat ||
+        !partner.lng ||
+        Math.abs(partner.lat - newLat) > 0.0001 ||
+        Math.abs(partner.lng - newLng) > 0.0001;
+
+      partner.lat = newLat;
+      partner.lng = newLng;
+      
       // Update partner distance dynamically relative to user's location
       const dist = getHaversineDistance(userLat, userLng, partner.lat, partner.lng);
       partner.distance = `${dist.toFixed(1).replace('.', ',')} km`;
+
+      if (coordChanged || !partner.address || partner.address.includes("New York")) {
+        try {
+          const addr = await reverseGeocode(newLat, newLng);
+          if (addr) {
+            partner.address = addr;
+            
+            // If the user is currently viewing this partner, update the UI
+            if (state.currentView === "partner-detail" && state.selectedPartner?.id === partner.id) {
+              renderPartnerDetail();
+            }
+            // If the user is on the checkout screen, update the UI
+            if (state.currentView === "checkout") {
+              renderCheckout();
+            }
+          }
+          // Short delay to respect OSM Nominatim rate limits (1 req/sec)
+          await new Promise((resolve) => setTimeout(resolve, 300));
+        } catch (e) {
+          console.error(`Error reverse geocoding partner ${partner.id}:`, e);
+        }
+      }
     }
-  });
+  }
 }
 
 // Leaflet Map Integration
