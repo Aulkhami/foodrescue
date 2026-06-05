@@ -70,50 +70,7 @@ const state = {
   ecopayBalance: 150000,
 
   // Ongoing/Past Orders
-  orders: [
-    {
-      id: "FR-8291",
-      partnerName: "Sunrise Bakehouse",
-      itemName: "Roti Sourdough Organik",
-      itemCount: 2,
-      price: 33500, // 30000 subtotal + 2000 fee + 1500 tax
-      status: "completed",
-      date: "04 Jun 2026",
-      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Roti Sourdough Organik", quantity: 2, price: 15000 }
-      ],
-      subtotal: 30000,
-      platformFee: 2000,
-      tax: 1500,
-      paymentMethod: "EcoPay",
-      co2Saved: 1.6,
-      distance: "jarak 0,3 mil",
-      reviewed: false,
-    },
-    {
-      id: "FR-4729",
-      partnerName: "Green Valley Grocers",
-      itemName: "Kotak Misteri Sayuran",
-      itemCount: 1,
-      price: 15000,
-      status: "completed",
-      date: "02 Jun 2026",
-      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Kotak Misteri Sayuran", quantity: 1, price: 15000 }
-      ],
-      subtotal: 15000,
-      platformFee: 0,
-      tax: 0,
-      paymentMethod: "EcoCoins",
-      co2Saved: 0.8,
-      distance: "jarak 0,8 mil",
-      reviewed: true,
-      reviewRating: 5,
-      reviewComment: "Sayurannya sangat segar dan melimpah!",
-    }
-  ],
+  orders: [],
 
   // Gamification Quests
   quests: [
