@@ -3387,6 +3387,12 @@ window.openOrderDetailModal = function(orderId) {
   const partnerObj = partners.find(p => p.name === order.partnerName);
   const isOngoing = order.status === "ongoing";
   const orderDate = order.date || "Hari Ini";
+  const distanceHtml = isOngoing 
+    ? `
+      <span class="text-[10px] text-gray-300">•</span>
+      <span class="text-[10px] text-gray-400 font-semibold">📍 ${calculateDistanceToPartner(order.partnerName)}</span>
+    `
+    : "";
 
   const formatPrice = (price) => {
     return "Rp " + Math.round(price).toLocaleString("id-ID");
@@ -3501,8 +3507,7 @@ window.openOrderDetailModal = function(orderId) {
         <h4 class="font-extrabold text-sm text-gray-900 truncate">${order.partnerName}</h4>
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="text-[10px] text-gray-400 font-semibold">${orderDate}</span>
-          <span class="text-[10px] text-gray-300">•</span>
-          <span class="text-[10px] text-gray-400 font-semibold">📍 ${calculateDistanceToPartner(order.partnerName)}</span>
+          ${distanceHtml}
         </div>
       </div>
       <div class="text-right flex-shrink-0">
