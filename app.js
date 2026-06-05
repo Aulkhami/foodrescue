@@ -70,7 +70,50 @@ const state = {
   ecopayBalance: 150000,
 
   // Ongoing/Past Orders
-  orders: [],
+  orders: [
+    {
+      id: "FR-8291",
+      partnerName: "Sunrise Bakehouse",
+      itemName: "Roti Sourdough Organik",
+      itemCount: 2,
+      price: 33500, // 30000 subtotal + 2000 fee + 1500 tax
+      status: "completed",
+      date: "04 Jun 2026",
+      image: "https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Roti Sourdough Organik", quantity: 2, price: 15000 }
+      ],
+      subtotal: 30000,
+      platformFee: 2000,
+      tax: 1500,
+      paymentMethod: "EcoPay",
+      co2Saved: 1.6,
+      distance: "jarak 0,3 mil",
+      reviewed: false,
+    },
+    {
+      id: "FR-4729",
+      partnerName: "Green Valley Grocers",
+      itemName: "Kotak Misteri Sayuran",
+      itemCount: 1,
+      price: 15000,
+      status: "completed",
+      date: "02 Jun 2026",
+      image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600",
+      items: [
+        { name: "Kotak Misteri Sayuran", quantity: 1, price: 15000 }
+      ],
+      subtotal: 15000,
+      platformFee: 0,
+      tax: 0,
+      paymentMethod: "EcoCoins",
+      co2Saved: 0.8,
+      distance: "jarak 0,8 mil",
+      reviewed: true,
+      reviewRating: 5,
+      reviewComment: "Sayurannya sangat segar dan melimpah!",
+    }
+  ],
 
   // Gamification Quests
   quests: [
@@ -1613,6 +1656,16 @@ window.placeOrder = function () {
       quantity: item.quantity,
       price: item.price,
     })),
+    subtotal: subtotal,
+    platformFee: platformFee,
+    tax: tax,
+    paymentMethod: state.selectedPayment === "ecopay" ? "EcoPay" : (state.selectedPayment === "card" ? "Kartu Kredit" : "Cash on Delivery (COD)"),
+    co2Saved: co2SavedToday,
+    date: new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
   };
 
   // Add to order list at the beginning
@@ -1986,6 +2039,16 @@ window.claimBlindMeal = function (itemId) {
         price: 0.0,
       },
     ],
+    subtotal: 0.0,
+    platformFee: 0,
+    tax: 0,
+    paymentMethod: "EcoCoins",
+    co2Saved: item.co2Reduction,
+    date: new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    }),
   };
 
   state.orders.unshift(newOrder);
@@ -2069,13 +2132,24 @@ function renderOrders() {
           .map(
             (o) => {
               const partnerObj = partners.find(p => p.name === o.partnerName);
-              const reviewBtn = partnerObj ? `
-                <button onclick="openPartnerReviewModal('${partnerObj.id}')" class="text-[9px] font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-0.5 cursor-pointer">
-                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Beri Ulasan
-                </button>
-              ` : "";
+              let reviewBtn = "";
+              if (partnerObj) {
+                if (o.reviewed) {
+                  reviewBtn = `
+                    <span class="text-[9px] font-bold text-amber-500 bg-amber-50 border border-amber-100 px-1.5 py-0.5 rounded-md flex items-center gap-0.5">
+                      ⭐ ${o.reviewRating}
+                    </span>
+                  `;
+                } else {
+                  reviewBtn = `
+                    <button onclick="event.stopPropagation(); openPartnerReviewModal('${partnerObj.id}', '${o.id}')" class="text-[9px] font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-0.5 cursor-pointer">
+                      <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Beri Ulasan
+                    </button>
+                  `;
+                }
+              }
               return `
-    <div class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between">
+    <div onclick="openOrderDetailModal('${o.id}')" class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between cursor-pointer hover:border-emerald-100 hover:shadow-sm active:scale-[0.99] transition-all">
       <div class="flex items-center gap-3">
         <img src="${o.image}" alt="${o.partnerName}" class="w-12 h-12 rounded-lg object-cover">
         <div>
@@ -3077,6 +3151,11 @@ window.completeTrackedOrder = function () {
   const orderInState = state.orders.find((o) => o.id === order.id);
   if (orderInState) {
     orderInState.status = "completed";
+    orderInState.date = new Date().toLocaleDateString("id-ID", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
   }
 
   // Refresh dynamic parts & save state
@@ -3195,6 +3274,7 @@ window.openCartConflictModal = function (currentPartnerName, newPartnerName, new
 
 let currentReviewRating = 0;
 let currentReviewPartnerId = null;
+let currentReviewOrderId = null;
 
 window.setReviewRating = function(rating) {
   currentReviewRating = rating;
@@ -3210,11 +3290,12 @@ window.setReviewRating = function(rating) {
   });
 };
 
-window.openPartnerReviewModal = function(partnerId) {
+window.openPartnerReviewModal = function(partnerId, orderId = null) {
   const partner = partners.find(p => p.id === partnerId);
   if (!partner) return;
   
   currentReviewPartnerId = partnerId;
+  currentReviewOrderId = orderId;
   currentReviewRating = 0;
   
   const partnerNameEl = document.getElementById("review-partner-name");
@@ -3238,6 +3319,7 @@ window.closePartnerReviewModal = function() {
   const modal = document.getElementById("partner-review-modal");
   if (modal) modal.classList.add("hidden");
   currentReviewPartnerId = null;
+  currentReviewOrderId = null;
   currentReviewRating = 0;
 };
 
@@ -3273,8 +3355,21 @@ window.submitPartnerReview = function() {
   const totalRating = partner.reviews.reduce((sum, r) => sum + r.rating, 0);
   partner.rating = parseFloat((totalRating / partner.reviews.length).toFixed(1));
   
+  // Link review to order if applicable
+  if (currentReviewOrderId) {
+    const order = state.orders.find(o => o.id === currentReviewOrderId);
+    if (order) {
+      order.reviewed = true;
+      order.reviewRating = currentReviewRating;
+      order.reviewComment = comment;
+    }
+  }
+  
   showToast("Ulasan berhasil dikirim! Terima kasih.", "check-circle");
   window.closePartnerReviewModal();
+  
+  // Re-render orders if visible
+  renderOrders();
   
   // Re-render if on partner detail page
   if (state.currentView === "partner-detail" && state.selectedPartner && state.selectedPartner.id === partner.id) {
@@ -3286,5 +3381,172 @@ window.submitPartnerReview = function() {
     renderExploreCatalog();
     updateMapMarkers();
   }
+};
+
+// ==========================================
+// ORDER DETAIL MODAL
+// ==========================================
+window.openOrderDetailModal = function(orderId) {
+  const order = state.orders.find(o => o.id === orderId);
+  if (!order) return;
+  
+  const modal = document.getElementById("order-detail-modal");
+  const content = document.getElementById("order-detail-content");
+  if (!modal || !content) return;
+
+  const partnerObj = partners.find(p => p.name === order.partnerName);
+  const orderDate = order.date || "Selesai";
+
+  const formatPrice = (price) => {
+    return "Rp " + Math.round(price).toLocaleString("id-ID");
+  };
+
+  const itemsHtml = (order.items || [{ name: order.itemName, quantity: order.itemCount || 1, price: order.price }])
+    .map(item => {
+      const itemPrice = item.price || 0;
+      const totalItemPrice = itemPrice * item.quantity;
+      return `
+        <div class="flex justify-between items-start py-2 border-b border-gray-100 text-xs">
+          <div>
+            <div class="font-bold text-gray-900">${item.name}</div>
+            <div class="text-[10px] text-gray-400 font-medium">${item.quantity} x ${formatPrice(itemPrice)}</div>
+          </div>
+          <div class="font-bold text-gray-900">${formatPrice(totalItemPrice)}</div>
+        </div>
+      `;
+    }).join("");
+
+  const subtotal = order.subtotal !== undefined ? order.subtotal : (order.items ? order.items.reduce((sum, i) => sum + (i.price * i.quantity), 0) : order.price);
+  const platformFee = order.platformFee !== undefined ? order.platformFee : (order.price > 0 ? 2000 : 0);
+  const tax = order.tax !== undefined ? order.tax : (order.price > 0 ? subtotal * 0.05 : 0);
+  const total = order.price;
+  const paymentMethodName = order.paymentMethod || "EcoPay";
+
+  const co2SavedVal = order.co2Saved !== undefined ? order.co2Saved : ((order.itemCount || 1) * 0.8);
+  const ecoImpactHtml = `
+    <div class="bg-emerald-50/70 border border-emerald-100 rounded-2xl p-3.5 flex items-center gap-3">
+      <div class="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center text-white shadow-xs">
+        <i data-lucide="leaf" class="w-5.5 h-5.5"></i>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold text-emerald-900">Dampak Lingkungan Anda</h4>
+        <p class="text-[10px] text-emerald-700 font-semibold leading-relaxed mt-0.5">
+          Penyelamatan ini mengurangi sekitar <strong class="font-extrabold text-emerald-800">${co2SavedVal.toFixed(1)} kg</strong> emisi CO2 & menyelamatkan <strong class="font-extrabold text-emerald-800">${order.itemCount || 1} porsi</strong> makanan!
+        </p>
+      </div>
+    </div>
+  `;
+
+  let reviewSectionHtml = "";
+  if (order.reviewed) {
+    let starsHtml = "";
+    for (let i = 1; i <= 5; i++) {
+      starsHtml += `<i data-lucide="star" class="w-3.5 h-3.5 ${i <= order.reviewRating ? 'text-yellow-400 fill-current' : 'text-gray-200'}"></i>`;
+    }
+    reviewSectionHtml = `
+      <div class="bg-amber-50/50 border border-amber-100/60 rounded-2xl p-3.5 space-y-1.5">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-900 flex items-center gap-1">
+            <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Ulasan Anda
+          </span>
+          <div class="flex gap-0.5">
+            ${starsHtml}
+          </div>
+        </div>
+        <p class="text-[10px] text-amber-800 italic leading-relaxed font-medium">"${order.reviewComment || ''}"</p>
+      </div>
+    `;
+  } else if (partnerObj) {
+    reviewSectionHtml = `
+      <button onclick="event.stopPropagation(); closeOrderDetailModal(); openPartnerReviewModal('${partnerObj.id}', '${order.id}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-600 border border-emerald-100 font-extrabold text-xs py-3 rounded-2xl shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+        <i data-lucide="edit-3" class="w-4 h-4"></i> Beri Ulasan Sekarang
+      </button>
+    `;
+  }
+
+  const reorderBtnHtml = partnerObj ? `
+    <button onclick="closeOrderDetailModal(); window.reorderItem('${order.partnerName}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+      <i data-lucide="refresh-cw" class="w-4 h-4"></i> Pesan Lagi
+    </button>
+  ` : "";
+
+  content.innerHTML = `
+    <!-- Partner Header -->
+    <div class="flex items-center gap-3">
+      <img src="${order.image}" alt="${order.partnerName}" class="w-14 h-14 rounded-2xl object-cover shadow-xs border border-gray-100">
+      <div class="flex-1 min-w-0">
+        <h4 class="font-extrabold text-sm text-gray-900 truncate">${order.partnerName}</h4>
+        <div class="flex items-center gap-1.5 mt-0.5">
+          <span class="text-[10px] text-gray-400 font-semibold">${orderDate}</span>
+          <span class="text-[10px] text-gray-300">•</span>
+          <span class="text-[10px] text-gray-400 font-semibold">📍 ${order.distance || 'jarak dekat'}</span>
+        </div>
+      </div>
+      <div class="text-right flex-shrink-0">
+        <span class="text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-100 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Selesai
+        </span>
+      </div>
+    </div>
+
+    <!-- Order Summary Title -->
+    <div class="pt-2">
+      <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold tracking-wider uppercase mb-1">
+        <span>Rincian Item</span>
+        <span>ID: ${order.id}</span>
+      </div>
+      <div class="bg-gray-50/50 rounded-2xl p-3 border border-gray-100/60 max-h-[160px] overflow-y-auto">
+        ${itemsHtml}
+      </div>
+    </div>
+
+    <!-- Eco impact -->
+    ${ecoImpactHtml}
+
+    <!-- Payment details -->
+    <div class="space-y-2 pt-1">
+      <h4 class="text-[10px] text-gray-400 font-bold tracking-wider uppercase mb-1">Rincian Pembayaran</h4>
+      <div class="space-y-1.5 bg-gray-50/30 p-3 rounded-2xl border border-gray-100/40 text-xs">
+        <div class="flex justify-between items-center text-gray-500 font-medium">
+          <span>Subtotal</span>
+          <span>${formatPrice(subtotal)}</span>
+        </div>
+        <div class="flex justify-between items-center text-gray-500 font-medium">
+          <span>Biaya Layanan</span>
+          <span>${formatPrice(platformFee)}</span>
+        </div>
+        <div class="flex justify-between items-center text-gray-500 font-medium">
+          <span>Pajak (5%)</span>
+          <span>${formatPrice(tax)}</span>
+        </div>
+        <div class="border-t border-gray-100 my-1"></div>
+        <div class="flex justify-between items-center font-bold text-gray-900">
+          <span>Total Pembayaran</span>
+          <span class="text-sm text-emerald-600">${formatPrice(total)}</span>
+        </div>
+        <div class="flex justify-between items-center text-[10px] text-gray-400 font-semibold mt-1">
+          <span>Metode Pembayaran</span>
+          <span class="font-bold uppercase text-gray-600">${paymentMethodName}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Review & Reorder Buttons -->
+    <div class="flex flex-col gap-2.5 pt-1.5">
+      ${reviewSectionHtml}
+      ${reorderBtnHtml}
+    </div>
+  `;
+
+  modal.classList.remove("hidden");
+  
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+};
+
+window.closeOrderDetailModal = function() {
+  const modal = document.getElementById("order-detail-modal");
+  if (modal) modal.classList.add("hidden");
 };
 

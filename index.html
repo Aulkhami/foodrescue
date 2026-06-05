@@ -1584,6 +1584,30 @@
       </div>
     </div>
 
+    <!-- MODAL: ORDER DETAILS -->
+    <div
+      id="order-detail-modal"
+      class="fixed inset-0 bg-gray-900/60 backdrop-blur-xs flex items-center justify-center z-[999] hidden animate-fade-in"
+    >
+      <div
+        class="bg-white w-full max-w-sm rounded-3xl p-6 shadow-2xl mx-4 space-y-4 max-h-[80vh] overflow-y-auto relative"
+      >
+        <div class="flex justify-between items-center pb-2 border-b border-gray-100">
+          <h3 class="font-black text-gray-900 text-base">Detail Pesanan</h3>
+          <button
+            onclick="closeOrderDetailModal()"
+            class="text-gray-400 hover:text-gray-600 cursor-pointer flex items-center justify-center"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div id="order-detail-content" class="space-y-4">
+          <!-- Dynamic content will be injected here -->
+        </div>
+      </div>
+    </div>
+
     <!-- Toast Notification Container -->
     <div
       id="toast-container"
