@@ -584,6 +584,20 @@ function updateFloatingCart() {
   }
 }
 
+function updateCartAndReRender() {
+  updateFloatingCart();
+  if (state.currentView === "explore") {
+    renderExploreCatalog();
+  } else if (state.currentView === "partner-detail") {
+    renderPartnerDetail();
+  } else if (state.currentView === "cart") {
+    renderCart();
+  }
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+}
+
 function switchView(viewName, params = {}) {
   // If not authenticated and trying to go to any page other than login, redirect to login
   if (!state.isAuthenticated && viewName !== "login") {
@@ -919,6 +933,30 @@ function renderExploreCatalog() {
     .map(
       (item) => {
         const isFavoritePartner = state.user?.favoritePartners && state.user.favoritePartners.includes(item.partnerId);
+        const cartItem = state.cart.find((c) => c.id === item.id);
+        const buttonHtml = cartItem 
+          ? `
+            <div class="flex items-center gap-1.5">
+              <button onclick="event.stopPropagation(); decreaseItemQty('${item.id}')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-full p-1.5 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Kurangi item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                </svg>
+              </button>
+              <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1.5 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Tambah item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+          `
+          : `
+            <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1.5 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Tambah ke keranjang">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          `;
+
         return `
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative flex flex-col cursor-pointer" onclick="switchView('food-detail', { itemId: '${item.id}' })">
       <div class="relative h-32 w-full">
@@ -951,11 +989,7 @@ function renderExploreCatalog() {
             <span class="text-xs text-gray-400 line-through">${formatRupiah(item.originalPrice)}</span>
             <span class="text-base font-bold text-emerald-600 ml-1">${formatRupiah(item.price)}</span>
           </div>
-          <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1.5 shadow-sm transition-transform active:scale-95 flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+          ${buttonHtml}
         </div>
       </div>
     </div>
@@ -1018,7 +1052,32 @@ function renderPartnerDetail() {
   const partnerItems = catalog.filter((item) => item.partnerId === p.id);
   const itemsHtml = partnerItems
     .map(
-      (item) => `
+      (item) => {
+        const cartItem = state.cart.find((c) => c.id === item.id);
+        const buttonHtml = cartItem 
+          ? `
+            <div class="flex items-center gap-1.5">
+              <button onclick="event.stopPropagation(); decreaseItemQty('${item.id}')" class="bg-emerald-100 hover:bg-emerald-200 text-emerald-800 rounded-full p-1 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Kurangi item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4" />
+                </svg>
+              </button>
+              <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Tambah item">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </button>
+            </div>
+          `
+          : `
+            <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1 shadow-sm transition-transform active:scale-95 flex items-center justify-center cursor-pointer" title="Tambah ke keranjang">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+              </svg>
+            </button>
+          `;
+
+        return `
     <div class="bg-white rounded-xl p-3 border border-gray-100 flex gap-3 shadow-sm" onclick="switchView('food-detail', { itemId: '${item.id}' })">
       <img src="${item.image}" alt="${item.name}" class="w-20 h-20 rounded-lg object-cover">
       <div class="flex-1 flex flex-col justify-between">
@@ -1031,15 +1090,12 @@ function renderPartnerDetail() {
             <span class="text-xs text-gray-400 line-through">${formatRupiah(item.originalPrice)}</span>
             <span class="text-sm font-bold text-emerald-600 ml-1">${formatRupiah(item.price)}</span>
           </div>
-          <button onclick="event.stopPropagation(); addItemToCart('${item.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white rounded-full p-1 shadow-sm transition-transform active:scale-95">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-            </svg>
-          </button>
+          ${buttonHtml}
         </div>
       </div>
     </div>
-  `,
+  `;
+      }
     )
     .join("");
 
@@ -1286,7 +1342,7 @@ window.addDetailsToCart = function () {
   }
 
   showToast("Berhasil dimasukkan ke Keranjang!");
-  updateFloatingCart();
+  updateCartAndReRender();
 };
 
 // Cart Rendering & Handlers
@@ -1464,10 +1520,23 @@ window.addItemToCart = function (itemId) {
     });
   }
 
-  // Update floating badge
-  updateFloatingCart();
-
+  updateCartAndReRender();
   showToast("Berhasil dimasukkan ke Keranjang!");
+};
+
+window.decreaseItemQty = function (itemId) {
+  const item = state.cart.find((c) => c.id === itemId);
+  if (!item) return;
+
+  item.quantity--;
+  if (item.quantity <= 0) {
+    state.cart = state.cart.filter((c) => c.id !== itemId);
+    showToast("Item dihapus dari Keranjang!");
+  } else {
+    showToast("Jumlah item berhasil dikurangi!");
+  }
+
+  updateCartAndReRender();
 };
 
 window.updateCartQuantity = function (itemId, delta) {
@@ -1478,17 +1547,13 @@ window.updateCartQuantity = function (itemId, delta) {
   if (item.quantity <= 0) {
     removeFromCart(itemId);
   } else {
-    renderCart();
+    updateCartAndReRender();
   }
 };
 
 window.removeFromCart = function (itemId) {
   state.cart = state.cart.filter((c) => c.id !== itemId);
-
-  // Update floating badge
-  updateFloatingCart();
-
-  renderCart();
+  updateCartAndReRender();
 };
 
 window.goToCheckout = function () {
@@ -3243,10 +3308,7 @@ window.openCartConflictModal = function (currentPartnerName, newPartnerName, new
         co2Reduction: pendingCartItem.co2Reduction,
       });
       
-      updateFloatingCart();
-      if (state.currentView === "cart") {
-        renderCart();
-      }
+      updateCartAndReRender();
       
       showToast("Keranjang diganti & item berhasil dimasukkan!");
       window.closeCartConflictModal();
