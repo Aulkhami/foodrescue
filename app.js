@@ -1016,7 +1016,9 @@ async function updatePartnerCoordinates() {
     { id: "partner-4", latOffset: 0.001, lngOffset: 0.0048 },
   ];
 
-  for (const off of offsets) {
+  const partnersToGeocode = [];
+
+  offsets.forEach((off) => {
     const partner = partners.find((p) => p.id === off.id);
     if (partner) {
       const newLat = userLat + off.latOffset;
@@ -1037,33 +1039,47 @@ async function updatePartnerCoordinates() {
       partner.distance = `${dist.toFixed(1).replace('.', ',')} km`;
 
       if (coordChanged || !partner.address || partner.address.includes("New York")) {
-        try {
-          const addr = await reverseGeocode(newLat, newLng);
-          if (addr) {
-            partner.address = addr;
-            
-            // If the user is currently viewing this partner, update the UI
-            if (state.currentView === "partner-detail" && state.selectedPartner?.id === partner.id) {
-              renderPartnerDetail();
-            }
-            // If the user is on the checkout screen, update the UI
-            if (state.currentView === "checkout") {
-              renderCheckout();
-            }
-          }
-          // Short delay to respect OSM Nominatim rate limits (1 req/sec)
-          await new Promise((resolve) => setTimeout(resolve, 300));
-        } catch (e) {
-          console.error(`Error reverse geocoding partner ${partner.id}:`, e);
+        partnersToGeocode.push({ partner, newLat, newLng });
+      }
+    }
+  });
+
+  // Draw the partner markers on the map immediately with their new coordinates
+  updateMapMarkers();
+
+  // Perform geocoding sequentially in the background
+  for (const { partner, newLat, newLng } of partnersToGeocode) {
+    try {
+      const addr = await reverseGeocode(newLat, newLng);
+      if (addr) {
+        partner.address = addr;
+        
+        // If the user is currently viewing this partner, update the UI
+        if (state.currentView === "partner-detail" && state.selectedPartner?.id === partner.id) {
+          renderPartnerDetail();
+        }
+        // If the user is on the checkout screen, update the UI
+        if (state.currentView === "checkout") {
+          renderCheckout();
         }
       }
+      // Short delay to respect OSM Nominatim rate limits (1 req/sec)
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    } catch (e) {
+      console.error(`Error reverse geocoding partner ${partner.id}:`, e);
     }
   }
 }
 
 // Leaflet Map Integration
-function setupMap() {
-  updatePartnerCoordinates();
+async function setupMap() {
+  const loader = document.getElementById("map-loader");
+  if (loader) {
+    loader.classList.remove("hidden");
+    loader.style.opacity = "1";
+  }
+
+  await updatePartnerCoordinates();
 
   const userLat = (state.user && state.user.lat) || 40.7265;
   const userLng = (state.user && state.user.lng) || -73.995;
@@ -1087,6 +1103,14 @@ function setupMap() {
 
   // Load Partner Markers
   updateMapMarkers();
+
+  // Hide loader with a smooth fade-out
+  if (loader) {
+    loader.style.opacity = "0";
+    setTimeout(() => {
+      loader.classList.add("hidden");
+    }, 300);
+  }
 }
 
 function updateUserMapMarker() {
