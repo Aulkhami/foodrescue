@@ -2099,7 +2099,7 @@ function renderOrders() {
                   `;
                 } else {
                   reviewBtn = `
-                    <button onclick="event.stopPropagation(); openPartnerReviewModal('${partnerObj.id}', '${o.id}')" class="text-[9px] font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-0.5 cursor-pointer">
+                    <button onclick="event.stopPropagation(); openPartnerReviewModal('${partnerObj.id}', '${o.id}')" class="text-[9px] text-nowrap font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-1 cursor-pointer">
                       <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Beri Ulasan
                     </button>
                   `;
