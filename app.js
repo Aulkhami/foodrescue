@@ -70,66 +70,7 @@ const state = {
   ecopayBalance: 150000,
 
   // Ongoing/Past Orders
-  orders: [
-    {
-      id: "FR-4829",
-      partnerName: "Luigi's Artisanal Bakery",
-      itemName: "Kotak Pizza Misteri",
-      itemCount: 2,
-      price: 25000,
-      status: "ongoing",
-      expiresIn: "44m 58s",
-      distance: "jarak 0,6 km",
-      image:
-        "https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Kotak Pizza Misteri", quantity: 2, price: 12500 }
-      ],
-    },
-    {
-      id: "FR-8291",
-      partnerName: "Sunrise Bakehouse",
-      itemName: "Kotak Kue Akhir Hari",
-      itemCount: 1,
-      price: 15000,
-      status: "ongoing",
-      expiresIn: "Siap Diambil",
-      distance: "jarak 1,9 km",
-      image:
-        "https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Kotak Kue Akhir Hari", quantity: 1, price: 15000 }
-      ],
-    },
-    {
-      id: "FR-1279",
-      partnerName: "Urban Greens",
-      itemName: "Mangkuk Salad Superfood",
-      itemCount: 1,
-      price: 15000,
-      status: "completed",
-      date: "24 Okt 2023",
-      image:
-        "https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Mangkuk Salad Superfood", quantity: 1, price: 15000 }
-      ],
-    },
-    {
-      id: "FR-1102",
-      partnerName: "The Vegan Joint",
-      itemName: "Eco-Burger & Kentang Goreng Manis",
-      itemCount: 1,
-      price: 26500,
-      status: "completed",
-      date: "21 Okt 2023",
-      image:
-        "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&q=80&w=600",
-      items: [
-        { name: "Eco-Burger & Kentang Goreng Manis", quantity: 1, price: 26500 }
-      ],
-    },
-  ],
+  orders: [],
 
   // Gamification Quests
   quests: [
@@ -1171,9 +1112,6 @@ function renderPartnerDetail() {
       <div class="pt-2">
         <div class="flex justify-between items-center mb-3">
           <h4 class="font-bold text-gray-900 text-sm">Penilaian & Ulasan</h4>
-          <button onclick="openPartnerReviewModal('${p.id}')" class="text-xs font-bold text-emerald-600 hover:underline flex items-center gap-1 cursor-pointer">
-            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Tulis Ulasan
-          </button>
         </div>
         ${reviewsHtml}
       </div>
@@ -2133,7 +2071,7 @@ function renderOrders() {
               const partnerObj = partners.find(p => p.name === o.partnerName);
               const reviewBtn = partnerObj ? `
                 <button onclick="openPartnerReviewModal('${partnerObj.id}')" class="text-[9px] font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-0.5 cursor-pointer">
-                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Ulas
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Beri Ulasan
                 </button>
               ` : "";
               return `
@@ -2161,9 +2099,6 @@ function renderOrders() {
         <div class="text-xs font-bold text-gray-900">${formatRupiah(o.price)}</div>
         <div class="flex items-center gap-1.5 justify-end">
           ${reviewBtn}
-          <button onclick="reorderItem('${o.partnerName}')" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 hover:bg-emerald-100 transition-colors">
-            Pesan Lagi
-          </button>
         </div>
       </div>
     </div>
