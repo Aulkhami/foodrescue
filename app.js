@@ -59,6 +59,8 @@ const state = {
     mealsRescued: 24,
     moneySaved: 500000, // Rp
     address: "Gang Hijau No. 42, Sukajadi, Bandung 40162",
+    lat: 40.7265,
+    lng: -73.995,
     favoritePartners: ["partner-1"], // Default favorite partner
   },
 
@@ -750,6 +752,9 @@ function updatePartnerCoordinates() {
     if (partner) {
       partner.lat = userLat + off.latOffset;
       partner.lng = userLng + off.lngOffset;
+      // Update partner distance dynamically relative to user's location
+      const dist = getHaversineDistance(userLat, userLng, partner.lat, partner.lng);
+      partner.distance = `${dist.toFixed(1).replace('.', ',')} km`;
     }
   });
 }
@@ -1606,7 +1611,7 @@ window.placeOrder = function () {
     price: totalPrice,
     status: "ongoing",
     expiresIn: "1h 59m",
-    distance: "jarak 1,2 km",
+    distance: calculateDistanceToPartner(firstItem.partnerName),
     image: firstItem.image,
     items: state.cart.map((item) => ({
       name: item.name,
@@ -1987,7 +1992,7 @@ window.claimBlindMeal = function (itemId) {
     price: 0.0, // Claimed via coins
     status: "ongoing",
     expiresIn: "30m 00s",
-    distance: "jarak 1,9 km",
+    distance: calculateDistanceToPartner(item.partnerName),
     image: item.image,
     items: [
       {
@@ -2069,7 +2074,7 @@ function renderOrders() {
         </div>
         
         <div class="flex items-center justify-between mt-3">
-          <span class="text-[10px] text-gray-400 font-semibold">📍 ${o.distance}</span>
+          <span class="text-[10px] text-gray-400 font-semibold">${calculateDistanceToPartner(o.partnerName)}</span>
           <button onclick="trackOrderRoute('${o.id}')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-[10px] px-3.5 py-1.5 rounded-lg shadow-xs transition-colors">
             Lacak Pesanan
           </button>
@@ -3105,6 +3110,30 @@ function getHaversineDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
+function calculateDistanceToPartner(partnerName) {
+  const partner = partners.find(p => p.name === partnerName);
+  if (!partner) return "jarak dekat";
+
+  let userLat = (state.user && state.user.lat) || 40.7265;
+  let userLng = (state.user && state.user.lng) || -73.995;
+
+  if (
+    window.exploreLocationMode === "live" &&
+    window.liveUserLat &&
+    window.liveUserLng
+  ) {
+    userLat = window.liveUserLat;
+    userLng = window.liveUserLng;
+  }
+
+  if (partner.lat !== undefined && partner.lng !== undefined) {
+    const dist = getHaversineDistance(userLat, userLng, partner.lat, partner.lng);
+    return `${dist.toFixed(1).replace('.', ',')} km`;
+  }
+
+  return "Jarak Dekat";
+}
+
 window.completeTrackedOrder = function () {
   const order = window.activeTrackOrder;
   if (!order) return;
@@ -3473,7 +3502,7 @@ window.openOrderDetailModal = function(orderId) {
         <div class="flex items-center gap-1.5 mt-0.5">
           <span class="text-[10px] text-gray-400 font-semibold">${orderDate}</span>
           <span class="text-[10px] text-gray-300">•</span>
-          <span class="text-[10px] text-gray-400 font-semibold">📍 ${order.distance || 'jarak dekat'}</span>
+          <span class="text-[10px] text-gray-400 font-semibold">📍 ${calculateDistanceToPartner(order.partnerName)}</span>
         </div>
       </div>
       <div class="text-right flex-shrink-0">
