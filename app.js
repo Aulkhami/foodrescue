@@ -238,6 +238,10 @@ const partners = [
     description:
       "Toko roti lokal artisanal yang berkomitmen pada zero waste. Spesialisasi dalam sourdough organik, kue kering, dan roti tawar.",
     tags: ["Toko Roti", "Vegetarian"],
+    reviews: [
+      { name: "Siti Rahma", rating: 5, comment: "Kue sourdough-nya sangat lezat dan lembut! Sangat disarankan.", date: "24 Mei 2026" },
+      { name: "Budi Santoso", rating: 4, comment: "Roti tawarnya masih segar sekali meskipun dibeli malam hari. Mantap!", date: "20 Mei 2026" }
+    ]
   },
   {
     id: "partner-2",
@@ -252,6 +256,10 @@ const partners = [
     description:
       "Pasar bahan makanan lokal segar yang menyelamatkan bundel hasil tani tidak sempurna dan sayuran organik kemasan.",
     tags: ["Sayuran", "Organik"],
+    reviews: [
+      { name: "Dewi Lestari", rating: 5, comment: "Banyak sayuran organik segar dengan harga murah! Mengurangi limbah sayuran.", date: "23 Mei 2026" },
+      { name: "Rian Hidayat", rating: 4, comment: "Bundel sayuran lengkap, pas untuk masak seminggu.", date: "18 Mei 2026" }
+    ]
   },
   {
     id: "partner-3",
@@ -266,6 +274,10 @@ const partners = [
     description:
       "Kedai kopi dan dapur ramah lingkungan yang menyelamatkan mangkuk sarapan, kue kering, dan mangkuk biji-bijian makan siang setiap hari.",
     tags: ["Makanan Berat", "Kopi"],
+    reviews: [
+      { name: "Amiruddin", rating: 5, comment: "Mangkuk biji-bijian makan siang porsinya besar dan sangat sehat. Kopinya juga enak.", date: "25 Mei 2026" },
+      { name: "Indah Permata", rating: 4, comment: "Stafnya sangat ramah. Makanan sisa diselamatkan dengan kemasan kertas ramah lingkungan.", date: "15 Mei 2026" }
+    ]
   },
   {
     id: "partner-4",
@@ -280,6 +292,10 @@ const partners = [
     description:
       "Toko roti dan tempat makan Italia yang menawarkan roti lapis segar, loyang pizza, dan kotak manis akhir hari.",
     tags: ["Toko Roti", "Pizza"],
+    reviews: [
+      { name: "Eko Prasetyo", rating: 5, comment: "Pizza kotaknya luar biasa! Porsinya banyak dan rasanya otentik Italia.", date: "26 Mei 2026" },
+      { name: "Mega Utami", rating: 5, comment: "Toko roti Italia terbaik di kawasan ini. Sangat merekomendasikan kotak pizza misteri.", date: "22 Mei 2026" }
+    ]
   },
 ];
 
@@ -1081,6 +1097,37 @@ function renderPartnerDetail() {
     )
     .join("");
 
+  // Get reviews
+  const reviews = p.reviews || [];
+  let reviewsHtml = "";
+  if (reviews.length === 0) {
+    reviewsHtml = `
+      <div class="text-center py-6 text-gray-400 text-xs bg-gray-50/50 rounded-2xl border border-dashed border-gray-100 flex flex-col items-center justify-center">
+        <i data-lucide="message-square" class="w-6 h-6 text-gray-300 mb-1"></i>
+        Belum ada ulasan untuk mitra ini. Jadilah yang pertama memberikan ulasan!
+      </div>
+    `;
+  } else {
+    reviewsHtml = `
+      <div class="space-y-3">
+        ${reviews.map(r => `
+          <div class="bg-gray-50/50 rounded-2xl p-3 border border-gray-100 space-y-1.5 shadow-2xs">
+            <div class="flex justify-between items-center">
+              <span class="font-bold text-xs text-gray-900">${r.name}</span>
+              <span class="text-[9px] text-gray-400">${r.date}</span>
+            </div>
+            <div class="flex items-center gap-0.5 text-yellow-400">
+              ${Array.from({ length: 5 }, (_, i) => `
+                <i data-lucide="star" class="w-3 h-3 ${i < r.rating ? 'fill-current text-yellow-400' : 'text-gray-200'}"></i>
+              `).join("")}
+            </div>
+            <p class="text-xs text-gray-600 leading-relaxed">${r.comment}</p>
+          </div>
+        `).join("")}
+      </div>
+    `;
+  }
+
   details.innerHTML = `
     <div class="relative h-44 w-full">
       <img src="${p.image}" alt="${p.name}" class="w-full h-full object-cover">
@@ -1119,6 +1166,16 @@ function renderPartnerDetail() {
         <div class="space-y-3">
           ${itemsHtml}
         </div>
+      </div>
+
+      <div class="pt-2">
+        <div class="flex justify-between items-center mb-3">
+          <h4 class="font-bold text-gray-900 text-sm">Penilaian & Ulasan</h4>
+          <button onclick="openPartnerReviewModal('${p.id}')" class="text-xs font-bold text-emerald-600 hover:underline flex items-center gap-1 cursor-pointer">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Tulis Ulasan
+          </button>
+        </div>
+        ${reviewsHtml}
       </div>
     </div>
   `;
@@ -2072,7 +2129,14 @@ function renderOrders() {
   `
       : past
           .map(
-            (o) => `
+            (o) => {
+              const partnerObj = partners.find(p => p.name === o.partnerName);
+              const reviewBtn = partnerObj ? `
+                <button onclick="openPartnerReviewModal('${partnerObj.id}')" class="text-[9px] font-extrabold text-emerald-600 bg-white border border-emerald-100 px-2 py-1 rounded-md hover:bg-emerald-50 transition-colors flex items-center gap-0.5 cursor-pointer">
+                  <i data-lucide="edit-3" class="w-3.5 h-3.5"></i> Ulas
+                </button>
+              ` : "";
+              return `
     <div class="bg-white rounded-xl p-3 border border-gray-50 shadow-xs flex items-center justify-between">
       <div class="flex items-center gap-3">
         <img src="${o.image}" alt="${o.partnerName}" class="w-12 h-12 rounded-lg object-cover">
@@ -2095,12 +2159,16 @@ function renderOrders() {
       
       <div class="text-right space-y-1.5">
         <div class="text-xs font-bold text-gray-900">${formatRupiah(o.price)}</div>
-        <button onclick="reorderItem('${o.partnerName}')" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 hover:bg-emerald-100 transition-colors">
-          Pesan Lagi
-        </button>
+        <div class="flex items-center gap-1.5 justify-end">
+          ${reviewBtn}
+          <button onclick="reorderItem('${o.partnerName}')" class="text-[9px] font-extrabold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 hover:bg-emerald-100 transition-colors">
+            Pesan Lagi
+          </button>
+        </div>
       </div>
     </div>
-  `,
+  `;
+            }
           )
           .join("");
 
@@ -3187,6 +3255,101 @@ window.openCartConflictModal = function (currentPartnerName, newPartnerName, new
     if (window.lucide) {
       window.lucide.createIcons();
     }
+  }
+};
+
+let currentReviewRating = 0;
+let currentReviewPartnerId = null;
+
+window.setReviewRating = function(rating) {
+  currentReviewRating = rating;
+  const stars = document.querySelectorAll(".review-star-btn");
+  stars.forEach((star, index) => {
+    if (index < rating) {
+      star.classList.remove("text-gray-300");
+      star.classList.add("text-yellow-400");
+    } else {
+      star.classList.remove("text-yellow-400");
+      star.classList.add("text-gray-300");
+    }
+  });
+};
+
+window.openPartnerReviewModal = function(partnerId) {
+  const partner = partners.find(p => p.id === partnerId);
+  if (!partner) return;
+  
+  currentReviewPartnerId = partnerId;
+  currentReviewRating = 0;
+  
+  const partnerNameEl = document.getElementById("review-partner-name");
+  if (partnerNameEl) partnerNameEl.innerText = partner.name;
+  
+  const commentEl = document.getElementById("review-comment");
+  if (commentEl) commentEl.value = "";
+  
+  window.setReviewRating(0);
+  
+  const modal = document.getElementById("partner-review-modal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
+  }
+};
+
+window.closePartnerReviewModal = function() {
+  const modal = document.getElementById("partner-review-modal");
+  if (modal) modal.classList.add("hidden");
+  currentReviewPartnerId = null;
+  currentReviewRating = 0;
+};
+
+window.submitPartnerReview = function() {
+  if (currentReviewRating === 0) {
+    showToast("Pilih rating terlebih dahulu!", "star");
+    return;
+  }
+  
+  const partner = partners.find(p => p.id === currentReviewPartnerId);
+  if (!partner) return;
+  
+  const comment = document.getElementById("review-comment").value.trim();
+  if (!comment) {
+    showToast("Tulis komentar ulasan Anda!", "message-square");
+    return;
+  }
+  
+  if (!partner.reviews) {
+    partner.reviews = [];
+  }
+  
+  const newReview = {
+    name: state.user?.name || "Pengguna Anonim",
+    rating: currentReviewRating,
+    comment: comment,
+    date: new Date().toLocaleDateString("id-ID", { day: "numeric", month: "short", year: "numeric" })
+  };
+  
+  partner.reviews.unshift(newReview);
+  
+  // Recalculate average rating
+  const totalRating = partner.reviews.reduce((sum, r) => sum + r.rating, 0);
+  partner.rating = parseFloat((totalRating / partner.reviews.length).toFixed(1));
+  
+  showToast("Ulasan berhasil dikirim! Terima kasih.", "check-circle");
+  window.closePartnerReviewModal();
+  
+  // Re-render if on partner detail page
+  if (state.currentView === "partner-detail" && state.selectedPartner && state.selectedPartner.id === partner.id) {
+    renderPartnerDetail();
+  }
+  
+  // Re-render if on explore catalog
+  if (state.currentView === "explore") {
+    renderExploreCatalog();
+    updateMapMarkers();
   }
 };
 
