@@ -493,7 +493,119 @@ window.activeTrackPartner = null;
 window.routeOriginMode = "saved";
 window.liveRouteLat = null;
 window.liveRouteLng = null;
+// Autocomplete logic for Address inputs (Nominatim OSM)
+let autocompleteTimeout = null;
 
+function setupAutocomplete(inputId, dropdownId, type) {
+  const input = document.getElementById(inputId);
+  const dropdown = document.getElementById(dropdownId);
+  if (!input || !dropdown) return;
+
+  input.addEventListener("input", (e) => {
+    const query = e.target.value.trim();
+    if (autocompleteTimeout) clearTimeout(autocompleteTimeout);
+
+    if (query.length < 3) {
+      dropdown.innerHTML = "";
+      dropdown.classList.add("hidden");
+      return;
+    }
+
+    // Debounce to limit API requests (be polite to OSM Nominatim API)
+    autocompleteTimeout = setTimeout(async () => {
+      try {
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&limit=5&q=${encodeURIComponent(query)}`,
+          {
+            headers: {
+              "Accept-Language": "id, en",
+              "User-Agent": "FoodRescue/1.0",
+            },
+          }
+        );
+        const data = await response.json();
+        
+        if (data && data.length > 0) {
+          dropdown.innerHTML = data
+            .map((item) => {
+              const displayName = item.display_name;
+              const lat = parseFloat(item.lat);
+              const lng = parseFloat(item.lon);
+              return `
+                <div class="px-3.5 py-2 text-gray-800 hover:bg-emerald-50 cursor-pointer transition-colors border-b border-gray-50 last:border-0 truncate"
+                     onclick="selectAutocompleteAddress('${inputId}', '${dropdownId}', '${type}', ${lat}, ${lng}, '${displayName.replace(/'/g, "\\'")}')">
+                  ${displayName}
+                </div>
+              `;
+            })
+            .join("");
+          dropdown.classList.remove("hidden");
+        } else {
+          dropdown.innerHTML = `<div class="px-3.5 py-2 text-gray-400 italic">Tidak ada alamat ditemukan</div>`;
+          dropdown.classList.remove("hidden");
+        }
+      } catch (error) {
+        console.error("Autocomplete fetch error:", error);
+      }
+    }, 400);
+  });
+
+  // Close suggestions dropdown when clicking outside
+  document.addEventListener("click", (e) => {
+    if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+      dropdown.classList.add("hidden");
+    }
+  });
+}
+
+window.selectAutocompleteAddress = function (inputId, dropdownId, type, lat, lng, address) {
+  const input = document.getElementById(inputId);
+  if (input) {
+    input.value = address;
+  }
+
+  const dropdown = document.getElementById(dropdownId);
+  if (dropdown) {
+    dropdown.innerHTML = "";
+    dropdown.classList.add("hidden");
+  }
+
+  if (type === "login") {
+    window.loginSelectedLat = lat;
+    window.loginSelectedLng = lng;
+    window.lastGeocodedAddress = address;
+
+    if (loginMarker) {
+      loginMarker.setLatLng([lat, lng]);
+    }
+    if (loginMap) {
+      loginMap.setView([lat, lng], 14);
+      setTimeout(() => loginMap.invalidateSize(), 50);
+    }
+    
+    const statusEl = document.getElementById("login-map-status");
+    if (statusEl) {
+      statusEl.innerText = "Lokasi diset dari saran alamat";
+    }
+  } else if (type === "profile") {
+    window.profileSelectedLat = lat;
+    window.profileSelectedLng = lng;
+    window.lastGeocodedProfileAddress = address;
+
+    if (profileEditMarker) {
+      profileEditMarker.setLatLng([lat, lng]);
+    }
+    if (profileEditMap) {
+      profileEditMap.setView([lat, lng], 14);
+      setTimeout(() => profileEditMap.invalidateSize(), 50);
+    }
+
+    const statusEl = document.getElementById("profile-map-status");
+    if (statusEl) {
+      statusEl.innerText = "Lokasi diset dari saran alamat";
+    }
+  }
+};
 
 // DOM References & Render Controllers
 document.addEventListener("DOMContentLoaded", () => {
@@ -505,6 +617,10 @@ function initApp() {
   setupSearchAndFilters();
   setupMap();
   setupNotificationDropdown();
+
+  // Setup Autocomplete for Address input fields
+  setupAutocomplete("login-address", "login-address-autocomplete-dropdown", "login");
+  setupAutocomplete("profile-edit-address", "profile-edit-address-autocomplete-dropdown", "profile");
 
   // Check localStorage for logged-in user
   const savedUser = localStorage.getItem("foodrescue_user");
@@ -2835,6 +2951,10 @@ async function reverseGeocode(lat, lng) {
     );
     const data = await response.json();
 
+    if (data && data.display_name) {
+      return data.display_name;
+    }
+
     if (data && data.address) {
       const addr = data.address;
       const street = addr.road || addr.suburb || addr.neighbourhood || "";
@@ -2853,7 +2973,7 @@ async function reverseGeocode(lat, lng) {
       }
     }
 
-    return data.display_name || `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+    return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
   } catch (error) {
     console.error("Reverse geocoding error:", error);
     return `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
