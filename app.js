@@ -2861,13 +2861,17 @@ window.trackOrderRoute = function (orderId) {
   const detailsEl = document.getElementById("route-order-details");
   if (detailsEl) {
     detailsEl.classList.remove("items-center");
-    detailsEl.classList.add("items-start");
+    detailsEl.classList.add("items-start", "cursor-pointer", "hover:border-emerald-100", "hover:shadow-sm", "active:scale-[0.99]", "transition-all");
+    detailsEl.setAttribute("onclick", `openOrderDetailModal('${order.id}')`);
     detailsEl.innerHTML = `
       <img src="${order.image}" alt="${order.itemName}" class="w-12 h-12 rounded-xl object-cover flex-shrink-0 mt-0.5">
       <div class="flex-1 min-w-0">
-        <div class="flex justify-between items-baseline">
+        <div class="flex justify-between items-center">
           <h4 class="font-extrabold text-xs text-gray-900 truncate">${order.partnerName}</h4>
-          <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">${order.id}</span>
+          <div class="flex items-center gap-1 flex-shrink-0">
+            <span class="text-[9px] font-black text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">${order.id}</span>
+            <i data-lucide="chevron-right" class="w-3.5 h-3.5 text-gray-300"></i>
+          </div>
         </div>
         <div class="flex flex-wrap gap-1 mt-1 mb-1.5">
           ${(order.items || [{ name: order.itemName, quantity: order.itemCount || 1 }])
@@ -3352,7 +3356,8 @@ window.openOrderDetailModal = function(orderId) {
   if (!modal || !content) return;
 
   const partnerObj = partners.find(p => p.name === order.partnerName);
-  const orderDate = order.date || "Selesai";
+  const isOngoing = order.status === "ongoing";
+  const orderDate = order.date || "Hari Ini";
 
   const formatPrice = (price) => {
     return "Rp " + Math.round(price).toLocaleString("id-ID");
@@ -3386,46 +3391,78 @@ window.openOrderDetailModal = function(orderId) {
         <i data-lucide="leaf" class="w-5.5 h-5.5"></i>
       </div>
       <div>
-        <h4 class="text-xs font-bold text-emerald-900">Dampak Lingkungan Anda</h4>
+        <h4 class="text-xs font-bold text-emerald-900">${isOngoing ? 'Potensi Dampak Lingkungan' : 'Dampak Lingkungan Anda'}</h4>
         <p class="text-[10px] text-emerald-700 font-semibold leading-relaxed mt-0.5">
-          Penyelamatan ini mengurangi sekitar <strong class="font-extrabold text-emerald-800">${co2SavedVal.toFixed(1)} kg</strong> emisi CO2 & menyelamatkan <strong class="font-extrabold text-emerald-800">${order.itemCount || 1} porsi</strong> makanan!
+          Penyelamatan ini ${isOngoing ? 'akan mengurangi' : 'mengurangi'} sekitar <strong class="font-extrabold text-emerald-800">${co2SavedVal.toFixed(1)} kg</strong> emisi CO2 & ${isOngoing ? 'menyelamatkan' : 'menyelamatkan'} <strong class="font-extrabold text-emerald-800">${order.itemCount || 1} porsi</strong> makanan!
         </p>
       </div>
     </div>
   `;
 
-  let reviewSectionHtml = "";
-  if (order.reviewed) {
-    let starsHtml = "";
-    for (let i = 1; i <= 5; i++) {
-      starsHtml += `<i data-lucide="star" class="w-3.5 h-3.5 ${i <= order.reviewRating ? 'text-yellow-400 fill-current' : 'text-gray-200'}"></i>`;
-    }
-    reviewSectionHtml = `
-      <div class="bg-amber-50/50 border border-amber-100/60 rounded-2xl p-3.5 space-y-1.5">
-        <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-amber-900 flex items-center gap-1">
-            <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Ulasan Anda
-          </span>
-          <div class="flex gap-0.5">
-            ${starsHtml}
-          </div>
-        </div>
-        <p class="text-[10px] text-amber-800 italic leading-relaxed font-medium">"${order.reviewComment || ''}"</p>
-      </div>
+  const statusBadge = isOngoing 
+    ? `
+      <span class="text-[10px] font-extrabold bg-amber-50 text-amber-800 border border-amber-100 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+        <span class="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse"></span> Aktif
+      </span>
+    `
+    : `
+      <span class="text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-100 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+        <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Selesai
+      </span>
     `;
-  } else if (partnerObj) {
-    reviewSectionHtml = `
-      <button onclick="event.stopPropagation(); closeOrderDetailModal(); openPartnerReviewModal('${partnerObj.id}', '${order.id}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-600 border border-emerald-100 font-extrabold text-xs py-3 rounded-2xl shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
-        <i data-lucide="edit-3" class="w-4 h-4"></i> Beri Ulasan Sekarang
+
+  let bottomActionsHtml = "";
+  if (isOngoing) {
+    bottomActionsHtml = `
+      <div class="bg-blue-50/70 border border-blue-100 rounded-2xl p-3.5 flex items-start gap-2.5">
+        <i data-lucide="info" class="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5"></i>
+        <div class="text-[10px] text-blue-800 font-semibold leading-relaxed">
+          Penyelamatan sedang berlangsung. Silakan datang ke mitra sebelum waktu habis (<strong>${order.expiresIn || '2 jam'}</strong>) dan tunjukkan ID pesanan ini untuk mengambil makanan Anda.
+        </div>
+      </div>
+      <button onclick="closeOrderDetailModal()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+        Tutup
       </button>
     `;
-  }
+  } else {
+    let reviewSectionHtml = "";
+    if (order.reviewed) {
+      let starsHtml = "";
+      for (let i = 1; i <= 5; i++) {
+        starsHtml += `<i data-lucide="star" class="w-3.5 h-3.5 ${i <= order.reviewRating ? 'text-yellow-400 fill-current' : 'text-gray-200'}"></i>`;
+      }
+      reviewSectionHtml = `
+        <div class="bg-amber-50/50 border border-amber-100/60 rounded-2xl p-3.5 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <span class="text-xs font-bold text-amber-900 flex items-center gap-1">
+              <i data-lucide="award" class="w-4 h-4 text-amber-500"></i> Ulasan Anda
+            </span>
+            <div class="flex gap-0.5">
+              ${starsHtml}
+            </div>
+          </div>
+          <p class="text-[10px] text-amber-800 italic leading-relaxed font-medium">"${order.reviewComment || ''}"</p>
+        </div>
+      `;
+    } else if (partnerObj) {
+      reviewSectionHtml = `
+        <button onclick="event.stopPropagation(); closeOrderDetailModal(); openPartnerReviewModal('${partnerObj.id}', '${order.id}')" class="w-full bg-white hover:bg-emerald-50 text-emerald-600 border border-emerald-100 font-extrabold text-xs py-3 rounded-2xl shadow-xs transition-colors flex items-center justify-center gap-1.5 cursor-pointer">
+          <i data-lucide="edit-3" class="w-4 h-4"></i> Beri Ulasan Sekarang
+        </button>
+      `;
+    }
 
-  const reorderBtnHtml = partnerObj ? `
-    <button onclick="closeOrderDetailModal(); window.reorderItem('${order.partnerName}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
-      <i data-lucide="refresh-cw" class="w-4 h-4"></i> Pesan Lagi
-    </button>
-  ` : "";
+    const reorderBtnHtml = partnerObj ? `
+      <button onclick="closeOrderDetailModal(); window.reorderItem('${order.partnerName}')" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs py-3 rounded-2xl shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer">
+        <i data-lucide="refresh-cw" class="w-4 h-4"></i> Pesan Lagi
+      </button>
+    ` : "";
+
+    bottomActionsHtml = `
+      ${reviewSectionHtml}
+      ${reorderBtnHtml}
+    `;
+  }
 
   content.innerHTML = `
     <!-- Partner Header -->
@@ -3440,9 +3477,7 @@ window.openOrderDetailModal = function(orderId) {
         </div>
       </div>
       <div class="text-right flex-shrink-0">
-        <span class="text-[10px] font-extrabold bg-emerald-50 text-emerald-800 border border-emerald-100 px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-          <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Selesai
-        </span>
+        ${statusBadge}
       </div>
     </div>
 
@@ -3490,8 +3525,7 @@ window.openOrderDetailModal = function(orderId) {
 
     <!-- Review & Reorder Buttons -->
     <div class="flex flex-col gap-2.5 pt-1.5">
-      ${reviewSectionHtml}
-      ${reorderBtnHtml}
+      ${bottomActionsHtml}
     </div>
   `;
 
