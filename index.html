@@ -1214,9 +1214,21 @@
               A
             </div>
             <div>
-              <h3 id="profile-name" class="font-bold text-gray-900 text-base">
-                Alex
-              </h3>
+              <div
+                class="flex items-center gap-1.5 cursor-pointer hover:text-emerald-600 transition-colors group"
+                onclick="openProfileNameModal()"
+              >
+                <h3
+                  id="profile-name"
+                  class="font-bold text-gray-900 group-hover:text-emerald-600 transition-colors text-base"
+                >
+                  Alex
+                </h3>
+                <i
+                  data-lucide="pencil"
+                  class="w-3.5 h-3.5 text-gray-400 group-hover:text-emerald-600 transition-colors"
+                ></i>
+              </div>
               <p
                 id="profile-address"
                 class="text-xs text-gray-400 mt-0.5 font-medium"
@@ -1526,6 +1538,62 @@
         lucide.createIcons();
       };
     </script>
+    <!-- MODAL: EDIT NAME PROFILE -->
+    <div
+      id="profile-name-modal"
+      class="fixed inset-0 bg-gray-900/60 backdrop-blur-xs flex items-center justify-center z-[999] hidden"
+    >
+      <div
+        class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl mx-4 space-y-4"
+      >
+        <div class="flex justify-between items-center">
+          <h3 class="font-black text-gray-900 text-base">
+            Ubah Nama Lengkap Anda
+          </h3>
+          <button
+            onclick="closeProfileNameModal()"
+            class="text-gray-400 hover:text-gray-600 cursor-pointer"
+          >
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+
+        <div class="space-y-1 relative">
+          <label for="profile-edit-name" class="text-xs font-bold text-gray-700"
+            >Nama Lengkap</label
+          >
+          <div class="relative flex items-center">
+            <span
+              class="absolute inset-y-0 left-3.5 flex items-center text-gray-400"
+            >
+              <i data-lucide="user" class="w-4 h-4"></i>
+            </span>
+            <input
+              type="text"
+              id="profile-edit-name"
+              placeholder="Masukkan nama lengkap Anda..."
+              class="w-full bg-white border border-gray-100 rounded-2xl py-3 pl-11 pr-4 text-xs font-medium text-gray-900 focus:outline-none focus:border-emerald-600 shadow-xs placeholder-gray-400"
+            />
+          </div>
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button
+            onclick="closeProfileNameModal()"
+            class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 rounded-2xl text-center text-xs transition-colors cursor-pointer"
+          >
+            Batal
+          </button>
+          <button
+            onclick="saveProfileName()"
+            class="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-2xl text-center text-xs shadow-md transition-colors cursor-pointer"
+          >
+            Simpan
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- MODAL: EDIT ADDRESS PROFILE -->
     <div
       id="profile-address-modal"

@@ -2529,6 +2529,13 @@ window.reorderItem = function (partnerName) {
 // Profile Screen rendering
 function renderProfile() {
   document.getElementById("profile-name").innerText = state.user.name;
+  
+  // Update profile avatar initial
+  const avatarEl = document.querySelector("#screen-profile .w-14.min-w-14.h-14");
+  if (avatarEl && state.user.name) {
+    avatarEl.innerText = state.user.name.charAt(0).toUpperCase();
+  }
+
   document.getElementById("profile-address").innerText = state.user.address;
   document.getElementById("profile-co2").innerText =
     `${state.user.co2Saved.toFixed(1)} kg`;
@@ -3036,6 +3043,47 @@ async function forwardGeocode(addressStr) {
   }
   return null;
 }
+
+// ==========================================
+// PROFILE EDIT NAME MODAL LOGIC
+// ==========================================
+
+window.openProfileNameModal = function () {
+  const modal = document.getElementById("profile-name-modal");
+  if (!modal) return;
+
+  modal.classList.remove("hidden");
+
+  const input = document.getElementById("profile-edit-name");
+  if (input && state.user) {
+    input.value = state.user.name || "";
+  }
+};
+
+window.closeProfileNameModal = function () {
+  const modal = document.getElementById("profile-name-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+  }
+};
+
+window.saveProfileName = function () {
+  const input = document.getElementById("profile-edit-name");
+  if (!input) return;
+
+  const nameVal = input.value.trim();
+  if (!nameVal) {
+    showToast("Nama tidak boleh kosong", "user");
+    return;
+  }
+
+  if (state.user) {
+    state.user.name = nameVal;
+    saveUserState();
+    showToast("Nama berhasil diperbarui!", "user");
+    window.closeProfileNameModal();
+  }
+};
 
 // ==========================================
 // PROFILE EDIT ADDRESS MODAL LOGIC
