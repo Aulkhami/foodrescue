@@ -1217,6 +1217,12 @@ window.addDetailsToCart = function () {
   const item = state.selectedFoodItem;
   if (!item) return;
 
+  // Check for partner conflict
+  if (state.cart.length > 0 && state.cart[0].partnerId !== item.partnerId) {
+    window.openCartConflictModal(state.cart[0].partnerName, item.partnerName, item, state.detailQty);
+    return;
+  }
+
   const existing = state.cart.find((c) => c.id === item.id);
   if (existing) {
     existing.quantity += state.detailQty;
@@ -1347,6 +1353,12 @@ function renderCart() {
 window.addItemToCart = function (itemId) {
   const item = catalog.find((i) => i.id === itemId);
   if (!item) return;
+
+  // Check for partner conflict
+  if (state.cart.length > 0 && state.cart[0].partnerId !== item.partnerId) {
+    window.openCartConflictModal(state.cart[0].partnerName, item.partnerName, item, 1);
+    return;
+  }
 
   const existing = state.cart.find((c) => c.id === itemId);
   if (existing) {
@@ -3032,6 +3044,61 @@ window.toggleFavoritePartner = function (partnerId) {
   if (state.currentView === "explore") {
     renderExploreCatalog();
     updateMapMarkers();
+  }
+};
+
+let pendingCartItem = null;
+let pendingCartQty = 1;
+
+window.closeCartConflictModal = function () {
+  const modal = document.getElementById("cart-conflict-modal");
+  if (modal) modal.classList.add("hidden");
+  pendingCartItem = null;
+  pendingCartQty = 1;
+};
+
+window.openCartConflictModal = function (currentPartnerName, newPartnerName, newItem, qty = 1) {
+  pendingCartItem = newItem;
+  pendingCartQty = qty;
+  
+  const msgElement = document.getElementById("cart-conflict-message");
+  if (msgElement) {
+    msgElement.innerHTML = `Anda sudah menambahkan item dari <strong>${currentPartnerName}</strong>. Keranjang hanya bisa diisi oleh item dari satu mitra yang sama.<br><br>Apakah Anda ingin mengosongkan keranjang dan mulai mengisi dengan item dari <strong>${newPartnerName}</strong>?`;
+  }
+  
+  const confirmBtn = document.getElementById("cart-conflict-confirm-btn");
+  if (confirmBtn) {
+    confirmBtn.onclick = function () {
+      state.cart = [];
+      state.cart.push({
+        id: pendingCartItem.id,
+        name: pendingCartItem.name,
+        partnerId: pendingCartItem.partnerId,
+        partnerName: pendingCartItem.partnerName,
+        price: pendingCartItem.price,
+        originalPrice: pendingCartItem.originalPrice,
+        image: pendingCartItem.image,
+        quantity: pendingCartQty,
+        pickupWindow: pendingCartItem.pickupWindow,
+        co2Reduction: pendingCartItem.co2Reduction,
+      });
+      
+      updateFloatingCart();
+      if (state.currentView === "cart") {
+        renderCart();
+      }
+      
+      showToast("Keranjang diganti & item berhasil dimasukkan!");
+      window.closeCartConflictModal();
+    };
+  }
+  
+  const modal = document.getElementById("cart-conflict-modal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    if (window.lucide) {
+      window.lucide.createIcons();
+    }
   }
 };
 
