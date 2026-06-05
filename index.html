@@ -350,6 +350,12 @@
               Semua Kategori
             </button>
             <button
+              data-category="favorites"
+              class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all"
+            >
+              ❤️ Favorit
+            </button>
+            <button
               data-category="bakery"
               class="category-badge whitespace-nowrap bg-white text-gray-600 rounded-full px-4 py-1.5 text-xs font-bold border border-gray-200 shadow-xs transition-all"
             >
@@ -1131,6 +1137,20 @@
               class="text-sm font-extrabold text-amber-500"
               >1,250</span
             >
+          </div>
+
+          <!-- Favorite Partners Section -->
+          <div
+            class="bg-white rounded-2xl p-4 border border-gray-100 shadow-sm space-y-3"
+          >
+            <h4
+              class="font-bold text-xs text-gray-400 uppercase tracking-wider flex items-center gap-1.5"
+            >
+              <span>❤️</span> Mitra Favorit Anda
+            </h4>
+            <div id="profile-favorite-partners" class="space-y-2.5">
+              <!-- Dynamic Favorite Partners -->
+            </div>
           </div>
 
           <!-- Profile Settings list -->

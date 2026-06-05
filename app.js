@@ -59,6 +59,7 @@ const state = {
     mealsRescued: 24,
     moneySaved: 500000, // Rp
     address: "Gang Hijau No. 42, Sukajadi, Bandung 40162",
+    favoritePartners: ["partner-1"], // Default favorite partner
   },
 
   // Cart State
@@ -409,6 +410,9 @@ function initApp() {
   if (savedUser) {
     try {
       state.user = JSON.parse(savedUser);
+      if (!state.user.favoritePartners) {
+        state.user.favoritePartners = [];
+      }
       state.isAuthenticated = true;
       updateUserDynamicElements();
       updateUserMapMarker();
@@ -890,14 +894,21 @@ function updateMapMarkers() {
 
 // Filter Function
 function getFilteredItems() {
+  const favorites = state.user?.favoritePartners || [];
   return catalog.filter((item) => {
     const matchesSearch =
       item.name.toLowerCase().includes(state.searchQuery) ||
       item.partnerName.toLowerCase().includes(state.searchQuery);
     const matchesBudget = item.price <= state.budgetLimit;
-    const matchesCategory =
-      state.selectedCategory === "all" ||
-      item.category === state.selectedCategory;
+    
+    let matchesCategory = false;
+    if (state.selectedCategory === "all") {
+      matchesCategory = true;
+    } else if (state.selectedCategory === "favorites") {
+      matchesCategory = favorites.includes(item.partnerId);
+    } else {
+      matchesCategory = item.category === state.selectedCategory;
+    }
 
     return matchesSearch && matchesBudget && matchesCategory;
   });
@@ -938,7 +949,9 @@ function renderExploreCatalog() {
 
   container.innerHTML = items
     .map(
-      (item) => `
+      (item) => {
+        const isFavoritePartner = state.user?.favoritePartners && state.user.favoritePartners.includes(item.partnerId);
+        return `
     <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative flex flex-col cursor-pointer" onclick="switchView('food-detail', { itemId: '${item.id}' })">
       <div class="relative h-32 w-full">
         <img src="${item.image}" alt="${item.name}" class="h-full w-full object-cover">
@@ -951,7 +964,10 @@ function renderExploreCatalog() {
       </div>
       <div class="p-3 flex-1 flex flex-col justify-between">
         <div>
-          <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">${item.partnerName}</span>
+          <div class="flex items-center gap-1">
+            <span class="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">${item.partnerName}</span>
+            ${isFavoritePartner ? `<span class="text-red-500 text-[10px]" title="Mitra Favorit">❤️</span>` : ""}
+          </div>
           <h3 class="font-bold text-gray-900 text-sm leading-tight mt-0.5 line-clamp-1">${item.name}</h3>
           
           <div class="flex items-center mt-1">
@@ -975,7 +991,8 @@ function renderExploreCatalog() {
         </div>
       </div>
     </div>
-  `,
+  `;
+      }
     )
     .join("");
 }
@@ -1015,11 +1032,18 @@ function renderPartnerDetail() {
   const header = document.getElementById("partner-header");
   const details = document.getElementById("partner-details-container");
 
+  const isFavorite = state.user?.favoritePartners && state.user.favoritePartners.includes(p.id);
+
   header.innerHTML = `
     <button onclick="switchView('explore')" class="text-gray-600 hover:text-gray-900 flex items-center gap-1">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/></svg>
     </button>
-    <h2 class="font-bold text-gray-900 text-lg flex-1 text-center pr-5">${p.name}</h2>
+    <h2 class="font-bold text-gray-900 text-lg flex-1 text-center">${p.name}</h2>
+    <button onclick="toggleFavoritePartner('${p.id}')" class="text-gray-400 hover:text-red-500 transition-colors flex items-center justify-center p-1 cursor-pointer">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}" fill="${isFavorite ? 'currentColor' : 'none'}" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+      </svg>
+    </button>
   `;
 
   // Find partner's items
@@ -2022,6 +2046,46 @@ function renderProfile() {
   );
   document.getElementById("profile-coins").innerText =
     state.user.coins.toLocaleString();
+
+  // Render favorite partners
+  const favoriteContainer = document.getElementById("profile-favorite-partners");
+  if (favoriteContainer) {
+    const favoriteIds = state.user.favoritePartners || [];
+    if (favoriteIds.length === 0) {
+      favoriteContainer.innerHTML = `
+        <div class="text-center py-5 text-gray-400 text-xs bg-gray-50/50 rounded-xl border border-dashed border-gray-100">
+          <span class="text-2xl block mb-1">❤️</span>
+          Belum ada mitra favorit.<br>Tandai mitra sebagai favorit Anda untuk melihatnya di sini!
+        </div>
+      `;
+    } else {
+      const favoritePartnersList = partners.filter((p) => favoriteIds.includes(p.id));
+      favoriteContainer.innerHTML = favoritePartnersList
+        .map(
+          (p) => `
+        <div class="bg-gray-50 rounded-xl p-3 border border-gray-100 flex items-center justify-between shadow-xs">
+          <div class="flex items-center gap-3 cursor-pointer flex-1" onclick="switchView('partner-detail', { partnerId: '${p.id}' })">
+            <img src="${p.image}" alt="${p.name}" class="w-12 h-12 rounded-lg object-cover">
+            <div>
+              <h5 class="font-bold text-xs text-gray-900 leading-tight">${p.name}</h5>
+              <div class="flex items-center gap-1 mt-0.5">
+                <span class="text-yellow-400 text-[10px]">★</span>
+                <span class="text-[10px] text-gray-500 font-medium">${p.rating}</span>
+                <span class="text-[9px] text-gray-400">• ${p.distance}</span>
+              </div>
+            </div>
+          </div>
+          <button onclick="toggleFavoritePartner('${p.id}')" class="text-red-500 hover:text-gray-400 transition-colors p-1.5 flex items-center justify-center cursor-pointer">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 fill-red-500 text-red-500" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+          </button>
+        </div>
+      `
+        )
+        .join("");
+    }
+  }
 }
 
 function showToast(message, iconName = "shopping-bag") {
@@ -2087,6 +2151,7 @@ window.handleCustomLogin = async function (event) {
       address: addressInput,
       lat: lat,
       lng: lng,
+      favoritePartners: [],
     };
     state.isAuthenticated = true;
     localStorage.setItem("foodrescue_user", JSON.stringify(state.user));
@@ -2127,6 +2192,7 @@ window.logoutUser = function () {
     address: "",
     lat: 40.7265,
     lng: -73.995,
+    favoritePartners: [],
   };
   state.isAuthenticated = false;
 
@@ -2935,5 +3001,37 @@ window.completeTrackedOrder = function () {
     "check-circle",
   );
   switchView("orders");
+};
+
+window.toggleFavoritePartner = function (partnerId) {
+  if (!state.user.favoritePartners) {
+    state.user.favoritePartners = [];
+  }
+  const index = state.user.favoritePartners.indexOf(partnerId);
+  if (index === -1) {
+    state.user.favoritePartners.push(partnerId);
+    showToast("Mitra ditambahkan ke favorit", "heart");
+  } else {
+    state.user.favoritePartners.splice(index, 1);
+    showToast("Mitra dihapus dari favorit", "heart");
+  }
+  
+  saveUserState();
+  
+  // Re-render if on partner detail
+  if (state.currentView === "partner-detail" && state.selectedPartner && state.selectedPartner.id === partnerId) {
+    renderPartnerDetail();
+  }
+  
+  // Re-render if on profile
+  if (state.currentView === "profile") {
+    renderProfile();
+  }
+
+  // Re-render if on explore catalog
+  if (state.currentView === "explore") {
+    renderExploreCatalog();
+    updateMapMarkers();
+  }
 };
 
